@@ -226,13 +226,13 @@ manylinux1-x86.test: manylinux1-x86
 #
 
 base: Dockerfile imagefiles/
-	$(OCI_EXE) build --tag $(ORG)/base:latest \
-		--build-arg IMAGE=$(ORG)/base \
+	$(OCI_EXE) build --tag $(ORG)/dockcross-base:latest \
+		--build-arg IMAGE=$(ORG)/dockcross-base \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		.
 
 base.test: base
-	$(OCI_EXE) run $(RM) $(ORG)/base > $(BIN)/dockcross-base && chmod +x $(BIN)/dockcross-base
+	$(OCI_EXE) run $(RM) $(ORG)/dockcross-base > $(BIN)/dockcross-base && chmod +x $(BIN)/dockcross-base
 
 #
 # display
