@@ -40,7 +40,7 @@ url=https://github.com/dockbuild/CMake/releases/download/v${CMAKE_VERSION}/${CMA
 echo "Downloading $url"
 curl -# -LO $url
 
-tar -xzvf ${CMAKE_ROOT}.tar.gz
+tar -xzf ${CMAKE_ROOT}.tar.gz --no-same-owner
 rm -f ${CMAKE_ROOT}.tar.gz
 
 cd ${CMAKE_ROOT}

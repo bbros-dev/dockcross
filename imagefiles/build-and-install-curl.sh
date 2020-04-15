@@ -35,7 +35,7 @@ function build_curl {
     # Can't use curl here because we don't have it yet...we are building it.
     wget -q ${CURL_DOWNLOAD_URL}/${curl_fname}.orig.tar.gz
     check_sha256sum ${curl_fname}.orig.tar.gz ${curl_sha256}
-    tar -zxf ${curl_fname}.orig.tar.gz
+    tar -xzf ${curl_fname}.orig.tar.gz --no-same-owner
     (cd curl-* && do_curl_build)
     rm -rf curl_*
 }
@@ -46,4 +46,3 @@ build_curl $CURL_ROOT $CURL_HASH
 (cat /etc/ld.so.conf.d/usr-local.conf 2> /dev/null | grep -q "^/usr/local/lib$") ||
   echo '/usr/local/lib' >> /etc/ld.so.conf.d/usr-local.conf
 ldconfig
-

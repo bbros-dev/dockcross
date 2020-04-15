@@ -71,7 +71,7 @@ function build_openssl {
     # Can't use curl here because we don't have it yet
     wget -q ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
-    tar -xzf ${openssl_fname}.tar.gz
+    tar -xzf ${openssl_fname}.tar.gz --no-same-owner
     (cd ${openssl_fname} && do_openssl_build)
     rm -rf ${openssl_fname} ${openssl_fname}.tar.gz
     # Cleanup install tree

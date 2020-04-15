@@ -29,7 +29,7 @@ done
 REV=v1.7.2
 curl -# -o ninja.tar.gz -LO https://github.com/ninja-build/ninja/archive/$REV.tar.gz
 mkdir ninja
-tar -xzvf ./ninja.tar.gz --strip-components=1 -C ./ninja
+tar -xzf ./ninja.tar.gz --strip-components=1 -C ./ninja --no-same-owner
 
 # Configure, build and install
 pushd ./ninja
@@ -40,4 +40,3 @@ popd
 
 # Clean
 rm -rf ./ninja*
-
