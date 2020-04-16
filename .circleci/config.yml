@@ -13,9 +13,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Setup custom environment variables"
-          command: echo "export DOCKCROSS_ORG=${CIRCLE_PROJECT_USERNAME}" >> $BASH_ENV
-          command: echo "export DOCKCROSS_VERSION=$(cat version)" >> $BASH_ENV
+          name: Setup custom environment variables
+          command: |
+            echo "export DOCKCROSS_ORG=${CIRCLE_PROJECT_USERNAME}" >> $BASH_ENV
+            echo "export DOCKCROSS_VERSION=$(cat version)" >> $BASH_ENV
       - run:
           name: base build
           command: |
