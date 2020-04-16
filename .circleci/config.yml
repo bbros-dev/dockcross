@@ -825,10 +825,10 @@ jobs:
             fi
 
 workflows:
-    version: 2
-    build-test-deploy:
-      jobs:
-        - base
+  version: 2
+  build-test-deploy:
+    jobs:
+      - base
           <<: *workflow-settings
 #         - android-arm:
 #             requires:
@@ -864,9 +864,9 @@ workflows:
 #         - linux-ppc64le:
 #             requires:
 #               - base
-        - linux-x64:
-            requires:
-              - base
+      - linux-x64:
+          requires:
+            - base
 #         - linux-x86:
 #             requires:
 #               - base
