@@ -10,7 +10,7 @@ commands:
     description: Setup custom environment 
     steps:
       - run: 
-          name: Export Dockcross Org and Version
+          name: Export Org and Version
           command: |
             echo "export DOCKCROSS_ORG=$(cat dockcross_org)" >> $BASH_ENV
             echo "export DOCKCROSS_VERSION=$(cat dockcross_version)" >> $BASH_ENV
@@ -24,14 +24,14 @@ commands:
           key: dockcross-base-assets-{{ .Revision }}
       - setup_environment
       - run:
-          name: build << parameters.image_name >>
+          name: Build << parameters.image_name >>
           no_output_timeout: 1.5h
           command: |
             docker load -i ~/docker/dockcross-base.tar
             make << parameters.image_name >>
             docker save --output ~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
       - run:
-         name: test << parameters.image_name >>
+         name: Test << parameters.image_name >>
          command: |
             make << parameters.image_name >>.test
       - save_cache:
@@ -47,12 +47,12 @@ commands:
       - restore_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
       - setup_environment
-      - run:
-          name: deploy << parameters.image_name >>
+      - deploy:
+          name: Deploy << parameters.image_name >>
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               docker load -i ~/docker/<< parameters.image_name >>.tar
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
               docker push ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
             fi
 
@@ -84,7 +84,8 @@ jobs:
           paths:
             - ~/docker/dockcross-base.tar
             - ~/dockcross
-  make_dockcross: # a parameterized job that calls command `build_dockcross_image`
+
+  make_dockcross:
     description: Invoke the Dockcross Build and Test Command
     parameters:
       image:
@@ -97,376 +98,11 @@ jobs:
       - deploy_dockcross_image:
           image_name: << parameters.image >>
 
-  android-arm:
-    executor: dockcross
-    steps:
-      - build_test_dockcross_image:
-          image_name: android-arm
-  android-arm64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: android-arm64
-  web-wasm:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: web-wasm
-  linux-arm64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-arm64
-  linux-armv5:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-armv5
-  linux-armv5-musl:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-armv5-musl
-  linux-armv6:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-armv6
-  linux-armv7:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-armv7
-  linux-armv7a:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-armv7a
-  # Image build currently broken. See #209
-  # linux-mipsel:
-  #   executor: dockcross
-  #   steps:
-  #     - build_dockcross_image:
-  #         image_name: linux-mipsel
-  linux-s390x:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-s390x
-  linux-ppc64le:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-ppc64le
-  linux-x64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-x64
-  linux-x86:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: linux-x86
-  manylinux1-x64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: manylinux1-x64
-  manylinux1-x86:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: manylinux1-x86
-  manylinux2010-x64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: manylinux2010-x64
-  manylinux2010-x86:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: manylinux2010-x86
-  manylinux2014-x64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: manylinux2014-x64
-  windows-static-x64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: windows-static-x64
-  windows-static-x64-posix:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: windows-static-x64-posix
-  windows-static-x86:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: windows-static-x86
-  windows-shared-x64:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: windows-shared-x64
-  windows-shared-x64-posix:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: windows-shared-x64-posix
-  windows-shared-x86:
-    executor: dockcross
-    steps:
-      - build_dockcross_image:
-          image_name: windows-shared-x86
   deploy:
     executor: dockcross
     steps:
       - deploy_dockcross_image:
           image_name: "dockcross-base"
-      # - deploy:
-      #     name: Deploy base
-      #     command: |
-      #       docker load -i ~/docker/dockcross-base.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: android-arm-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy android-arm
-      #     command: |
-      #       docker load -i ~/docker/android-arm.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: android-arm64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy android-arm64
-      #     command: |
-      #       docker load -i ~/docker/android-arm64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: web-wasm-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy web-wasm
-      #     command: |
-      #       docker load -i ~/docker/web-wasm.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-arm64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-arm64
-      #     command: |
-      #       docker load -i ~/docker/linux-arm64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-armv5-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-armv5
-      #     command: |
-      #       docker load -i ~/docker/linux-armv5.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-armv6-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-armv6
-      #     command: |
-      #       docker load -i ~/docker/linux-armv6.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-armv7-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-armv7
-      #     command: |
-      #       docker load -i ~/docker/linux-armv7.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-armv7a-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-armv7a
-      #     command: |
-      #       docker load -i ~/docker/linux-armv7a.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}
-      #       fi
-      # # Image build currently broken. See #209
-      # #- restore_cache:
-      #     #key: linux-mipsel-assets-{{ .Revision }}
-      # #- deploy:
-      #     #name: Deploy linux-mipsel
-      #     #command: |
-      #       #docker load -i ~/docker/linux-mipsel.tar
-      #       #if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         #docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         #docker push ${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}
-      #       #fi
-      # - restore_cache:
-      #     key: linux-s390x-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-s390x
-      #     command: |
-      #       docker load -i ~/docker/linux-s390x.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-ppc64le-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-ppc64le
-      #     command: |
-      #       docker load -i ~/docker/linux-ppc64le.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-x64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-x64
-      #     command: |
-      #       docker load -i ~/docker/linux-x64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: linux-x86-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy linux-x86
-      #     command: |
-      #       docker load -i ~/docker/linux-x86.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: manylinux1-x64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy manylinux1-x64
-      #     command: |
-      #       docker load -i ~/docker/manylinux1-x64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: manylinux1-x86-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy manylinux1-x86
-      #     command: |
-      #       docker load -i ~/docker/manylinux1-x86.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: manylinux2010-x64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy manylinux2010-x64
-      #     command: |
-      #       docker load -i ~/docker/manylinux2010-x64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: manylinux2014-x64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy manylinux2014-x64
-      #     command: |
-      #       docker load -i ~/docker/manylinux2014-x64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: windows-static-x64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy windows-static-x64
-      #     command: |
-      #       docker load -i ~/docker/windows-static-x64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: windows-static-x64-posix-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy windows-static-x64-posix
-      #     command: |
-      #       docker load -i ~/docker/windows-static-x64-posix.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: windows-static-x86-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy windows-static-x86
-      #     command: |
-      #       docker load -i ~/docker/windows-static-x86.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: windows-shared-x64-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy windows-shared-x64
-      #     command: |
-      #       docker load -i ~/docker/windows-shared-x64.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: windows-shared-x64-posix-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy windows-shared-x64-posix
-      #     command: |
-      #       docker load -i ~/docker/windows-shared-x64-posix.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}
-      #       fi
-      # - restore_cache:
-      #     key: windows-shared-x86-assets-{{ .Revision }}
-      # - deploy:
-      #     name: Deploy windows-shared-x86
-      #     command: |
-      #       docker load -i ~/docker/windows-shared-x86.tar
-      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
-      #         docker push ${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}
-      #       fi
 
 workflows:
   version: 2
@@ -478,110 +114,103 @@ workflows:
           image: "linux-x64"
           requires:
             - base
-      # - linux-x64:
-      #     requires:
-      #       - base
+      - make_dockcross:
+          image: "android-arm"
+          requires:
+            - base
+      - make_dockcross:
+          image: "android-arm64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "web-wasm"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-arm64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-armv5"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-armv6"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-armv7"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-armv7a"
+          requires:
+            - base
+      # Image build currently broken. See #209
+      #- make_dockcross:
+      #    image: "linux-mipsel"
+      #    requires:
+      #      - base
+      - make_dockcross:
+          image: "linux-s390x"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-ppc64le"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-x64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "linux-x86"
+          requires:
+            - base
+      - make_dockcross:
+          image: "manylinux1-x64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "manylinux1-x86"
+          requires:
+            - base
+      - make_dockcross:
+          image: "manylinux2010-x64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "manylinux2010-x86"
+          requires:
+            - base
+      - make_dockcross:
+          image: "manylinux2014-x64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "windows-static-x64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "windows-static-x64-posix"
+          requires:
+            - base
+      - make_dockcross:
+          image: "windows-static-x86"
+          requires:
+            - base
+      - make_dockcross:
+          image: "windows-shared-x64"
+          requires:
+            - base
+      - make_dockcross:
+          image: "windows-shared-x64-posix"
+          requires:
+            - base
+      - make_dockcross:
+          image: "windows-shared-x86"
+          requires:
+            - base
       - deploy:
           requires:
             - base
-#
-#         - android-arm:
-#             requires:
-#               - base
-#         - android-arm64:
-#             requires:
-#               - base
-#         - web-wasm:
-#             requires:
-#               - base
-#         - linux-arm64:
-#             requires:
-#               - base
-#         - linux-armv5:
-#             requires:
-#               - base
-#         - linux-armv6:
-#             requires:
-#               - base
-#         - linux-armv7:
-#             requires:
-#               - base
-#         - linux-armv7a:
-#             requires:
-#               - base
-#         # Image build currently broken. See #209
-#         #- linux-mipsel:
-#             #requires:
-#               #- base
-#         - linux-s390x:
-#             requires:
-#               - base
-#         - linux-ppc64le:
-#             requires:
-#               - base
-      # - linux-x64:
-      #     requires:
-      #       - base
-#         - linux-x86:
-#             requires:
-#               - base
-#         - manylinux1-x64:
-#             requires:
-#               - base
-#         - manylinux1-x86:
-#             requires:
-#               - base
-#         - manylinux2010-x64:
-#             requires:
-#               - base
-#         - manylinux2010-x86:
-#             requires:
-#               - base
-#         - manylinux2014-x64:
-#             requires:
-#               - base
-#         - windows-static-x64:
-#             requires:
-#               - base
-#         - windows-static-x64-posix:
-#             requires:
-#               - base
-#         - windows-static-x86:
-#             requires:
-#               - base
-#         - windows-shared-x64:
-#             requires:
-#               - base
-#         - windows-shared-x64-posix:
-#             requires:
-#               - base
-#         - windows-shared-x86:
-#             requires:
-#               - base
-        # - deploy:
-        #     requires:
-        #       - base
-#               - android-arm
-#               - android-arm64
-#               - web-wasm
-#               - linux-arm64
-#               - linux-armv5
-#               - linux-armv6
-#               - linux-armv7
-#               - linux-armv7a
-#               #- linux-mipsel
-#               - linux-s390x
-#               - linux-ppc64le
-              # - linux-x64
-#               - linux-x86
-#               - manylinux1-x64
-#               - manylinux1-x86
-#               - manylinux2010-x64
-#               - manylinux2010-x86
-#               - manylinux2014-x64
-#               - windows-static-x64
-#               - windows-static-x64-posix
-#               - windows-static-x86
-#               - windows-shared-x64
-#               - windows-shared-x64-posix
-#               - windows-shared-x86
