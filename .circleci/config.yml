@@ -51,783 +51,783 @@ jobs:
       - save_cache:
           key: android-arm-assets-{{ .Revision }}
           paths: ~/docker/android-arm.tar
-#   android-arm64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: android-arm64 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make android-arm64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep android-arm64)
-#            docker save -o ~/docker/android-arm64.tar dockcross/android-arm64:latest $tagged
-#       - run:
-#          name: android-arm64 test
-#          command: |
-#            make android-arm64.test
-#       - save_cache:
-#           key: android-arm64-assets-{{ .Revision }}
-#           paths: ~/docker/android-arm64.tar
-#   web-wasm:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: web-wasm build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make web-wasm
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep web-wasm)
-#            docker save -o ~/docker/web-wasm.tar dockcross/web-wasm:latest $tagged
-#       - run:
-#          name: web-wasm test
-#          command: |
-#            make web-wasm.test
-#       - save_cache:
-#           key: web-wasm-assets-{{ .Revision }}
-#           paths: ~/docker/web-wasm.tar
-#   linux-arm64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#           name: linux-arm64 build
-#           no_output_timeout: 1.5h
-#           command: |
-#             docker load -i ~/docker/base.tar
-#             make linux-arm64
-#             tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-arm64)
-#             docker save -o ~/docker/linux-arm64.tar dockcross/linux-arm64:latest $tagged
-#       - run:
-#           name: linux-arm64 test
-#           command: |
-#             make linux-arm64.test
-#       - save_cache:
-#           key: linux-arm64-assets-{{ .Revision }}
-#           paths: ~/docker/linux-arm64.tar
-#   linux-armv5:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-armv5 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-armv5
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv5)
-#            docker save -o ~/docker/linux-armv5.tar dockcross/linux-armv5:latest $tagged
-#       - run:
-#          name: linux-armv5 test
-#          command: |
-#            make linux-armv5.test
-#       - save_cache:
-#           key: linux-armv5-assets-{{ .Revision }}
-#           paths: ~/docker/linux-armv5.tar
-#   linux-armv5-musl:
-#     <<: *build-settings
-#     steps:
-#     - restore_cache:
-#         key: base-assets-{{ .Revision }}
-#     - run:
-#         name: linux-armv5-musl build
-#         no_output_timeout: 1.5h
-#         command: |
-#           docker load -i ~/docker/base.tar
-#           make linux-armv5-musl
-#           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv5-musl:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv5-musl)
-#           docker save -o ~/docker/linux-armv5-musl.tar dockcross/linux-armv5-musl:latest $tagged
-#     - run:
-#         name: linux-armv5-musl test
-#         command: |
-#           make linux-armv5-musl.test
-#     - save_cache:
-#         key: linux-armv5-musl-assets-{{ .Revision }}
-#         paths: ~/docker/linux-armv5-musl.tar
-#   linux-armv6:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-armv6 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-armv6
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv6)
-#            docker save -o ~/docker/linux-armv6.tar dockcross/linux-armv6:latest $tagged
-#       - run:
-#          name: linux-armv6 test
-#          command: |
-#            make linux-armv6.test
-#       - save_cache:
-#           key: linux-armv6-assets-{{ .Revision }}
-#           paths: ~/docker/linux-armv6.tar
-#   linux-armv7:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-armv7 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-armv7
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7)
-#            docker save -o ~/docker/linux-armv7.tar dockcross/linux-armv7:latest $tagged
-#       - run:
-#          name: linux-armv7 test
-#          command: |
-#            make linux-armv7.test
-#       - save_cache:
-#           key: linux-armv7-assets-{{ .Revision }}
-#           paths: ~/docker/linux-armv7.tar
-#   linux-armv7a:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-armv7a build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-armv7a
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7a)
-#            docker save -o ~/docker/linux-armv7a.tar dockcross/linux-armv7a:latest $tagged
-#       - run:
-#          name: linux-armv7a test
-#          command: |
-#            make linux-armv7a.test
-#       - save_cache:
-#           key: linux-armv7a-assets-{{ .Revision }}
-#           paths: ~/docker/linux-armv7a.tar
-#   linux-mipsel:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       # Image build currently broken. See #209
-#       #- run:
-#          #name: linux-mipsel build
-#          #no_output_timeout: 1.5h
-#          #command: |
-#            #docker load -i ~/docker/base.tar
-#            #make linux-mipsel
-#            #tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-mipsel)
-#            #docker save -o ~/docker/linux-mipsel.tar dockcross/linux-mipsel:latest $tagged
-#       #- run:
-#          #name: linux-mipsel test
-#          #command: |
-#            #make linux-mipsel.test
-#       - save_cache:
-#           key: linux-mipsel-assets-{{ .Revision }}
-#           paths: ~/docker/linux-mipsel.tar
-#   linux-s390x:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-s390x build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-s390x
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-s390x)
-#            docker save -o ~/docker/linux-s390x.tar dockcross/linux-s390x:latest $tagged
-#       - run:
-#          name: linux-s390x test
-#          command: |
-#            make linux-s390x.test
-#       - save_cache:
-#           key: linux-s390x-assets-{{ .Revision }}
-#           paths: ~/docker/linux-s390x.tar
-#   linux-ppc64le:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-ppc64le build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-ppc64le
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-ppc64le)
-#            docker save -o ~/docker/linux-ppc64le.tar dockcross/linux-ppc64le:latest $tagged
-#       - run:
-#          name: linux-ppc64le test
-#          command: |
-#            make linux-ppc64le.test
-#       - save_cache:
-#           key: linux-ppc64le-assets-{{ .Revision }}
-#           paths: ~/docker/linux-ppc64le.tar
-#   linux-x64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-x64 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-x64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x64)
-#            docker save -o ~/docker/linux-x64.tar dockcross/linux-x64:latest $tagged
-#       - run:
-#          name: linux-x64 test
-#          command: |
-#            make linux-x64.test
-#       - save_cache:
-#           key: linux-x64-assets-{{ .Revision }}
-#           paths: ~/docker/linux-x64.tar
-#   linux-x86:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: linux-x86 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make linux-x86
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x86)
-#            docker save -o ~/docker/linux-x86.tar dockcross/linux-x86:latest $tagged
-#       - run:
-#          name: linux-x86 test
-#          command: |
-#            make linux-x86.test
-#       - save_cache:
-#           key: linux-x86-assets-{{ .Revision }}
-#           paths: ~/docker/linux-x86.tar
-#   manylinux1-x64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: manylinux1-x64 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make manylinux1-x64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x64)
-#            docker save -o ~/docker/manylinux1-x64.tar dockcross/manylinux1-x64:latest $tagged
-#       - run:
-#          name: manylinux1-x64 test
-#          command: |
-#            make manylinux1-x64.test
-#       - save_cache:
-#           key: manylinux1-x64-assets-{{ .Revision }}
-#           paths: ~/docker/manylinux1-x64.tar
-#   manylinux1-x86:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: manylinux1-x86 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make manylinux1-x86
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x86)
-#            docker save -o ~/docker/manylinux1-x86.tar dockcross/manylinux1-x86:latest $tagged
-#       - run:
-#          name: manylinux1-x86 test
-#          command: |
-#            make manylinux1-x86.test
-#       - save_cache:
-#           key: manylinux1-x86-assets-{{ .Revision }}
-#           paths: ~/docker/manylinux1-x86.tar
-#   manylinux2010-x64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: manylinux2010-x64 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make manylinux2010-x64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2010-x64)
-#            docker save -o ~/docker/manylinux2010-x64.tar dockcross/manylinux2010-x64:latest $tagged
-#       - run:
-#          name: manylinux2010-x64 test
-#          command: |
-#            make manylinux2010-x64.test
-#       - save_cache:
-#           key: manylinux2010-x64-assets-{{ .Revision }}
-#           paths: ~/docker/manylinux2010-x64.tar
-#   manylinux2010-x86:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: manylinux2010-x86 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make manylinux2010-x86
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2010-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2010-x86)
-#            docker save -o ~/docker/manylinux2010-x86.tar dockcross/manylinux2010-x86:latest $tagged
-#       - run:
-#          name: manylinux2010-x86 test
-#          command: |
-#            make manylinux2010-x86.test
-#       - save_cache:
-#           key: manylinux2010-x86-assets-{{ .Revision }}
-#           paths: ~/docker/manylinux2010-x86.tar
-#   manylinux2014-x64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          name: manylinux2014-x64 build
-#          no_output_timeout: 1.5h
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make manylinux2014-x64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2014-x64)
-#            docker save -o ~/docker/manylinux2014-x64.tar dockcross/manylinux2014-x64:latest $tagged
-#       - run:
-#          name: manylinux2014-x64 test
-#          command: |
-#            make manylinux2014-x64.test
-#       - save_cache:
-#           key: manylinux2014-x64-assets-{{ .Revision }}
-#           paths: ~/docker/manylinux2014-x64.tar
-#   windows-static-x64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          no_output_timeout: 1.5h
-#          name: windows-static-x64 build
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make windows-static-x64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64)
-#            docker save -o ~/docker/windows-static-x64.tar dockcross/windows-static-x64:latest $tagged
-#       - run:
-#          name: windows-static-x64 test
-#          command: |
-#            make windows-static-x64.test
-#       - save_cache:
-#           key: windows-static-x64-assets-{{ .Revision }}
-#           paths: ~/docker/windows-static-x64.tar
-#   windows-static-x64-posix:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          no_output_timeout: 1.5h
-#          name: windows-static-x64-posix build
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make windows-static-x64-posix
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64-posix)
-#            docker save -o ~/docker/windows-static-x64-posix.tar dockcross/windows-static-x64-posix:latest $tagged
-#       - run:
-#          name: windows-static-x64-posix test
-#          command: |
-#            make windows-static-x64-posix.test
-#       - save_cache:
-#           key: windows-static-x64-posix-assets-{{ .Revision }}
-#           paths: ~/docker/windows-static-x64-posix.tar
-#   windows-static-x86:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          no_output_timeout: 1.5h
-#          name: windows-static-x86 build
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make windows-static-x86
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x86)
-#            docker save -o ~/docker/windows-static-x86.tar dockcross/windows-static-x86:latest $tagged
-#       - run:
-#          name: windows-static-x86 test
-#          command: |
-#            make windows-static-x86.test
-#       - save_cache:
-#           key: windows-static-x86-assets-{{ .Revision }}
-#           paths: ~/docker/windows-static-x86.tar
-#   windows-shared-x64:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          no_output_timeout: 1.5h
-#          name: windows-shared-x64 build
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make windows-shared-x64
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64)
-#            docker save -o ~/docker/windows-shared-x64.tar dockcross/windows-shared-x64:latest $tagged
-#       - run:
-#          name: windows-shared-x64 test
-#          command: |
-#            make windows-shared-x64.test
-#       - save_cache:
-#           key: windows-shared-x64-assets-{{ .Revision }}
-#           paths: ~/docker/windows-shared-x64.tar
-#   windows-shared-x64-posix:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          no_output_timeout: 1.5h
-#          name: windows-shared-x64-posix build
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make windows-shared-x64-posix
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64-posix)
-#            docker save -o ~/docker/windows-shared-x64-posix.tar dockcross/windows-shared-x64-posix:latest $tagged
-#       - run:
-#          name: windows-shared-x64-posix test
-#          command: |
-#            make windows-shared-x64-posix.test
-#       - save_cache:
-#           key: windows-shared-x64-posix-assets-{{ .Revision }}
-#           paths: ~/docker/windows-shared-x64-posix.tar
-#   windows-shared-x86:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - run:
-#          no_output_timeout: 1.5h
-#          name: windows-shared-x86 build
-#          command: |
-#            docker load -i ~/docker/base.tar
-#            make windows-shared-x86
-#            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x86)
-#            docker save -o ~/docker/windows-shared-x86.tar dockcross/windows-shared-x86:latest $tagged
-#       - run:
-#          name: windows-shared-x86 test
-#          command: |
-#            make windows-shared-x86.test
-#       - save_cache:
-#           key: windows-shared-x86-assets-{{ .Revision }}
-#           paths: ~/docker/windows-shared-x86.tar
-#   deploy:
-#     <<: *build-settings
-#     steps:
-#       - restore_cache:
-#           key: base-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy base
-#           command: |
-#             docker load -i ~/docker/base.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/dockcross-base:latest
-#             fi
-#       - restore_cache:
-#           key: android-arm-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy android-arm
-#           command: |
-#             docker load -i ~/docker/android-arm.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/android-arm:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep android-arm)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: android-arm64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy android-arm64
-#           command: |
-#             docker load -i ~/docker/android-arm64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/android-arm64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep android-arm64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: web-wasm-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy web-wasm
-#           command: |
-#             docker load -i ~/docker/web-wasm.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/web-wasm:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep web-wasm)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-arm64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-arm64
-#           command: |
-#             docker load -i ~/docker/linux-arm64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-arm64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-arm64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-armv5-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-armv5
-#           command: |
-#             docker load -i ~/docker/linux-armv5.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-armv5:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv5)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-armv6-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-armv6
-#           command: |
-#             docker load -i ~/docker/linux-armv6.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-armv6:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv6)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-armv7-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-armv7
-#           command: |
-#             docker load -i ~/docker/linux-armv7.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-armv7:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-armv7a-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-armv7a
-#           command: |
-#             docker load -i ~/docker/linux-armv7a.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-armv7a:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7a)
-#               docker push $tagged
-#             fi
-#       # Image build currently broken. See #209
-#       #- restore_cache:
-#           #key: linux-mipsel-assets-{{ .Revision }}
-#       #- deploy:
-#           #name: Deploy linux-mipsel
-#           #command: |
-#             #docker load -i ~/docker/linux-mipsel.tar
-#             #if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               #docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               #docker push dockcross/linux-mipsel:latest
-#               #tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-mipsel)
-#               #docker push $tagged
-#             #fi
-#       - restore_cache:
-#           key: linux-s390x-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-s390x
-#           command: |
-#             docker load -i ~/docker/linux-s390x.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-s390x:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-s390x)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-ppc64le-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-ppc64le
-#           command: |
-#             docker load -i ~/docker/linux-ppc64le.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-ppc64le:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-ppc64le)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-x64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-x64
-#           command: |
-#             docker load -i ~/docker/linux-x64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-x64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: linux-x86-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy linux-x86
-#           command: |
-#             docker load -i ~/docker/linux-x86.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/linux-x86:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x86)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: manylinux1-x64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy manylinux1-x64
-#           command: |
-#             docker load -i ~/docker/manylinux1-x64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/manylinux1-x64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: manylinux1-x86-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy manylinux1-x86
-#           command: |
-#             docker load -i ~/docker/manylinux1-x86.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/manylinux1-x86:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x86)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: manylinux2010-x64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy manylinux2010-x64
-#           command: |
-#             docker load -i ~/docker/manylinux2010-x64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/manylinux2010-x64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2010-x64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: manylinux2014-x64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy manylinux2014-x64
-#           command: |
-#             docker load -i ~/docker/manylinux2014-x64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/manylinux2014-x64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2014-x64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: windows-static-x64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy windows-static-x64
-#           command: |
-#             docker load -i ~/docker/windows-static-x64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/windows-static-x64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: windows-static-x64-posix-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy windows-static-x64-posix
-#           command: |
-#             docker load -i ~/docker/windows-static-x64-posix.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/windows-static-x64-posix:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64-posix)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: windows-static-x86-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy windows-static-x86
-#           command: |
-#             docker load -i ~/docker/windows-static-x86.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/windows-static-x86:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x86)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: windows-shared-x64-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy windows-shared-x64
-#           command: |
-#             docker load -i ~/docker/windows-shared-x64.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/windows-shared-x64:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: windows-shared-x64-posix-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy windows-shared-x64-posix
-#           command: |
-#             docker load -i ~/docker/windows-shared-x64-posix.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/windows-shared-x64-posix:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64-posix)
-#               docker push $tagged
-#             fi
-#       - restore_cache:
-#           key: windows-shared-x86-assets-{{ .Revision }}
-#       - deploy:
-#           name: Deploy windows-shared-x86
-#           command: |
-#             docker load -i ~/docker/windows-shared-x86.tar
-#             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#               docker login -u $DOCKER_USER -p $DOCKER_PASS
-#               docker push dockcross/windows-shared-x86:latest
-#               tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x86)
-#               docker push $tagged
-#             fi
+  android-arm64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: android-arm64 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make android-arm64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep android-arm64)
+           docker save -o ~/docker/android-arm64.tar dockcross/android-arm64:latest $tagged
+      - run:
+         name: android-arm64 test
+         command: |
+           make android-arm64.test
+      - save_cache:
+          key: android-arm64-assets-{{ .Revision }}
+          paths: ~/docker/android-arm64.tar
+  web-wasm:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: web-wasm build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make web-wasm
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep web-wasm)
+           docker save -o ~/docker/web-wasm.tar dockcross/web-wasm:latest $tagged
+      - run:
+         name: web-wasm test
+         command: |
+           make web-wasm.test
+      - save_cache:
+          key: web-wasm-assets-{{ .Revision }}
+          paths: ~/docker/web-wasm.tar
+  linux-arm64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+          name: linux-arm64 build
+          no_output_timeout: 1.5h
+          command: |
+            docker load -i ~/docker/base.tar
+            make linux-arm64
+            tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-arm64)
+            docker save -o ~/docker/linux-arm64.tar dockcross/linux-arm64:latest $tagged
+      - run:
+          name: linux-arm64 test
+          command: |
+            make linux-arm64.test
+      - save_cache:
+          key: linux-arm64-assets-{{ .Revision }}
+          paths: ~/docker/linux-arm64.tar
+  linux-armv5:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-armv5 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-armv5
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv5)
+           docker save -o ~/docker/linux-armv5.tar dockcross/linux-armv5:latest $tagged
+      - run:
+         name: linux-armv5 test
+         command: |
+           make linux-armv5.test
+      - save_cache:
+          key: linux-armv5-assets-{{ .Revision }}
+          paths: ~/docker/linux-armv5.tar
+  linux-armv5-musl:
+    <<: *build-settings
+    steps:
+    - restore_cache:
+        key: base-assets-{{ .Revision }}
+    - run:
+        name: linux-armv5-musl build
+        no_output_timeout: 1.5h
+        command: |
+          docker load -i ~/docker/base.tar
+          make linux-armv5-musl
+          tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv5-musl:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv5-musl)
+          docker save -o ~/docker/linux-armv5-musl.tar dockcross/linux-armv5-musl:latest $tagged
+    - run:
+        name: linux-armv5-musl test
+        command: |
+          make linux-armv5-musl.test
+    - save_cache:
+        key: linux-armv5-musl-assets-{{ .Revision }}
+        paths: ~/docker/linux-armv5-musl.tar
+  linux-armv6:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-armv6 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-armv6
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv6)
+           docker save -o ~/docker/linux-armv6.tar dockcross/linux-armv6:latest $tagged
+      - run:
+         name: linux-armv6 test
+         command: |
+           make linux-armv6.test
+      - save_cache:
+          key: linux-armv6-assets-{{ .Revision }}
+          paths: ~/docker/linux-armv6.tar
+  linux-armv7:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-armv7 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-armv7
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7)
+           docker save -o ~/docker/linux-armv7.tar dockcross/linux-armv7:latest $tagged
+      - run:
+         name: linux-armv7 test
+         command: |
+           make linux-armv7.test
+      - save_cache:
+          key: linux-armv7-assets-{{ .Revision }}
+          paths: ~/docker/linux-armv7.tar
+  linux-armv7a:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-armv7a build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-armv7a
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7a)
+           docker save -o ~/docker/linux-armv7a.tar dockcross/linux-armv7a:latest $tagged
+      - run:
+         name: linux-armv7a test
+         command: |
+           make linux-armv7a.test
+      - save_cache:
+          key: linux-armv7a-assets-{{ .Revision }}
+          paths: ~/docker/linux-armv7a.tar
+  linux-mipsel:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      # Image build currently broken. See #209
+      #- run:
+         #name: linux-mipsel build
+         #no_output_timeout: 1.5h
+         #command: |
+           #docker load -i ~/docker/base.tar
+           #make linux-mipsel
+           #tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-mipsel)
+           #docker save -o ~/docker/linux-mipsel.tar dockcross/linux-mipsel:latest $tagged
+      #- run:
+         #name: linux-mipsel test
+         #command: |
+           #make linux-mipsel.test
+      - save_cache:
+          key: linux-mipsel-assets-{{ .Revision }}
+          paths: ~/docker/linux-mipsel.tar
+  linux-s390x:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-s390x build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-s390x
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-s390x)
+           docker save -o ~/docker/linux-s390x.tar dockcross/linux-s390x:latest $tagged
+      - run:
+         name: linux-s390x test
+         command: |
+           make linux-s390x.test
+      - save_cache:
+          key: linux-s390x-assets-{{ .Revision }}
+          paths: ~/docker/linux-s390x.tar
+  linux-ppc64le:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-ppc64le build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-ppc64le
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-ppc64le)
+           docker save -o ~/docker/linux-ppc64le.tar dockcross/linux-ppc64le:latest $tagged
+      - run:
+         name: linux-ppc64le test
+         command: |
+           make linux-ppc64le.test
+      - save_cache:
+          key: linux-ppc64le-assets-{{ .Revision }}
+          paths: ~/docker/linux-ppc64le.tar
+  linux-x64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-x64 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-x64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x64)
+           docker save -o ~/docker/linux-x64.tar dockcross/linux-x64:latest $tagged
+      - run:
+         name: linux-x64 test
+         command: |
+           make linux-x64.test
+      - save_cache:
+          key: linux-x64-assets-{{ .Revision }}
+          paths: ~/docker/linux-x64.tar
+  linux-x86:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: linux-x86 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make linux-x86
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x86)
+           docker save -o ~/docker/linux-x86.tar dockcross/linux-x86:latest $tagged
+      - run:
+         name: linux-x86 test
+         command: |
+           make linux-x86.test
+      - save_cache:
+          key: linux-x86-assets-{{ .Revision }}
+          paths: ~/docker/linux-x86.tar
+  manylinux1-x64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: manylinux1-x64 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make manylinux1-x64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x64)
+           docker save -o ~/docker/manylinux1-x64.tar dockcross/manylinux1-x64:latest $tagged
+      - run:
+         name: manylinux1-x64 test
+         command: |
+           make manylinux1-x64.test
+      - save_cache:
+          key: manylinux1-x64-assets-{{ .Revision }}
+          paths: ~/docker/manylinux1-x64.tar
+  manylinux1-x86:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: manylinux1-x86 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make manylinux1-x86
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x86)
+           docker save -o ~/docker/manylinux1-x86.tar dockcross/manylinux1-x86:latest $tagged
+      - run:
+         name: manylinux1-x86 test
+         command: |
+           make manylinux1-x86.test
+      - save_cache:
+          key: manylinux1-x86-assets-{{ .Revision }}
+          paths: ~/docker/manylinux1-x86.tar
+  manylinux2010-x64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: manylinux2010-x64 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make manylinux2010-x64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2010-x64)
+           docker save -o ~/docker/manylinux2010-x64.tar dockcross/manylinux2010-x64:latest $tagged
+      - run:
+         name: manylinux2010-x64 test
+         command: |
+           make manylinux2010-x64.test
+      - save_cache:
+          key: manylinux2010-x64-assets-{{ .Revision }}
+          paths: ~/docker/manylinux2010-x64.tar
+  manylinux2010-x86:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: manylinux2010-x86 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make manylinux2010-x86
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2010-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2010-x86)
+           docker save -o ~/docker/manylinux2010-x86.tar dockcross/manylinux2010-x86:latest $tagged
+      - run:
+         name: manylinux2010-x86 test
+         command: |
+           make manylinux2010-x86.test
+      - save_cache:
+          key: manylinux2010-x86-assets-{{ .Revision }}
+          paths: ~/docker/manylinux2010-x86.tar
+  manylinux2014-x64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         name: manylinux2014-x64 build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/base.tar
+           make manylinux2014-x64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2014-x64)
+           docker save -o ~/docker/manylinux2014-x64.tar dockcross/manylinux2014-x64:latest $tagged
+      - run:
+         name: manylinux2014-x64 test
+         command: |
+           make manylinux2014-x64.test
+      - save_cache:
+          key: manylinux2014-x64-assets-{{ .Revision }}
+          paths: ~/docker/manylinux2014-x64.tar
+  windows-static-x64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         no_output_timeout: 1.5h
+         name: windows-static-x64 build
+         command: |
+           docker load -i ~/docker/base.tar
+           make windows-static-x64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64)
+           docker save -o ~/docker/windows-static-x64.tar dockcross/windows-static-x64:latest $tagged
+      - run:
+         name: windows-static-x64 test
+         command: |
+           make windows-static-x64.test
+      - save_cache:
+          key: windows-static-x64-assets-{{ .Revision }}
+          paths: ~/docker/windows-static-x64.tar
+  windows-static-x64-posix:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         no_output_timeout: 1.5h
+         name: windows-static-x64-posix build
+         command: |
+           docker load -i ~/docker/base.tar
+           make windows-static-x64-posix
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64-posix)
+           docker save -o ~/docker/windows-static-x64-posix.tar dockcross/windows-static-x64-posix:latest $tagged
+      - run:
+         name: windows-static-x64-posix test
+         command: |
+           make windows-static-x64-posix.test
+      - save_cache:
+          key: windows-static-x64-posix-assets-{{ .Revision }}
+          paths: ~/docker/windows-static-x64-posix.tar
+  windows-static-x86:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         no_output_timeout: 1.5h
+         name: windows-static-x86 build
+         command: |
+           docker load -i ~/docker/base.tar
+           make windows-static-x86
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x86)
+           docker save -o ~/docker/windows-static-x86.tar dockcross/windows-static-x86:latest $tagged
+      - run:
+         name: windows-static-x86 test
+         command: |
+           make windows-static-x86.test
+      - save_cache:
+          key: windows-static-x86-assets-{{ .Revision }}
+          paths: ~/docker/windows-static-x86.tar
+  windows-shared-x64:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         no_output_timeout: 1.5h
+         name: windows-shared-x64 build
+         command: |
+           docker load -i ~/docker/base.tar
+           make windows-shared-x64
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64)
+           docker save -o ~/docker/windows-shared-x64.tar dockcross/windows-shared-x64:latest $tagged
+      - run:
+         name: windows-shared-x64 test
+         command: |
+           make windows-shared-x64.test
+      - save_cache:
+          key: windows-shared-x64-assets-{{ .Revision }}
+          paths: ~/docker/windows-shared-x64.tar
+  windows-shared-x64-posix:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         no_output_timeout: 1.5h
+         name: windows-shared-x64-posix build
+         command: |
+           docker load -i ~/docker/base.tar
+           make windows-shared-x64-posix
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64-posix)
+           docker save -o ~/docker/windows-shared-x64-posix.tar dockcross/windows-shared-x64-posix:latest $tagged
+      - run:
+         name: windows-shared-x64-posix test
+         command: |
+           make windows-shared-x64-posix.test
+      - save_cache:
+          key: windows-shared-x64-posix-assets-{{ .Revision }}
+          paths: ~/docker/windows-shared-x64-posix.tar
+  windows-shared-x86:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - run:
+         no_output_timeout: 1.5h
+         name: windows-shared-x86 build
+         command: |
+           docker load -i ~/docker/base.tar
+           make windows-shared-x86
+           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x86)
+           docker save -o ~/docker/windows-shared-x86.tar dockcross/windows-shared-x86:latest $tagged
+      - run:
+         name: windows-shared-x86 test
+         command: |
+           make windows-shared-x86.test
+      - save_cache:
+          key: windows-shared-x86-assets-{{ .Revision }}
+          paths: ~/docker/windows-shared-x86.tar
+  deploy:
+    <<: *build-settings
+    steps:
+      - restore_cache:
+          key: base-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy base
+          command: |
+            docker load -i ~/docker/base.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/dockcross-base:latest
+            fi
+      - restore_cache:
+          key: android-arm-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy android-arm
+          command: |
+            docker load -i ~/docker/android-arm.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/android-arm:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep android-arm)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: android-arm64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy android-arm64
+          command: |
+            docker load -i ~/docker/android-arm64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/android-arm64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep android-arm64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: web-wasm-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy web-wasm
+          command: |
+            docker load -i ~/docker/web-wasm.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/web-wasm:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep web-wasm)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-arm64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-arm64
+          command: |
+            docker load -i ~/docker/linux-arm64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-arm64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-arm64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-armv5-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-armv5
+          command: |
+            docker load -i ~/docker/linux-armv5.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-armv5:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv5)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-armv6-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-armv6
+          command: |
+            docker load -i ~/docker/linux-armv6.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-armv6:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv6)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-armv7-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-armv7
+          command: |
+            docker load -i ~/docker/linux-armv7.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-armv7:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-armv7a-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-armv7a
+          command: |
+            docker load -i ~/docker/linux-armv7a.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-armv7a:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-armv7a)
+              docker push $tagged
+            fi
+      # Image build currently broken. See #209
+      #- restore_cache:
+          #key: linux-mipsel-assets-{{ .Revision }}
+      #- deploy:
+          #name: Deploy linux-mipsel
+          #command: |
+            #docker load -i ~/docker/linux-mipsel.tar
+            #if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              #docker login -u $DOCKER_USER -p $DOCKER_PASS
+              #docker push dockcross/linux-mipsel:latest
+              #tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-mipsel)
+              #docker push $tagged
+            #fi
+      - restore_cache:
+          key: linux-s390x-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-s390x
+          command: |
+            docker load -i ~/docker/linux-s390x.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-s390x:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-s390x)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-ppc64le-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-ppc64le
+          command: |
+            docker load -i ~/docker/linux-ppc64le.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-ppc64le:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-ppc64le)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-x64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-x64
+          command: |
+            docker load -i ~/docker/linux-x64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-x64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: linux-x86-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy linux-x86
+          command: |
+            docker load -i ~/docker/linux-x86.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/linux-x86:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x86)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: manylinux1-x64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy manylinux1-x64
+          command: |
+            docker load -i ~/docker/manylinux1-x64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/manylinux1-x64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: manylinux1-x86-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy manylinux1-x86
+          command: |
+            docker load -i ~/docker/manylinux1-x86.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/manylinux1-x86:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux1-x86)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: manylinux2010-x64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy manylinux2010-x64
+          command: |
+            docker load -i ~/docker/manylinux2010-x64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/manylinux2010-x64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2010-x64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: manylinux2014-x64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy manylinux2014-x64
+          command: |
+            docker load -i ~/docker/manylinux2014-x64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/manylinux2014-x64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep manylinux2014-x64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: windows-static-x64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy windows-static-x64
+          command: |
+            docker load -i ~/docker/windows-static-x64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/windows-static-x64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: windows-static-x64-posix-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy windows-static-x64-posix
+          command: |
+            docker load -i ~/docker/windows-static-x64-posix.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/windows-static-x64-posix:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x64-posix)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: windows-static-x86-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy windows-static-x86
+          command: |
+            docker load -i ~/docker/windows-static-x86.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/windows-static-x86:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-static-x86)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: windows-shared-x64-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy windows-shared-x64
+          command: |
+            docker load -i ~/docker/windows-shared-x64.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/windows-shared-x64:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: windows-shared-x64-posix-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy windows-shared-x64-posix
+          command: |
+            docker load -i ~/docker/windows-shared-x64-posix.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/windows-shared-x64-posix:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x64-posix)
+              docker push $tagged
+            fi
+      - restore_cache:
+          key: windows-shared-x86-assets-{{ .Revision }}
+      - deploy:
+          name: Deploy windows-shared-x86
+          command: |
+            docker load -i ~/docker/windows-shared-x86.tar
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push dockcross/windows-shared-x86:latest
+              tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep windows-shared-x86)
+              docker push $tagged
+            fi
 
-# workflows:
-#     version: 2
-#     build-test-deploy:
-#       jobs:
-#         - base
+workflows:
+    version: 2
+    build-test-deploy:
+      jobs:
+        - base
 #         - android-arm:
 #             requires:
 #               - base
@@ -862,9 +862,9 @@ jobs:
 #         - linux-ppc64le:
 #             requires:
 #               - base
-#         - linux-x64:
-#             requires:
-#               - base
+        - linux-x64:
+            requires:
+              - base
 #         - linux-x86:
 #             requires:
 #               - base
