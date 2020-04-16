@@ -17,19 +17,13 @@ references:
     filters:
       branches:
         only: develop
-    steps:
-      - setup_environment:
 
 jobs:
   base:
     executor: dockcross
     steps:
       - checkout
-      - run:
-          name: Setup custom environment variables
-          command: |
-            echo "export DOCKCROSS_ORG=${CIRCLE_PROJECT_USERNAME}" >> $BASH_ENV
-            echo "export DOCKCROSS_VERSION=$(cat version)" >> $BASH_ENV
+      - setup_environment:
       - run:
           name: base build
           command: |
@@ -51,6 +45,7 @@ jobs:
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
+      - setup_environment:
       - run:
          name: android-arm build
          no_output_timeout: 1.5h
@@ -291,6 +286,7 @@ jobs:
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
+      - setup_environment:
       - run:
          name: linux-x64 build
          no_output_timeout: 1.5h
