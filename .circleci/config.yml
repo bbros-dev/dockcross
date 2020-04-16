@@ -12,21 +12,24 @@ commands:
       - run: |
           echo "export DOCKCROSS_ORG=$(cat dockcross_org)" >> $BASH_ENV
           echo "export DOCKCROSS_VERSION=$(cat dockcross_version)" >> $BASH_ENV
-  build_dockcross_image:
-    description: Build a dockcross container image
+  build_test_dockcross_image:
+    description: Build & test a dockcross container image
     parameters:
       image_name:
         type: string
     steps:
+      - restore_cache:
+          key: dockcross-base-assets-{{ .Revision }}
+      - setup_environment
       - run:
-         name: << parameters.image_name >> build
+         name: build << parameters.image_name >>
          no_output_timeout: 1.5h
          command: |
            docker load -i ~/docker/dockcross-base.tar
            make << parameters.image_name >>
            docker save --output ~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
       - run:
-         name: << parameters.image_name >> test
+         name: test << parameters.image_name >>
          command: |
            make << parameters.image_name >>.test
       - save_cache:
@@ -39,12 +42,17 @@ commands:
       image_name:
         type: string
     steps:
-      - run: |
-          docker load -i ~/docker/<< parameters.image_name >>.tar
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
-          fi
+      - restore_cache:
+          key: << parameters.image_name >>-assets-{{ .Revision }}
+      - setup_environment
+      - run:
+          name: deploy << parameters.image_name >>
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker load -i ~/docker/<< parameters.image_name >>.tar
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
+            fi
 
 references:
   workflow-settings: &workflow-settings
@@ -70,495 +78,151 @@ jobs:
          command: |
            make base.test
       - save_cache:
-          key: base-assets-{{ .Revision }}
+          key: dockcross-base-assets-{{ .Revision }}
           paths:
             - ~/docker/dockcross-base.tar
             - ~/dockcross
+  make_dockcross: # a parameterized job that calls command `build_dockcross_image`
+    description: Invoke the Dockcross Build and Test Command
+    parameters:
+      image:
+        description: "The OCI Container Image Name"
+        type: string
+    executor: dockcross
+    steps:
+      - build_test_dockcross_image:
+          image_name: << parameters.image >>
+      - deploy_dockcross_image:
+          image_name: << parameters.image >>
   android-arm:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - setup_environment
-      - run:
-         name: android-arm build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make android-arm
-           docker save --output~/docker/android-arm.tar ${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}
-      - run:
-         name: android-arm test
-         command: |
-           make android-arm.test
-      - save_cache:
-          key: android-arm-assets-{{ .Revision }}
-          paths: ~/docker/android-arm.tar
+      - build_test_dockcross_image:
+          image_name: android-arm
   android-arm64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: android-arm64 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make android-arm64
-           docker save --output~/docker/android-arm64.tar dockcross/android-arm64:${DOCKCROSS_VERSION}
-      - run:
-         name: android-arm64 test
-         command: |
-           make android-arm64.test
-      - save_cache:
-          key: android-arm64-assets-{{ .Revision }}
-          paths: ~/docker/android-arm64.tar
+      - build_dockcross_image:
+          image_name: android-arm64
   web-wasm:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: web-wasm build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make web-wasm
-           docker save --output~/docker/web-wasm.tar dockcross/web-wasm:${DOCKCROSS_VERSION}
-      - run:
-         name: web-wasm test
-         command: |
-           make web-wasm.test
-      - save_cache:
-          key: web-wasm-assets-{{ .Revision }}
-          paths: ~/docker/web-wasm.tar
+      - build_dockcross_image:
+          image_name: web-wasm
   linux-arm64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-          name: linux-arm64 build
-          no_output_timeout: 1.5h
-          command: |
-            docker load -i ~/docker/dockcross-base.tar
-            make linux-arm64
-            docker save --output~/docker/linux-arm64.tar dockcross/linux-arm64:${DOCKCROSS_VERSION}
-      - run:
-          name: linux-arm64 test
-          command: |
-            make linux-arm64.test
-      - save_cache:
-          key: linux-arm64-assets-{{ .Revision }}
-          paths: ~/docker/linux-arm64.tar
+      - build_dockcross_image:
+          image_name: linux-arm64
   linux-armv5:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-armv5 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-armv5
-           docker save --output~/docker/linux-armv5.tar dockcross/linux-armv5:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-armv5 test
-         command: |
-           make linux-armv5.test
-      - save_cache:
-          key: linux-armv5-assets-{{ .Revision }}
-          paths: ~/docker/linux-armv5.tar
+      - build_dockcross_image:
+          image_name: linux-armv5
   linux-armv5-musl:
     executor: dockcross
     steps:
-    - restore_cache:
-        key: base-assets-{{ .Revision }}
-    - run:
-        name: linux-armv5-musl build
-        no_output_timeout: 1.5h
-        command: |
-          docker load -i ~/docker/dockcross-base.tar
-          make linux-armv5-musl
-          docker save --output~/docker/linux-armv5-musl.tar dockcross/linux-armv5-musl:${DOCKCROSS_VERSION}
-    - run:
-        name: linux-armv5-musl test
-        command: |
-          make linux-armv5-musl.test
-    - save_cache:
-        key: linux-armv5-musl-assets-{{ .Revision }}
-        paths: ~/docker/linux-armv5-musl.tar
+      - build_dockcross_image:
+          image_name: linux-armv5-musl
   linux-armv6:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-armv6 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-armv6
-           docker save --output~/docker/linux-armv6.tar dockcross/linux-armv6:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-armv6 test
-         command: |
-           make linux-armv6.test
-      - save_cache:
-          key: linux-armv6-assets-{{ .Revision }}
-          paths: ~/docker/linux-armv6.tar
+      - build_dockcross_image:
+          image_name: linux-armv6
   linux-armv7:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-armv7 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-armv7
-           docker save --output~/docker/linux-armv7.tar dockcross/linux-armv7:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-armv7 test
-         command: |
-           make linux-armv7.test
-      - save_cache:
-          key: linux-armv7-assets-{{ .Revision }}
-          paths: ~/docker/linux-armv7.tar
+      - build_dockcross_image:
+          image_name: linux-armv7
   linux-armv7a:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-armv7a build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-armv7a
-           docker save --output~/docker/linux-armv7a.tar dockcross/linux-armv7a:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-armv7a test
-         command: |
-           make linux-armv7a.test
-      - save_cache:
-          key: linux-armv7a-assets-{{ .Revision }}
-          paths: ~/docker/linux-armv7a.tar
-  linux-mipsel:
-    executor: dockcross
-    steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      # Image build currently broken. See #209
-      #- run:
-         #name: linux-mipsel build
-         #no_output_timeout: 1.5h
-         #command: |
-           #docker load -i ~/docker/dockcross-base.tar
-           #make linux-mipsel
-           #docker save --output~/docker/linux-mipsel.tar dockcross/linux-mipsel:${DOCKCROSS_VERSION}
-      #- run:
-         #name: linux-mipsel test
-         #command: |
-           #make linux-mipsel.test
-      - save_cache:
-          key: linux-mipsel-assets-{{ .Revision }}
-          paths: ~/docker/linux-mipsel.tar
+      - build_dockcross_image:
+          image_name: linux-armv7a
+  # Image build currently broken. See #209
+  # linux-mipsel:
+  #   executor: dockcross
+  #   steps:
+  #     - build_dockcross_image:
+  #         image_name: linux-mipsel
   linux-s390x:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-s390x build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-s390x
-           docker save --output~/docker/linux-s390x.tar dockcross/linux-s390x:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-s390x test
-         command: |
-           make linux-s390x.test
-      - save_cache:
-          key: linux-s390x-assets-{{ .Revision }}
-          paths: ~/docker/linux-s390x.tar
+      - build_dockcross_image:
+          image_name: linux-s390x
   linux-ppc64le:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-ppc64le build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-ppc64le
-           docker save --output~/docker/linux-ppc64le.tar dockcross/linux-ppc64le:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-ppc64le test
-         command: |
-           make linux-ppc64le.test
-      - save_cache:
-          key: linux-ppc64le-assets-{{ .Revision }}
-          paths: ~/docker/linux-ppc64le.tar
+      - build_dockcross_image:
+          image_name: linux-ppc64le
   linux-x64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - setup_environment
       - build_dockcross_image:
           image_name: linux-x64
-      # - run:
-      #    name: linux-x64 build
-      #    no_output_timeout: 1.5h
-      #    command: |
-      #      docker load -i ~/docker/dockcross-base.tar
-      #      make linux-x64
-      #      docker save --output ~/docker/linux-x64.tar ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
-      # - run:
-      #    name: linux-x64 test
-      #    command: |
-      #      make linux-x64.test
-      # - save_cache:
-      #     key: linux-x64-assets-{{ .Revision }}
-      #     paths: ~/docker/linux-x64.tar
   linux-x86:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: linux-x86 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make linux-x86
-           docker save --output~/docker/linux-x86.tar dockcross/linux-x86:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-x86 test
-         command: |
-           make linux-x86.test
-      - save_cache:
-          key: linux-x86-assets-{{ .Revision }}
-          paths: ~/docker/linux-x86.tar
+      - build_dockcross_image:
+          image_name: linux-x86
   manylinux1-x64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: manylinux1-x64 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make manylinux1-x64
-           docker save --output~/docker/manylinux1-x64.tar dockcross/manylinux1-x64:${DOCKCROSS_VERSION}
-      - run:
-         name: manylinux1-x64 test
-         command: |
-           make manylinux1-x64.test
-      - save_cache:
-          key: manylinux1-x64-assets-{{ .Revision }}
-          paths: ~/docker/manylinux1-x64.tar
+      - build_dockcross_image:
+          image_name: manylinux1-x64
   manylinux1-x86:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: manylinux1-x86 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make manylinux1-x86
-           docker save --output~/docker/manylinux1-x86.tar dockcross/manylinux1-x86:${DOCKCROSS_VERSION}
-      - run:
-         name: manylinux1-x86 test
-         command: |
-           make manylinux1-x86.test
-      - save_cache:
-          key: manylinux1-x86-assets-{{ .Revision }}
-          paths: ~/docker/manylinux1-x86.tar
+      - build_dockcross_image:
+          image_name: manylinux1-x86
   manylinux2010-x64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: manylinux2010-x64 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make manylinux2010-x64
-           docker save --output~/docker/manylinux2010-x64.tar dockcross/manylinux2010-x64:${DOCKCROSS_VERSION}
-      - run:
-         name: manylinux2010-x64 test
-         command: |
-           make manylinux2010-x64.test
-      - save_cache:
-          key: manylinux2010-x64-assets-{{ .Revision }}
-          paths: ~/docker/manylinux2010-x64.tar
+      - build_dockcross_image:
+          image_name: manylinux2010-x64
   manylinux2010-x86:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: manylinux2010-x86 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make manylinux2010-x86
-           docker save --output~/docker/manylinux2010-x86.tar dockcross/manylinux2010-x86:${DOCKCROSS_VERSION}
-      - run:
-         name: manylinux2010-x86 test
-         command: |
-           make manylinux2010-x86.test
-      - save_cache:
-          key: manylinux2010-x86-assets-{{ .Revision }}
-          paths: ~/docker/manylinux2010-x86.tar
+      - build_dockcross_image:
+          image_name: manylinux2010-x86
   manylinux2014-x64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         name: manylinux2014-x64 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make manylinux2014-x64
-           docker save --output~/docker/manylinux2014-x64.tar dockcross/manylinux2014-x64:${DOCKCROSS_VERSION}
-      - run:
-         name: manylinux2014-x64 test
-         command: |
-           make manylinux2014-x64.test
-      - save_cache:
-          key: manylinux2014-x64-assets-{{ .Revision }}
-          paths: ~/docker/manylinux2014-x64.tar
+      - build_dockcross_image:
+          image_name: manylinux2014-x64
   windows-static-x64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         no_output_timeout: 1.5h
-         name: windows-static-x64 build
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make windows-static-x64
-           docker save --output~/docker/windows-static-x64.tar dockcross/windows-static-x64:${DOCKCROSS_VERSION}
-      - run:
-         name: windows-static-x64 test
-         command: |
-           make windows-static-x64.test
-      - save_cache:
-          key: windows-static-x64-assets-{{ .Revision }}
-          paths: ~/docker/windows-static-x64.tar
+      - build_dockcross_image:
+          image_name: windows-static-x64
   windows-static-x64-posix:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         no_output_timeout: 1.5h
-         name: windows-static-x64-posix build
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make windows-static-x64-posix
-           docker save --output~/docker/windows-static-x64-posix.tar dockcross/windows-static-x64-posix:${DOCKCROSS_VERSION}
-      - run:
-         name: windows-static-x64-posix test
-         command: |
-           make windows-static-x64-posix.test
-      - save_cache:
-          key: windows-static-x64-posix-assets-{{ .Revision }}
-          paths: ~/docker/windows-static-x64-posix.tar
+      - build_dockcross_image:
+          image_name: windows-static-x64-posix
   windows-static-x86:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         no_output_timeout: 1.5h
-         name: windows-static-x86 build
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make windows-static-x86
-           docker save --output~/docker/windows-static-x86.tar dockcross/windows-static-x86:${DOCKCROSS_VERSION}
-      - run:
-         name: windows-static-x86 test
-         command: |
-           make windows-static-x86.test
-      - save_cache:
-          key: windows-static-x86-assets-{{ .Revision }}
-          paths: ~/docker/windows-static-x86.tar
+      - build_dockcross_image:
+          image_name: windows-static-x86
   windows-shared-x64:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         no_output_timeout: 1.5h
-         name: windows-shared-x64 build
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make windows-shared-x64
-           docker save --output~/docker/windows-shared-x64.tar dockcross/windows-shared-x64:${DOCKCROSS_VERSION}
-      - run:
-         name: windows-shared-x64 test
-         command: |
-           make windows-shared-x64.test
-      - save_cache:
-          key: windows-shared-x64-assets-{{ .Revision }}
-          paths: ~/docker/windows-shared-x64.tar
+      - build_dockcross_image:
+          image_name: windows-shared-x64
   windows-shared-x64-posix:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         no_output_timeout: 1.5h
-         name: windows-shared-x64-posix build
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make windows-shared-x64-posix
-           docker save --output~/docker/windows-shared-x64-posix.tar dockcross/windows-shared-x64-posix:${DOCKCROSS_VERSION}
-      - run:
-         name: windows-shared-x64-posix test
-         command: |
-           make windows-shared-x64-posix.test
-      - save_cache:
-          key: windows-shared-x64-posix-assets-{{ .Revision }}
-          paths: ~/docker/windows-shared-x64-posix.tar
+      - build_dockcross_image:
+          image_name: windows-shared-x64-posix
   windows-shared-x86:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
-      - run:
-         no_output_timeout: 1.5h
-         name: windows-shared-x86 build
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make windows-shared-x86
-           docker save --output~/docker/windows-shared-x86.tar dockcross/windows-shared-x86:${DOCKCROSS_VERSION}
-      - run:
-         name: windows-shared-x86 test
-         command: |
-           make windows-shared-x86.test
-      - save_cache:
-          key: windows-shared-x86-assets-{{ .Revision }}
-          paths: ~/docker/windows-shared-x86.tar
+      - build_dockcross_image:
+          image_name: windows-shared-x86
   deploy:
     executor: dockcross
     steps:
-      - restore_cache:
-          key: base-assets-{{ .Revision }}
       - deploy_dockcross_image:
           image_name: "dockcross-base"
       # - deploy:
@@ -680,16 +344,16 @@ jobs:
       #         docker login -u $DOCKER_USER -p $DOCKER_PASS
       #         docker push ${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}
       #       fi
-      - restore_cache:
-          key: linux-x64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-x64
-          command: |
-            docker load -i ~/docker/linux-x64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
-            fi
+      # - restore_cache:
+      #     key: linux-x64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-x64
+      #     command: |
+      #       docker load -i ~/docker/linux-x64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
+      #       fi
       # - restore_cache:
       #     key: linux-x86-assets-{{ .Revision }}
       # - deploy:
@@ -807,13 +471,17 @@ workflows:
     jobs:
       - base:
           <<: *workflow-settings
-      - linux-x64:
+      - make_dockcross:
+          image: "linux-x64"
           requires:
             - base
+      # - linux-x64:
+      #     requires:
+      #       - base
       - deploy:
           requires:
             - base
-            - linux-x64
+#
 #         - android-arm:
 #             requires:
 #               - base
