@@ -828,7 +828,7 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - base
+      - base:
           <<: *workflow-settings
 #         - android-arm:
 #             requires:
