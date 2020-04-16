@@ -10,8 +10,8 @@ commands:
     description: Setup custom environment 
     steps:
       - run: |
-          echo "export DOCKCROSS_ORG=${CIRCLE_PROJECT_USERNAME}" >> $BASH_ENV
-          echo "export DOCKCROSS_VERSION=$(cat version)" >> $BASH_ENV
+          echo "export DOCKCROSS_ORG=$(cat dockcross_org)" >> $BASH_ENV
+          echo "export DOCKCROSS_VERSION=$(cat dockcross_version)" >> $BASH_ENV
   build_dockcross_image:
     description: Build a dockcross container image
     parameters:
@@ -24,7 +24,15 @@ commands:
          command: |
            docker load -i ~/docker/dockcross-base.tar
            make << parameters.image_name >>
-           docker save --output~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
+           docker save --output ~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
+      - run:
+         name: << parameters.image_name >> test
+         command: |
+           make << parameters.image_name >>.test
+      - save_cache:
+          key: << parameters.image_name >>-assets-{{ .Revision }}
+          paths: ~/docker/<< parameters.image_name >>.tar
+
   deploy_dockcross_image:
     description: Deploy a dockcross container image
     parameters:
@@ -311,13 +319,13 @@ jobs:
       #      docker load -i ~/docker/dockcross-base.tar
       #      make linux-x64
       #      docker save --output ~/docker/linux-x64.tar ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
-      - run:
-         name: linux-x64 test
-         command: |
-           make linux-x64.test
-      - save_cache:
-          key: linux-x64-assets-{{ .Revision }}
-          paths: ~/docker/linux-x64.tar
+      # - run:
+      #    name: linux-x64 test
+      #    command: |
+      #      make linux-x64.test
+      # - save_cache:
+      #     key: linux-x64-assets-{{ .Revision }}
+      #     paths: ~/docker/linux-x64.tar
   linux-x86:
     executor: dockcross
     steps:
