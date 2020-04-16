@@ -799,6 +799,13 @@ workflows:
     jobs:
       - base:
           <<: *workflow-settings
+      - linux-x64:
+          requires:
+            - base
+      - deploy:
+          requires:
+            - base
+            - linux-x64
 #         - android-arm:
 #             requires:
 #               - base
@@ -833,9 +840,9 @@ workflows:
 #         - linux-ppc64le:
 #             requires:
 #               - base
-      - linux-x64:
-          requires:
-            - base
+      # - linux-x64:
+      #     requires:
+      #       - base
 #         - linux-x86:
 #             requires:
 #               - base
@@ -872,9 +879,9 @@ workflows:
 #         - windows-shared-x86:
 #             requires:
 #               - base
-        - deploy:
-            requires:
-              - base
+        # - deploy:
+        #     requires:
+        #       - base
 #               - android-arm
 #               - android-arm64
 #               - web-wasm
@@ -886,7 +893,7 @@ workflows:
 #               #- linux-mipsel
 #               - linux-s390x
 #               - linux-ppc64le
-              - linux-x64
+              # - linux-x64
 #               - linux-x86
 #               - manylinux1-x64
 #               - manylinux1-x86
