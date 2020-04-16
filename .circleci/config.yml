@@ -303,7 +303,7 @@ jobs:
           key: base-assets-{{ .Revision }}
       - setup_environment
       - build_dockcross_image:
-          name: linux-x64
+          image_name: linux-x64
       # - run:
       #    name: linux-x64 build
       #    no_output_timeout: 1.5h
@@ -552,7 +552,7 @@ jobs:
       - restore_cache:
           key: base-assets-{{ .Revision }}
       - deploy_dockcross_image:
-          name: "dockcross-base"
+          image_name: "dockcross-base"
       # - deploy:
       #     name: Deploy base
       #     command: |
