@@ -1,13 +1,12 @@
 build-settings: &build-settings
   machine: true
   working_directory: ~/dockcross
+  branches:
+    only:
+      - develop
 
 version: 2
 jobs:
-  build:
-    branches:
-      only:
-        - develop
   base:
     <<: *build-settings
     steps:
