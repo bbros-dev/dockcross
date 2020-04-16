@@ -15,27 +15,27 @@ commands:
   build_dockcross_image:
     description: Build a dockcross container image
     parameters:
-      name:
+      image_name:
         type: string
     steps:
       - run:
-         name: << parameters.name >> build
+         name: << parameters.image_name >> build
          no_output_timeout: 1.5h
          command: |
            docker load -i ~/docker/dockcross-base.tar
-           make << parameters.name >>
-           docker save --output~/docker/<< parameters.name >>.tar ${DOCKCROSS_ORG}/<< parameters.name >>:${DOCKCROSS_VERSION}
+           make << parameters.image_name >>
+           docker save --output~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
   deploy_dockcross_image:
     description: Deploy a dockcross container image
     parameters:
-      name:
+      image_name:
         type: string
     steps:
       - run: |
-          docker load -i ~/docker/<< parameters.name >>.tar
+          docker load -i ~/docker/<< parameters.image_name >>.tar
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push ${DOCKCROSS_ORG}/<< parameters.name >>:${DOCKCROSS_VERSION}
+            docker push ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
           fi
 
 references:
