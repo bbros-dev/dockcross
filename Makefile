@@ -13,7 +13,7 @@ DOCKCROSS_ORG ?= dockcross
 # Exit if we don't have a DOCKCROSS_VERSION.
 # If the shell has `export DOCKCROSS_VERSION=m.n.o` we'll get that.
 ifndef DOCKCROSS_VERSION
-	$(error DOCKCROSS_VERSION is not set)
+$(error DOCKCROSS_VERSION is not set)
 endif
 
 # Check we have a semantic version, abend. Make doesn't have regular expressions
@@ -21,9 +21,9 @@ endif
 SEMVER := $(shell [[ $(DOCKCROSS_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo matched)
 
 ifdef SEMVER
-	@echo Semantic version number given: $(DOCKCROSS_VERSION)
+@echo Semantic version number given: $(DOCKCROSS_VERSION)
 else
-	$(error DOCKCROSS_VERSION is not semantic version number)
+$(error DOCKCROSS_VERSION is not semantic version number)
 endif
 
 # Tag images with semantic version number.
@@ -94,7 +94,8 @@ web-wasm: web-wasm/Dockerfile
 	cp -r test web-wasm/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/web-wasm:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/web-wasm \
-		--build-arg VERSION=$(TAG) \
+		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
+    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -115,7 +116,8 @@ manylinux2014-x64: manylinux2014-x64/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux2014-x64:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux2014-x64 \
-		--build-arg VERSION=$(TAG) \
+		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
+    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -134,7 +136,8 @@ manylinux2010-x64: manylinux2010-x64/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux2010-x64:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux2010-x64 \
-		--build-arg VERSION=$(TAG) \
+		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
+    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -153,7 +156,7 @@ manylinux2010-x86: manylinux2010-x86/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux2010-x86:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux2010-x86 \
-		--build-arg VERSION=$(TAG) \
+		--build-arg--build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -172,7 +175,8 @@ manylinux1-x64: manylinux1-x64/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux1-x64:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux1-x64 \
-		--build-arg VERSION=$(TAG) \
+		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
+    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -191,7 +195,8 @@ manylinux1-x86: manylinux1-x86/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux1-x86:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux1-x86 \
-		--build-arg VERSION=$(TAG) \
+		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
+    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -231,7 +236,8 @@ $(STANDARD_IMAGES): %: %/Dockerfile base
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/$@:$(TAG) \
 		--build-arg IMAGE=$(DOCKCROSS_ORG)/$@ \
-		--build-arg VERSION=$(TAG) \
+		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
+    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
