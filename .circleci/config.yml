@@ -1,4 +1,5 @@
 version: 2.1
+
 executors:
   dockcross:
     machine: true
@@ -11,6 +12,31 @@ commands:
       - run: |
           echo "export DOCKCROSS_ORG=${CIRCLE_PROJECT_USERNAME}" >> $BASH_ENV
           echo "export DOCKCROSS_VERSION=$(cat version)" >> $BASH_ENV
+  build_dockcross_image:
+    description: Build a dockcross container image
+    parameters:
+      name:
+        type: string
+    steps:
+      - run:
+         name: << parameters.name >> build
+         no_output_timeout: 1.5h
+         command: |
+           docker load -i ~/docker/dockcross-base.tar
+           make << parameters.name >>
+           docker save --output~/docker/<< parameters.name >>.tar ${DOCKCROSS_ORG}/<< parameters.name >>:${DOCKCROSS_VERSION}
+  deploy_dockcross_image:
+    description: Deploy a dockcross container image
+    parameters:
+      name:
+        type: string
+    steps:
+      - run: |
+          docker load -i ~/docker/<< parameters.name >>.tar
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push ${DOCKCROSS_ORG}/<< parameters.name >>:${DOCKCROSS_VERSION}
+          fi
 
 references:
   workflow-settings: &workflow-settings
@@ -30,7 +56,7 @@ jobs:
             docker pull debian:10.3-slim
             make base
             mkdir -p ~/docker
-            docker save --output ~/docker/base.tar debian:10.3-slim ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
+            docker save --output ~/docker/dockcross-base.tar debian:10.3-slim ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
       - run:
          name: base test
          command: |
@@ -38,7 +64,7 @@ jobs:
       - save_cache:
           key: base-assets-{{ .Revision }}
           paths:
-            - ~/docker/base.tar
+            - ~/docker/dockcross-base.tar
             - ~/dockcross
   android-arm:
     executor: dockcross
@@ -50,7 +76,7 @@ jobs:
          name: android-arm build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make android-arm
            docker save --output~/docker/android-arm.tar ${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}
       - run:
@@ -69,7 +95,7 @@ jobs:
          name: android-arm64 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make android-arm64
            docker save --output~/docker/android-arm64.tar dockcross/android-arm64:${DOCKCROSS_VERSION}
       - run:
@@ -88,7 +114,7 @@ jobs:
          name: web-wasm build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make web-wasm
            docker save --output~/docker/web-wasm.tar dockcross/web-wasm:${DOCKCROSS_VERSION}
       - run:
@@ -107,7 +133,7 @@ jobs:
           name: linux-arm64 build
           no_output_timeout: 1.5h
           command: |
-            docker load -i ~/docker/base.tar
+            docker load -i ~/docker/dockcross-base.tar
             make linux-arm64
             docker save --output~/docker/linux-arm64.tar dockcross/linux-arm64:${DOCKCROSS_VERSION}
       - run:
@@ -126,7 +152,7 @@ jobs:
          name: linux-armv5 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-armv5
            docker save --output~/docker/linux-armv5.tar dockcross/linux-armv5:${DOCKCROSS_VERSION}
       - run:
@@ -145,7 +171,7 @@ jobs:
         name: linux-armv5-musl build
         no_output_timeout: 1.5h
         command: |
-          docker load -i ~/docker/base.tar
+          docker load -i ~/docker/dockcross-base.tar
           make linux-armv5-musl
           docker save --output~/docker/linux-armv5-musl.tar dockcross/linux-armv5-musl:${DOCKCROSS_VERSION}
     - run:
@@ -164,7 +190,7 @@ jobs:
          name: linux-armv6 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-armv6
            docker save --output~/docker/linux-armv6.tar dockcross/linux-armv6:${DOCKCROSS_VERSION}
       - run:
@@ -183,7 +209,7 @@ jobs:
          name: linux-armv7 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-armv7
            docker save --output~/docker/linux-armv7.tar dockcross/linux-armv7:${DOCKCROSS_VERSION}
       - run:
@@ -202,7 +228,7 @@ jobs:
          name: linux-armv7a build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-armv7a
            docker save --output~/docker/linux-armv7a.tar dockcross/linux-armv7a:${DOCKCROSS_VERSION}
       - run:
@@ -222,7 +248,7 @@ jobs:
          #name: linux-mipsel build
          #no_output_timeout: 1.5h
          #command: |
-           #docker load -i ~/docker/base.tar
+           #docker load -i ~/docker/dockcross-base.tar
            #make linux-mipsel
            #docker save --output~/docker/linux-mipsel.tar dockcross/linux-mipsel:${DOCKCROSS_VERSION}
       #- run:
@@ -241,7 +267,7 @@ jobs:
          name: linux-s390x build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-s390x
            docker save --output~/docker/linux-s390x.tar dockcross/linux-s390x:${DOCKCROSS_VERSION}
       - run:
@@ -260,7 +286,7 @@ jobs:
          name: linux-ppc64le build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-ppc64le
            docker save --output~/docker/linux-ppc64le.tar dockcross/linux-ppc64le:${DOCKCROSS_VERSION}
       - run:
@@ -276,13 +302,15 @@ jobs:
       - restore_cache:
           key: base-assets-{{ .Revision }}
       - setup_environment
-      - run:
-         name: linux-x64 build
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/base.tar
-           make linux-x64
-           docker save --output~/docker/linux-x64.tar ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
+      - build_dockcross_image:
+          name: linux-x64
+      # - run:
+      #    name: linux-x64 build
+      #    no_output_timeout: 1.5h
+      #    command: |
+      #      docker load -i ~/docker/dockcross-base.tar
+      #      make linux-x64
+      #      docker save --output ~/docker/linux-x64.tar ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
       - run:
          name: linux-x64 test
          command: |
@@ -299,7 +327,7 @@ jobs:
          name: linux-x86 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make linux-x86
            docker save --output~/docker/linux-x86.tar dockcross/linux-x86:${DOCKCROSS_VERSION}
       - run:
@@ -318,7 +346,7 @@ jobs:
          name: manylinux1-x64 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make manylinux1-x64
            docker save --output~/docker/manylinux1-x64.tar dockcross/manylinux1-x64:${DOCKCROSS_VERSION}
       - run:
@@ -337,7 +365,7 @@ jobs:
          name: manylinux1-x86 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make manylinux1-x86
            docker save --output~/docker/manylinux1-x86.tar dockcross/manylinux1-x86:${DOCKCROSS_VERSION}
       - run:
@@ -356,7 +384,7 @@ jobs:
          name: manylinux2010-x64 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make manylinux2010-x64
            docker save --output~/docker/manylinux2010-x64.tar dockcross/manylinux2010-x64:${DOCKCROSS_VERSION}
       - run:
@@ -375,7 +403,7 @@ jobs:
          name: manylinux2010-x86 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make manylinux2010-x86
            docker save --output~/docker/manylinux2010-x86.tar dockcross/manylinux2010-x86:${DOCKCROSS_VERSION}
       - run:
@@ -394,7 +422,7 @@ jobs:
          name: manylinux2014-x64 build
          no_output_timeout: 1.5h
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make manylinux2014-x64
            docker save --output~/docker/manylinux2014-x64.tar dockcross/manylinux2014-x64:${DOCKCROSS_VERSION}
       - run:
@@ -413,7 +441,7 @@ jobs:
          no_output_timeout: 1.5h
          name: windows-static-x64 build
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make windows-static-x64
            docker save --output~/docker/windows-static-x64.tar dockcross/windows-static-x64:${DOCKCROSS_VERSION}
       - run:
@@ -432,7 +460,7 @@ jobs:
          no_output_timeout: 1.5h
          name: windows-static-x64-posix build
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make windows-static-x64-posix
            docker save --output~/docker/windows-static-x64-posix.tar dockcross/windows-static-x64-posix:${DOCKCROSS_VERSION}
       - run:
@@ -451,7 +479,7 @@ jobs:
          no_output_timeout: 1.5h
          name: windows-static-x86 build
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make windows-static-x86
            docker save --output~/docker/windows-static-x86.tar dockcross/windows-static-x86:${DOCKCROSS_VERSION}
       - run:
@@ -470,7 +498,7 @@ jobs:
          no_output_timeout: 1.5h
          name: windows-shared-x64 build
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make windows-shared-x64
            docker save --output~/docker/windows-shared-x64.tar dockcross/windows-shared-x64:${DOCKCROSS_VERSION}
       - run:
@@ -489,7 +517,7 @@ jobs:
          no_output_timeout: 1.5h
          name: windows-shared-x64-posix build
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make windows-shared-x64-posix
            docker save --output~/docker/windows-shared-x64-posix.tar dockcross/windows-shared-x64-posix:${DOCKCROSS_VERSION}
       - run:
@@ -508,7 +536,7 @@ jobs:
          no_output_timeout: 1.5h
          name: windows-shared-x86 build
          command: |
-           docker load -i ~/docker/base.tar
+           docker load -i ~/docker/dockcross-base.tar
            make windows-shared-x86
            docker save --output~/docker/windows-shared-x86.tar dockcross/windows-shared-x86:${DOCKCROSS_VERSION}
       - run:
@@ -523,125 +551,127 @@ jobs:
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy base
-          command: |
-            docker load -i ~/docker/base.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: android-arm-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy android-arm
-          command: |
-            docker load -i ~/docker/android-arm.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: android-arm64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy android-arm64
-          command: |
-            docker load -i ~/docker/android-arm64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: web-wasm-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy web-wasm
-          command: |
-            docker load -i ~/docker/web-wasm.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: linux-arm64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-arm64
-          command: |
-            docker load -i ~/docker/linux-arm64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: linux-armv5-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-armv5
-          command: |
-            docker load -i ~/docker/linux-armv5.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: linux-armv6-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-armv6
-          command: |
-            docker load -i ~/docker/linux-armv6.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: linux-armv7-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-armv7
-          command: |
-            docker load -i ~/docker/linux-armv7.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: linux-armv7a-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-armv7a
-          command: |
-            docker load -i ~/docker/linux-armv7a.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}
-            fi
-      # Image build currently broken. See #209
-      #- restore_cache:
-          #key: linux-mipsel-assets-{{ .Revision }}
-      #- deploy:
-          #name: Deploy linux-mipsel
-          #command: |
-            #docker load -i ~/docker/linux-mipsel.tar
-            #if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              #docker login -u $DOCKER_USER -p $DOCKER_PASS
-              #docker push ${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}
-            #fi
-      - restore_cache:
-          key: linux-s390x-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-s390x
-          command: |
-            docker load -i ~/docker/linux-s390x.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: linux-ppc64le-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-ppc64le
-          command: |
-            docker load -i ~/docker/linux-ppc64le.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}
-            fi
+      - deploy_dockcross_image:
+          name: "dockcross-base"
+      # - deploy:
+      #     name: Deploy base
+      #     command: |
+      #       docker load -i ~/docker/dockcross-base.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: android-arm-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy android-arm
+      #     command: |
+      #       docker load -i ~/docker/android-arm.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/android-arm:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: android-arm64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy android-arm64
+      #     command: |
+      #       docker load -i ~/docker/android-arm64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/android-arm64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: web-wasm-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy web-wasm
+      #     command: |
+      #       docker load -i ~/docker/web-wasm.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/web-wasm:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: linux-arm64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-arm64
+      #     command: |
+      #       docker load -i ~/docker/linux-arm64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-arm64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: linux-armv5-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-armv5
+      #     command: |
+      #       docker load -i ~/docker/linux-armv5.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-armv5:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: linux-armv6-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-armv6
+      #     command: |
+      #       docker load -i ~/docker/linux-armv6.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-armv6:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: linux-armv7-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-armv7
+      #     command: |
+      #       docker load -i ~/docker/linux-armv7.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-armv7:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: linux-armv7a-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-armv7a
+      #     command: |
+      #       docker load -i ~/docker/linux-armv7a.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-armv7a:${DOCKCROSS_VERSION}
+      #       fi
+      # # Image build currently broken. See #209
+      # #- restore_cache:
+      #     #key: linux-mipsel-assets-{{ .Revision }}
+      # #- deploy:
+      #     #name: Deploy linux-mipsel
+      #     #command: |
+      #       #docker load -i ~/docker/linux-mipsel.tar
+      #       #if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         #docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         #docker push ${DOCKCROSS_ORG}/linux-mipsel:${DOCKCROSS_VERSION}
+      #       #fi
+      # - restore_cache:
+      #     key: linux-s390x-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-s390x
+      #     command: |
+      #       docker load -i ~/docker/linux-s390x.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-s390x:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: linux-ppc64le-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-ppc64le
+      #     command: |
+      #       docker load -i ~/docker/linux-ppc64le.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-ppc64le:${DOCKCROSS_VERSION}
+      #       fi
       - restore_cache:
           key: linux-x64-assets-{{ .Revision }}
       - deploy:
@@ -652,116 +682,116 @@ jobs:
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker push ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
             fi
-      - restore_cache:
-          key: linux-x86-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy linux-x86
-          command: |
-            docker load -i ~/docker/linux-x86.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: manylinux1-x64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy manylinux1-x64
-          command: |
-            docker load -i ~/docker/manylinux1-x64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: manylinux1-x86-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy manylinux1-x86
-          command: |
-            docker load -i ~/docker/manylinux1-x86.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: manylinux2010-x64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy manylinux2010-x64
-          command: |
-            docker load -i ~/docker/manylinux2010-x64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: manylinux2014-x64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy manylinux2014-x64
-          command: |
-            docker load -i ~/docker/manylinux2014-x64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: windows-static-x64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy windows-static-x64
-          command: |
-            docker load -i ~/docker/windows-static-x64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: windows-static-x64-posix-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy windows-static-x64-posix
-          command: |
-            docker load -i ~/docker/windows-static-x64-posix.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: windows-static-x86-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy windows-static-x86
-          command: |
-            docker load -i ~/docker/windows-static-x86.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: windows-shared-x64-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy windows-shared-x64
-          command: |
-            docker load -i ~/docker/windows-shared-x64.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: windows-shared-x64-posix-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy windows-shared-x64-posix
-          command: |
-            docker load -i ~/docker/windows-shared-x64-posix.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}
-            fi
-      - restore_cache:
-          key: windows-shared-x86-assets-{{ .Revision }}
-      - deploy:
-          name: Deploy windows-shared-x86
-          command: |
-            docker load -i ~/docker/windows-shared-x86.tar
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push ${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}
-            fi
+      # - restore_cache:
+      #     key: linux-x86-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy linux-x86
+      #     command: |
+      #       docker load -i ~/docker/linux-x86.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/linux-x86:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: manylinux1-x64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy manylinux1-x64
+      #     command: |
+      #       docker load -i ~/docker/manylinux1-x64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/manylinux1-x64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: manylinux1-x86-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy manylinux1-x86
+      #     command: |
+      #       docker load -i ~/docker/manylinux1-x86.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/manylinux1-x86:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: manylinux2010-x64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy manylinux2010-x64
+      #     command: |
+      #       docker load -i ~/docker/manylinux2010-x64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/manylinux2010-x64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: manylinux2014-x64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy manylinux2014-x64
+      #     command: |
+      #       docker load -i ~/docker/manylinux2014-x64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/manylinux2014-x64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: windows-static-x64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy windows-static-x64
+      #     command: |
+      #       docker load -i ~/docker/windows-static-x64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/windows-static-x64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: windows-static-x64-posix-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy windows-static-x64-posix
+      #     command: |
+      #       docker load -i ~/docker/windows-static-x64-posix.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/windows-static-x64-posix:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: windows-static-x86-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy windows-static-x86
+      #     command: |
+      #       docker load -i ~/docker/windows-static-x86.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/windows-static-x86:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: windows-shared-x64-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy windows-shared-x64
+      #     command: |
+      #       docker load -i ~/docker/windows-shared-x64.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/windows-shared-x64:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: windows-shared-x64-posix-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy windows-shared-x64-posix
+      #     command: |
+      #       docker load -i ~/docker/windows-shared-x64-posix.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/windows-shared-x64-posix:${DOCKCROSS_VERSION}
+      #       fi
+      # - restore_cache:
+      #     key: windows-shared-x86-assets-{{ .Revision }}
+      # - deploy:
+      #     name: Deploy windows-shared-x86
+      #     command: |
+      #       docker load -i ~/docker/windows-shared-x86.tar
+      #       if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #         docker login -u $DOCKER_USER -p $DOCKER_PASS
+      #         docker push ${DOCKCROSS_ORG}/windows-shared-x86:${DOCKCROSS_VERSION}
+      #       fi
 
 workflows:
   version: 2
@@ -842,9 +872,9 @@ workflows:
 #         - windows-shared-x86:
 #             requires:
 #               - base
-#         - deploy:
-#             requires:
-#               - base
+        - deploy:
+            requires:
+              - base
 #               - android-arm
 #               - android-arm64
 #               - web-wasm
@@ -856,7 +886,7 @@ workflows:
 #               #- linux-mipsel
 #               - linux-s390x
 #               - linux-ppc64le
-#               - linux-x64
+              - linux-x64
 #               - linux-x86
 #               - manylinux1-x64
 #               - manylinux1-x86
