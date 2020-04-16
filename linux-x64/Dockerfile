@@ -1,4 +1,14 @@
-FROM dockcross/base:latest
+# NOTE: Arguments are reset to empty after the FROM statement.
+#       Unless they are not.
+#       This funkyness is from Docker world: 
+#       https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+#       https://docs.docker.com/engine/reference/builder/#scope
+ARG DOCKCROSS_ORG=dockcross
+ARG DOCKCROSS_VERSION=latest
+FROM ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
+ARG DOCKCROSS_ORG
+ARG DOCKCROSS_VERSION
+
 MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
 
 RUN apt-get update && \
@@ -22,14 +32,20 @@ ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
-ARG IMAGE=dockcross/linux-x64
-ARG VERSION=latest
+ARG DOCKCROSS_ORG=dockcross
+ARG IMAGE=${DOCKCROSS_ORG}/linux-x64
+ARG DOCKCROSS_VERSION
 ARG VCS_REF
 ARG VCS_URL
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.version=$VERSION \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
+LABEL org.opencontainers.image.created=$BUILD_DATE \
+      org.opencontainers.image.description=$IMAGE \
+      org.opencontainers.image.documentation=$DOCKCROSS_URL \
+      org.opencontainers.image.licenses="SPDX-License-Identifier: MIT" \
+      org.opencontainers.image.ref.name=$IMAGE \
+      org.opencontainers.image.revision=$VCS_REF \
+      org.opencontainers.image.source=$VCS_URL \
+      org.opencontainers.image.title=$IMAGE \
+      org.opencontainers.image.url=$DOCKCROSS_URL \
+      org.opencontainers.image.vendor=$DOCKCROSS_ORG \
+      org.opencontainers.image.version=$DOCKCROSS_VERSION
 ENV DEFAULT_DOCKCROSS_IMAGE ${IMAGE}:${VERSION}

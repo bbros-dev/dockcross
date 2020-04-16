@@ -96,13 +96,12 @@ make source code available in the container.
 Cross compilers
 ---------------
 
-.. |base-images| image:: https://images.microbadger.com/badges/image/dockcross/base.svg
-  :target: https://microbadger.com/images/dockcross/base
+.. |base-images| image:: https://images.microbadger.com/badges/image/dockcross/dockcross-base.svg
+  :target: https://microbadger.com/images/dockcross/dockcross-base
 
 dockcross/base
   |base-images| Base image for other toolchain images. From Debian 10 (Buster)
    with GCC, make, autotools, CMake, Ninja, Git, and Python.
-
 
 .. |android-arm-images| image:: https://images.microbadger.com/badges/image/dockcross/android-arm.svg
   :target: https://microbadger.com/images/dockcross/android-arm
@@ -418,7 +417,7 @@ In order to extend Dockcross images with your own commands, one must:
 
 An example Dockerfile would be::
 
-  FROM dockcross/linux-armv7
+  FROM dockcross/linux-armv7:2.0.0
 
   ENV DEFAULT_DOCKCROSS_IMAGE my_cool_image
   RUN apt-get install nano
