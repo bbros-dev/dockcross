@@ -1,18 +1,28 @@
-version: 2.0
-
-references:
-  build-settings: &build-settings
+version: 2.1
+executors:
+  dockcross:
     machine: true
     working_directory: ~/dockcross
 
+commands:
+  setup_environment:
+    description: Setup custom environment 
+    steps:
+      - run: |
+          echo "export DOCKCROSS_ORG=${CIRCLE_PROJECT_USERNAME}" >> $BASH_ENV
+          echo "export DOCKCROSS_VERSION=$(cat version)" >> $BASH_ENV
+
+references:
   workflow-settings: &workflow-settings
     filters:
       branches:
         only: develop
+    steps:
+      - setup_environment:
 
 jobs:
   base:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - checkout
       - run:
@@ -37,7 +47,7 @@ jobs:
             - ~/docker/base.tar
             - ~/dockcross
   android-arm:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -56,7 +66,7 @@ jobs:
           key: android-arm-assets-{{ .Revision }}
           paths: ~/docker/android-arm.tar
   android-arm64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -76,7 +86,7 @@ jobs:
           key: android-arm64-assets-{{ .Revision }}
           paths: ~/docker/android-arm64.tar
   web-wasm:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -96,7 +106,7 @@ jobs:
           key: web-wasm-assets-{{ .Revision }}
           paths: ~/docker/web-wasm.tar
   linux-arm64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -116,7 +126,7 @@ jobs:
           key: linux-arm64-assets-{{ .Revision }}
           paths: ~/docker/linux-arm64.tar
   linux-armv5:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -136,7 +146,7 @@ jobs:
           key: linux-armv5-assets-{{ .Revision }}
           paths: ~/docker/linux-armv5.tar
   linux-armv5-musl:
-    <<: *build-settings
+    executor: dockcross
     steps:
     - restore_cache:
         key: base-assets-{{ .Revision }}
@@ -156,7 +166,7 @@ jobs:
         key: linux-armv5-musl-assets-{{ .Revision }}
         paths: ~/docker/linux-armv5-musl.tar
   linux-armv6:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -176,7 +186,7 @@ jobs:
           key: linux-armv6-assets-{{ .Revision }}
           paths: ~/docker/linux-armv6.tar
   linux-armv7:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -196,7 +206,7 @@ jobs:
           key: linux-armv7-assets-{{ .Revision }}
           paths: ~/docker/linux-armv7.tar
   linux-armv7a:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -216,7 +226,7 @@ jobs:
           key: linux-armv7a-assets-{{ .Revision }}
           paths: ~/docker/linux-armv7a.tar
   linux-mipsel:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -237,7 +247,7 @@ jobs:
           key: linux-mipsel-assets-{{ .Revision }}
           paths: ~/docker/linux-mipsel.tar
   linux-s390x:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -257,7 +267,7 @@ jobs:
           key: linux-s390x-assets-{{ .Revision }}
           paths: ~/docker/linux-s390x.tar
   linux-ppc64le:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -277,7 +287,7 @@ jobs:
           key: linux-ppc64le-assets-{{ .Revision }}
           paths: ~/docker/linux-ppc64le.tar
   linux-x64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -296,7 +306,7 @@ jobs:
           key: linux-x64-assets-{{ .Revision }}
           paths: ~/docker/linux-x64.tar
   linux-x86:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -316,7 +326,7 @@ jobs:
           key: linux-x86-assets-{{ .Revision }}
           paths: ~/docker/linux-x86.tar
   manylinux1-x64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -336,7 +346,7 @@ jobs:
           key: manylinux1-x64-assets-{{ .Revision }}
           paths: ~/docker/manylinux1-x64.tar
   manylinux1-x86:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -356,7 +366,7 @@ jobs:
           key: manylinux1-x86-assets-{{ .Revision }}
           paths: ~/docker/manylinux1-x86.tar
   manylinux2010-x64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -376,7 +386,7 @@ jobs:
           key: manylinux2010-x64-assets-{{ .Revision }}
           paths: ~/docker/manylinux2010-x64.tar
   manylinux2010-x86:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -396,7 +406,7 @@ jobs:
           key: manylinux2010-x86-assets-{{ .Revision }}
           paths: ~/docker/manylinux2010-x86.tar
   manylinux2014-x64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -416,7 +426,7 @@ jobs:
           key: manylinux2014-x64-assets-{{ .Revision }}
           paths: ~/docker/manylinux2014-x64.tar
   windows-static-x64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -436,7 +446,7 @@ jobs:
           key: windows-static-x64-assets-{{ .Revision }}
           paths: ~/docker/windows-static-x64.tar
   windows-static-x64-posix:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -456,7 +466,7 @@ jobs:
           key: windows-static-x64-posix-assets-{{ .Revision }}
           paths: ~/docker/windows-static-x64-posix.tar
   windows-static-x86:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -476,7 +486,7 @@ jobs:
           key: windows-static-x86-assets-{{ .Revision }}
           paths: ~/docker/windows-static-x86.tar
   windows-shared-x64:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -496,7 +506,7 @@ jobs:
           key: windows-shared-x64-assets-{{ .Revision }}
           paths: ~/docker/windows-shared-x64.tar
   windows-shared-x64-posix:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -516,7 +526,7 @@ jobs:
           key: windows-shared-x64-posix-assets-{{ .Revision }}
           paths: ~/docker/windows-shared-x64-posix.tar
   windows-shared-x86:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
@@ -536,7 +546,7 @@ jobs:
           key: windows-shared-x86-assets-{{ .Revision }}
           paths: ~/docker/windows-shared-x86.tar
   deploy:
-    <<: *build-settings
+    executor: dockcross
     steps:
       - restore_cache:
           key: base-assets-{{ .Revision }}
