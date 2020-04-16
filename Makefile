@@ -105,7 +105,7 @@ web-wasm: web-wasm/Dockerfile
 
 web-wasm.test: web-wasm
 	cp -r test web-wasm/
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/web-wasm > $(BIN)/dockcross-web-wasm && chmod +x $(BIN)/dockcross-web-wasm
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/web-wasm:$(TAG) > $(BIN)/dockcross-web-wasm && chmod +x $(BIN)/dockcross-web-wasm
 	$(BIN)/dockcross-web-wasm python test/run.py --exe-suffix ".js"
 	rm -rf web-wasm/test
 
@@ -125,7 +125,7 @@ manylinux2014-x64: manylinux2014-x64/Dockerfile
 	rm -rf $@/imagefiles
 
 manylinux2014-x64.test: manylinux2014-x64
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2014-x64 > $(BIN)/dockcross-manylinux2014-x64 && chmod +x $(BIN)/dockcross-manylinux2014-x64
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2014-x64:$(TAG) > $(BIN)/dockcross-manylinux2014-x64 && chmod +x $(BIN)/dockcross-manylinux2014-x64
 	$(BIN)/dockcross-manylinux2014-x64 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
@@ -145,7 +145,7 @@ manylinux2010-x64: manylinux2010-x64/Dockerfile
 	rm -rf $@/imagefiles
 
 manylinux2010-x64.test: manylinux2010-x64
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2010-x64 > $(BIN)/dockcross-manylinux2010-x64 && chmod +x $(BIN)/dockcross-manylinux2010-x64
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2010-x64:$(TAG) > $(BIN)/dockcross-manylinux2010-x64 && chmod +x $(BIN)/dockcross-manylinux2010-x64
 	$(BIN)/dockcross-manylinux2010-x64 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
@@ -164,7 +164,7 @@ manylinux2010-x86: manylinux2010-x86/Dockerfile
 	rm -rf $@/imagefiles
 
 manylinux2010-x86.test: manylinux2010-x86
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2010-x86 > $(BIN)/dockcross-manylinux2010-x86 && chmod +x $(BIN)/dockcross-manylinux2010-x86
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2010-x86:$(TAG) > $(BIN)/dockcross-manylinux2010-x86 && chmod +x $(BIN)/dockcross-manylinux2010-x86
 	$(BIN)/dockcross-manylinux2010-x86 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
@@ -184,7 +184,7 @@ manylinux1-x64: manylinux1-x64/Dockerfile
 	rm -rf $@/imagefiles
 
 manylinux1-x64.test: manylinux1-x64
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux1-x64 > $(BIN)/dockcross-manylinux1-x64 && chmod +x $(BIN)/dockcross-manylinux1-x64
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux1-x64:$(TAG) > $(BIN)/dockcross-manylinux1-x64 && chmod +x $(BIN)/dockcross-manylinux1-x64
 	$(BIN)/dockcross-manylinux1-x64 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
@@ -204,7 +204,7 @@ manylinux1-x86: manylinux1-x86/Dockerfile
 	rm -rf $@/imagefiles
 
 manylinux1-x86.test: manylinux1-x86
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux1-x86 > $(BIN)/dockcross-manylinux1-x86 && chmod +x $(BIN)/dockcross-manylinux1-x86
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux1-x86:$(TAG) > $(BIN)/dockcross-manylinux1-x86 && chmod +x $(BIN)/dockcross-manylinux1-x86
 	$(BIN)/dockcross-manylinux1-x86 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
@@ -218,7 +218,7 @@ base: Dockerfile imagefiles/
 		.
 
 base.test: base
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/dockcross-base > $(BIN)/dockcross-base && chmod +x $(BIN)/dockcross-base
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/dockcross-base:$(TAG) > $(BIN)/dockcross-base && chmod +x $(BIN)/dockcross-base
 
 #
 # display
@@ -249,7 +249,7 @@ $(STANDARD_IMAGES): %: %/Dockerfile base
 #
 .SECONDEXPANSION:
 $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/$(basename $@) > $(BIN)/dockcross-$(basename $@) && chmod +x $(BIN)/dockcross-$(basename $@)
+	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/$(basename $@):$(TAG) > $(BIN)/dockcross-$(basename $@) && chmod +x $(BIN)/dockcross-$(basename $@)
 	$(BIN)/dockcross-$(basename $@) python test/run.py $($@_ARGS)
 
 #

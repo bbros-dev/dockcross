@@ -1,13 +1,15 @@
-build-settings: &build-settings
-  machine: true
-  working_directory: ~/dockcross
+version: 2.0
 
-workflow-settings: &workflow-settings
-  filters:
-    branches:
-      only: develop
+references:
+  build-settings: &build-settings
+    machine: true
+    working_directory: ~/dockcross
 
-version: 2
+  workflow-settings: &workflow-settings
+    filters:
+      branches:
+        only: develop
+
 jobs:
   base:
     <<: *build-settings
