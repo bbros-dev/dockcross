@@ -9,9 +9,11 @@ commands:
   setup_environment:
     description: Setup custom environment 
     steps:
-      - run: |
-          echo "export DOCKCROSS_ORG=$(cat dockcross_org)" >> $BASH_ENV
-          echo "export DOCKCROSS_VERSION=$(cat dockcross_version)" >> $BASH_ENV
+      - run: 
+          name: Export Dockcross Org and Version
+          command: |
+            echo "export DOCKCROSS_ORG=$(cat dockcross_org)" >> $BASH_ENV
+            echo "export DOCKCROSS_VERSION=$(cat dockcross_version)" >> $BASH_ENV
   build_test_dockcross_image:
     description: Build & test a dockcross container image
     parameters:
@@ -22,16 +24,16 @@ commands:
           key: dockcross-base-assets-{{ .Revision }}
       - setup_environment
       - run:
-         name: build << parameters.image_name >>
-         no_output_timeout: 1.5h
-         command: |
-           docker load -i ~/docker/dockcross-base.tar
-           make << parameters.image_name >>
-           docker save --output ~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
+          name: build << parameters.image_name >>
+          no_output_timeout: 1.5h
+          command: |
+            docker load -i ~/docker/dockcross-base.tar
+            make << parameters.image_name >>
+            docker save --output ~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
       - run:
          name: test << parameters.image_name >>
          command: |
-           make << parameters.image_name >>.test
+            make << parameters.image_name >>.test
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/docker/<< parameters.image_name >>.tar
@@ -48,7 +50,7 @@ commands:
       - run:
           name: deploy << parameters.image_name >>
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               docker load -i ~/docker/<< parameters.image_name >>.tar
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker push ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
@@ -94,6 +96,7 @@ jobs:
           image_name: << parameters.image >>
       - deploy_dockcross_image:
           image_name: << parameters.image >>
+
   android-arm:
     executor: dockcross
     steps:
