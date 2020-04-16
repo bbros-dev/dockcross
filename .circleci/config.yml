@@ -1,9 +1,11 @@
 build-settings: &build-settings
   machine: true
   working_directory: ~/dockcross
-  branches:
-    only:
-      - develop
+
+workflow-settings: &workflow-settings
+  filters:
+    branches:
+      only: develop
 
 version: 2
 jobs:
@@ -283,8 +285,7 @@ jobs:
          command: |
            docker load -i ~/docker/base.tar
            make linux-x64
-           tagged=$(docker images -q -f "since=${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}" --format '{{.Repository}}:{{.Tag}}' | grep linux-x64)
-           docker save -o ~/docker/linux-x64.tar dockcross/linux-x64:latest $tagged
+           docker save -o ~/docker/linux-x64.tar ${DOCKCROSS_ORG}/linux-x64:${DOCKCROSS_VERSION}
       - run:
          name: linux-x64 test
          command: |
@@ -828,6 +829,7 @@ workflows:
     build-test-deploy:
       jobs:
         - base
+          <<: *workflow-settings
 #         - android-arm:
 #             requires:
 #               - base
