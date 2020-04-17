@@ -3,37 +3,38 @@
 #       This funkyness is from Docker world: 
 #       https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 #       https://docs.docker.com/engine/reference/builder/#scope
-ARG DOCKCROSS_ORG=dockcross
-ARG DOCKCROSS_VERSION=latest
-FROM ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
-ARG DOCKCROSS_ORG
-ARG DOCKCROSS_VERSION
+ARG OCIX_ORG=dockcross
+ARG OCIX_VERSION
+FROM ${OCIX_ORG}/ocix-base:${OCIX_VERSION}
+ARG OCIX_ORG
+ARG OCIX_VERSION
 
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
+ENV CROSS_TRIPLE powerpc64el-linux-gnu
 
 COPY sources.list /etc/apt/sources.list
-RUN dpkg --add-architecture ppc64el ; apt-get update ; apt-get -y upgrade ; apt-get update ;
-
-ENV CROSS_TRIPLE powerpc64le-linux-gnu
-
-RUN apt-get install -y \
-  libbz2-dev:ppc64el \
-  libelf-dev:ppc64el \
-  libexpat1-dev:ppc64el \
-  ncurses-dev:ppc64el \
-  libssl-dev:ppc64el \
-  python-dev
+RUN dpkg --add-architecture ppc64el && \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes aptitude && \
+    aptitude update  --no-gui -f -q -y && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      crossbuild-essential-ppc64el:ppc64el \
+                      libbz2-dev:ppc64el \
+                      libelf-dev:ppc64el \
+                      libexpat1-dev:ppc64el \
+                      libglib2.0-dev:ppc64el \
+                      libpixman-1-dev:ppc64el \
+                      libssl-dev:ppc64el \
+                      ncurses-dev:ppc64el \
+                      python-dev:ppc64el \
+                      zlib1g-dev:ppc64el
 
 #include "common.crosstool"
 
-# ENV CROSS_TRIPLE powerpc64le-unknown-linux-gnu
-
 WORKDIR /usr/src
 
-RUN apt-get install -y libglib2.0-dev zlib1g-dev libpixman-1-dev && \
-  curl -L http://wiki.qemu-project.org/download/qemu-2.6.0.tar.bz2 | tar xj && \
+RUN curl -L http://wiki.qemu-project.org/download/qemu-2.6.0.tar.bz2 | tar xj && \
   cd qemu-2.6.0 && \
-  ./configure --target-list=ppc64le-linux-user --prefix=/usr && \
+  ./configure --target-list=ppc64le-linux-user,ppc64-softmmu --prefix=/usr && \
   make -j$(nproc) && \
   make install && \
   cd .. && rm -rf qemu-2.6.0
@@ -55,28 +56,29 @@ WORKDIR /work
 COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
 ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
-ENV PKG_CONFIG_PATH /usr/lib/powerpc64le-linux-gnu/pkgconfig
+ENV PKG_CONFIG_PATH /usr/lib/powerpc64el-linux-gnu/pkgconfig
 
 # Linux kernel cross compilation variables
 ENV PATH ${PATH}:${CROSS_ROOT}/bin
 ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH powerpc
 
-# Build-time metadata as defined at http://label-schema.org
+# OCI container annotations are as defined at  https://github.com/opencontainers/image-spec/blob/master/annotations.md
 ARG BUILD_DATE
-ARG IMAGE=${DOCKCROSS_ORG}/linux-ppc64le
+ARG IMAGE=${OCIX_ORG}/ocix-linux-ppc64el
 ARG VCS_REF
 ARG VCS_URL
-ARG DOCKCROSS_URL="https://github.com/${DOCKCROSS_ORG}/dockcross/blob/master/README.rst"
+ARG OCIX_URL="https://github.com/dockcross/dockcross/blob/master/README.rst"
+
 LABEL org.opencontainers.image.created=$BUILD_DATE \
       org.opencontainers.image.description=$IMAGE \
-      org.opencontainers.image.documentation=$DOCKCROSS_URL \
+      org.opencontainers.image.documentation=$OCIX_URL \
       org.opencontainers.image.licenses="SPDX-License-Identifier: MIT" \
       org.opencontainers.image.ref.name=$IMAGE \
       org.opencontainers.image.revision=$VCS_REF \
       org.opencontainers.image.source=$VCS_URL \
       org.opencontainers.image.title=$IMAGE \
-      org.opencontainers.image.url=$DOCKCROSS_URL \
-      org.opencontainers.image.vendor=$DOCKCROSS_ORG \
-      org.opencontainers.image.version=$DOCKCROSS_VERSION
-ENV DEFAULT_DOCKCROSS_IMAGE ${IMAGE}:${DOCKCROSS_VERSION}
+      org.opencontainers.image.url=$OCIX_URL \
+      org.opencontainers.image.vendor=$OCIX_ORG \
+      org.opencontainers.image.version=$OCIX_VERSION
+ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-DOCKCROSS_ORG=${DOCKCROSS_ORG:-dockcross}
-DOCKCROSS_VERSION=${DOCKCROSS_VERSION:-latet}
-DEFAULT_DOCKCROSS_IMAGE=${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}  # DO NOT MOVE THIS LINE (see entrypoint.sh)
+OCIX_ORG=${OCIX_ORG:-dockcross}
+if [[ -z "${OCIX_VERSION}" ]]; then
+    echo "You must provide an OCIX_VERSION environment variable" 1>&2
+    exit 1
+fi
+DEFAULT_OCIX_IMAGE=${OCIX_ORG}/ocix-base:${OCIX_VERSION}  # DO NOT MOVE THIS LINE (see entrypoint.sh)
 
 #------------------------------------------------------------------------------
 # Helpers
@@ -84,17 +87,15 @@ command:help() {
         fi
     else
         cat >&2 <<ENDHELP
-Usage: dockcross [options] [--] command [args]
+Usage: ocix [options] [--] command [args]
 
-By default, run the given *command* in an dockcross Docker container.
+By default, run the given *command* in an ocix container.
 
 The *options* can be one of:
 
     --args|-a           Extra args to the *${OCI_EXE} run* command
     --image|-i          Docker cross-compiler image to use
     --config|-c         Bash script to source before running this script
-
-
 Additionally, there are special update commands:
 
     update-image
@@ -156,13 +157,13 @@ done
 # 3. defaults
 
 # Source the config file if it exists
-DEFAULT_DOCKCROSS_CONFIG=~/.dockcross
-FINAL_CONFIG=${ARG_CONFIG-${DOCKCROSS_CONFIG-$DEFAULT_DOCKCROSS_CONFIG}}
+DEFAULT_OCIX_CONFIG=~/.ocix
+FINAL_CONFIG=${ARG_CONFIG-${DOCKCROSS_CONFIG-${DEFAULT_OCIX_CONFIG}}}
 
 [[ -f "$FINAL_CONFIG" ]] && source "$FINAL_CONFIG"
 
 # Set the OCI image
-FINAL_IMAGE=${ARG_IMAGE-${DOCKCROSS_IMAGE-$DEFAULT_DOCKCROSS_IMAGE}}
+FINAL_IMAGE=${ARG_IMAGE-${OCIX_IMAGE-$DEFAULT_OCIX_IMAGE}}
 
 # Handle special update command
 if [ "$special_update_command" != "" ]; then
@@ -263,10 +264,10 @@ exit $run_exit_code
 # This image is not intended to be run manually.
 #
 # To create a dockcross helper script for the
-# ${DOCKCROSS_ORG}/linux-armv7 image, run:
+# ${OCIX_ORG}/ocix-linux-armv7 image, run:
 #
-# ${OCI_EXE} run --rm dockcross/linux-armv7 > dockcross-linux-armv7
-# chmod +x dockcross-linux-armv7
+# ${OCI_EXE} run --rm ocix/linux-armv7 > ocix-linux-armv7
+# chmod +x ocix-linux-armv7
 #
 # You may then wish to move the dockcross script to your PATH.
 #

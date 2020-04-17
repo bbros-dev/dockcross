@@ -6,14 +6,15 @@ Cross compiling toolchains in OCI container images.
 .. image:: https://circleci.com/gh/dockcross/dockcross/tree/master.svg?style=svg
   :target: https://circleci.com/gh/dockcross/dockcross/tree/master
 
-
 Features
 --------
 
 * Supports `Docker <https://www.docker.com/>`_ and `Podman <https://podman.io/>`_
   container engines.
 * Supports `Open Container Initiative (OCI) <https://www.opencontainers.org/>`_
-  compatible containers and registries. 
+  compatible containers and registries.
+* Supports use cases where code and containers must be self-hosted. See
+  Self-Hosting below.
 * Pre-built and configured toolchains for cross compiling.
 * Most images also contain an emulator for the target system.
 * Clean separation of build tools, source code, and build artifacts.
@@ -73,14 +74,14 @@ Usage
 For the impatient, here's how to compile a hello world for armv7 using Docker::
 
   cd ~/src/dockcross
-  docker run --rm dockcross/linux-armv7 > ./dockcross-linux-armv7
-  chmod +x ./dockcross-linux-armv7
-  ./dockcross-linux-armv7 bash -c '$CC test/C/hello.c -o hello_arm'
+  docker run --rm ocix/linux-armv7 > ./ocix-linux-armv7
+  chmod +x ./ocix-linux-armv7
+  ./ocix-linux-armv7 bash -c '$CC test/C/hello.c -o hello_arm'
 
 Note how invoking any toolchain command (make, gcc, etc.) is just a matter of
 prepending the **dockcross** script on the commandline::
 
-  ./dockcross-linux-armv7 [command] [args...]
+  ./ocix-linux-armv7 [command] [args...]
 
 The **dockcross** script will select between the `docker` and `podman` container
 engines, then execute the given command-line inside the container,
@@ -96,8 +97,8 @@ make source code available in the container.
 Cross compilers
 ---------------
 
-.. |base-images| image:: https://images.microbadger.com/badges/image/dockcross/dockcross-base.svg
-  :target: https://microbadger.com/images/dockcross/dockcross-base
+.. |base-images| image:: https://images.microbadger.com/badges/image/dockcross/ocix-base.svg
+  :target: https://microbadger.com/images/dockcross/ocix-base
 
 dockcross/base
   |base-images| Base image for other toolchain images. From Debian 10 (Buster)
@@ -109,54 +110,40 @@ dockcross/base
 dockcross/android-arm
   |android-arm-images| The Android NDK standalone toolchain for the arm
   architecture.
-
-
 .. |android-arm64-images| image:: https://images.microbadger.com/badges/image/dockcross/android-arm64.svg
   :target: https://microbadger.com/images/dockcross/android-arm64
 
 dockcross/android-arm64
   |android-arm64-images| The Android NDK standalone toolchain for the arm64
   architecture.
-
-
 .. |linux-arm64-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-arm64.svg
   :target: https://microbadger.com/images/dockcross/linux-arm64
 
 dockcross/linux-arm64
   |linux-arm64-images| Cross compiler for the 64-bit ARM platform on Linux,
   also known as AArch64.
-
-
 .. |linux-armv5-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-armv5.svg
   :target: https://microbadger.com/images/dockcross/linux-armv5
 
 dockcross/linux-armv5
   |linux-armv5-images| Linux armv5 cross compiler toolchain for legacy devices
   like the Parrot AR Drone.
-
-
 .. |linux-armv5-musl-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-armv5-musl.svg
   :target: https://microbadger.com/images/dockcross/linux-armv5-musl
 
 dockcross/linux-armv5-musl
   |linux-armv5-musl-images| Linux armv5 cross compiler toolchain using `musl <https://www.musl-libc.org/>`_ as base "libc".
-
-
 .. |linux-armv6-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-armv6.svg
   :target: https://microbadger.com/images/dockcross/linux-armv6
 
 dockcross/linux-armv6
   |linux-armv6-images| Linux ARMv6 cross compiler toolchain for the Raspberry
   Pi, etc.
-
-
 .. |linux-armv7-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-armv7.svg
   :target: https://microbadger.com/images/dockcross/linux-armv7
 
 dockcross/linux-armv7
   |linux-armv7-images| Generic Linux armv7 cross compiler toolchain.
-
-
 .. |linux-armv7a-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-armv7a.svg
   :target: https://microbadger.com/images/dockcross/linux-armv7a
 
@@ -181,90 +168,68 @@ dockcross/linux-mips
 dockcross/linux-s390x
   |linux-s390x-images| Linux s390x cross compiler toolchain for S390X GNU systems.
 
-.. |linux-ppc64le-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-ppc64le.svg
-  :target: https://microbadger.com/images/dockcross/linux-ppc64le
+.. |linux-ppc64el-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-ppc64el.svg
+  :target: https://microbadger.com/images/dockcross/linux-ppc64el
 
-dockcross/linux-ppc64le
-  |linux-ppc64le-images| Linux PowerPC 64 little endian cross compiler
+dockcross/linux-ppc64el
+  |linux-ppc64el-images| Linux PowerPC 64 little endian cross compiler
   toolchain for the POWER8, etc.
-
-
 .. |linux-x64-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-x64.svg
   :target: https://microbadger.com/images/dockcross/linux-x64
 
 dockcross/linux-x64
   |linux-x64-images| Linux x86_64 / amd64 compiler. Since the container image is
   natively x86_64, this is not actually a cross compiler.
-
-
 .. |linux-x86-images| image:: https://images.microbadger.com/badges/image/dockcross/linux-x86.svg
   :target: https://microbadger.com/images/dockcross/linux-x86
 
 dockcross/linux-x86
   |linux-x86-images| Linux i686 cross compiler.
-
-
 .. |manylinux2014-x64-images| image:: https://images.microbadger.com/badges/image/dockcross/manylinux2014-x64.svg
   :target: https://microbadger.com/images/dockcross/manylinux2014-x64
 
 dockcross/manylinux2014-x64
   |manylinux2014-x64-images| `manylinux2014 <https://github.com/pypa/manylinux>`_ container image for building Linux x86_64 / amd64 `Python wheel packages <http://pythonwheels.com/>`_. It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8.
   Also has support for the dockcross script, and it has installations of CMake, Ninja, and `scikit-build <http://scikit-build.org>`_. For CMake, it sets `MANYLINUX2014` to "TRUE" in the toolchain.
-
-
 .. |manylinux2010-x64-images| image:: https://images.microbadger.com/badges/image/dockcross/manylinux2010-x64.svg
   :target: https://microbadger.com/images/dockcross/manylinux2010-x64
 
 dockcross/manylinux2010-x64
   |manylinux2010-x64-images| `manylinux2010 <https://github.com/pypa/manylinux>`_ container image for building Linux x86_64 / amd64 `Python wheel packages <http://pythonwheels.com/>`_. It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8.
   Also has support for the dockcross script, and it has installations of CMake, Ninja, and `scikit-build <http://scikit-build.org>`_. For CMake, it sets `MANYLINUX2010` to "TRUE" in the toolchain.
-
-
 .. |manylinux2010-x86-images| image:: https://images.microbadger.com/badges/image/dockcross/manylinux2010-x86.svg
   :target: https://microbadger.com/images/dockcross/manylinux2010-x86
 
 dockcross/manylinux2010-x86
   |manylinux2010-x86-images| `manylinux2010 <https://github.com/pypa/manylinux>`_ container image for building Linux i686 `Python wheel packages <http://pythonwheels.com/>`_. It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8.
   Also has support for the dockcross script, and it has installations of CMake, Ninja, and `scikit-build <http://scikit-build.org>`_. For CMake, it sets `MANYLINUX2010` to "TRUE" in the toolchain.
-
-
 .. |manylinux1-x64-images| image:: https://images.microbadger.com/badges/image/dockcross/manylinux1-x64.svg
   :target: https://microbadger.com/images/dockcross/manylinux1-x64
 
 dockcross/manylinux1-x64
   |manylinux1-x64-images| `manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_ container image for building Linux x86_64 / amd64 `Python wheel packages <http://pythonwheels.com/>`_. It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8.
   Also has support for the dockcross script, and it has installations of CMake, Ninja, and `scikit-build <http://scikit-build.org>`_. For CMake, it sets `MANYLINUX1` to "TRUE" in the toolchain.
-
-
 .. |manylinux1-x86-images| image:: https://images.microbadger.com/badges/image/dockcross/manylinux1-x86.svg
   :target: https://microbadger.com/images/dockcross/manylinux1-x86
 
 dockcross/manylinux1-x86
   |manylinux1-x86-images| `manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_ container image for building Linux i686 `Python wheel packages <http://pythonwheels.com/>`_. It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8.
   Also has support for the dockcross script, and it has installations of CMake, Ninja, and `scikit-build <http://scikit-build.org>`_. For CMake, it sets `MANYLINUX1` to "TRUE" in the toolchain.
-
-
 .. |web-wasm-images| image:: https://images.microbadger.com/badges/image/dockcross/web-wasm.svg
   :target: https://microbadger.com/images/dockcross/web-wasm
 
 dockcross/web-wasm
   |web-wasm-images| The Emscripten WebAssembly/asm.js/JavaScript cross compiler.
-
-
 .. |windows-static-x64-images| image:: https://images.microbadger.com/badges/image/dockcross/windows-static-x64.svg
   :target: https://microbadger.com/images/dockcross/windows-static-x64
 
 dockcross/windows-static-x64
   |windows-static-x64-images| 64-bit Windows cross-compiler based on `MXE/MinGW-w64`_ with win32 threads and static linking.
-
-
 .. |windows-static-x64-posix-images| image:: https://images.microbadger.com/badges/image/dockcross/windows-static-x64-posix.svg
   :target: https://microbadger.com/images/dockcross/windows-static-x64-posix
 
 dockcross/windows-static-x64-posix
   |windows-static-x64-posix-images| 64-bit Windows cross-compiler based on `MXE/MinGW-w64`_ with posix threads and static linking.
-
-
 .. |windows-static-x86-images| image:: https://images.microbadger.com/badges/image/dockcross/windows-static-x86.svg
   :target: https://microbadger.com/images/dockcross/windows-static-x86
 
@@ -276,22 +241,16 @@ dockcross/windows-static-x86
 
 dockcross/windows-shared-x64
   |windows-shared-x64-images| 64-bit Windows cross-compiler based on `MXE/MinGW-w64`_ with win32 threads and dynamic linking.
-
-
 .. |windows-shared-x64-posix-images| image:: https://images.microbadger.com/badges/image/dockcross/windows-shared-x64-posix.svg
   :target: https://microbadger.com/images/dockcross/windows-shared-x64-posix
 
 dockcross/windows-shared-x64-posix
   |windows-shared-x64-posix-images| 64-bit Windows cross-compiler based on `MXE/MinGW-w64`_ with posix threads and dynamic linking.
-
-
 .. |windows-shared-x86-images| image:: https://images.microbadger.com/badges/image/dockcross/windows-shared-x86.svg
   :target: https://microbadger.com/images/dockcross/windows-shared-x86
 
 dockcross/windows-shared-x86
   |windows-shared-x86-images| 32-bit Windows cross-compiler based on `MXE/MinGW-w64`_ with win32 threads and dynamic linking.
-
-
 Articles
 --------
 
@@ -299,8 +258,6 @@ Articles
   <https://nbviewer.jupyter.org/format/slides/github/dockcross/cxx-write-once-run-anywhere/blob/master/dockcross_CXX_Write_Once_Run_Anywhere.ipynb#/>`_
 - `Cross-compiling binaries for multiple architectures with Docker
   <https://web.archive.org/web/20170912153531/http://blogs.nopcode.org/brainstorm/2016/07/26/cross-compiling-with-docker>`_
-
-
 Built-in update commands
 ------------------------
 
@@ -314,26 +271,24 @@ source cross-compiler container image or the dockcross script itself.
 - ``dockcross update-script``: Update the installed dockcross script with the
   one bundled in the image.
 - ``dockcross update``: Update both the container image, and the dockcross script.
-
-
 Download all images
 -------------------
 
 To easily download all images, the convenience target ``display_images`` could
 be used::
 
-  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o dockcross-Makefile
-  for image in $(make -f dockcross-Makefile display_images); do
-    echo "Pulling dockcross/$image"
-    docker pull dockcross/$image
+  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
+  for image in $(make -f ocix-Makefile display_images); do
+    echo "Pulling ocix/$image"
+    docker pull ocix/$image
   done
 
 For Podman users, set ``OCI_EXE=podman`` when invoking a ``make`` target::
 
-  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o dockcross-Makefile
-  for image in $(make OCI_EXE=podman -f dockcross-Makefile display_images); do
-    echo "Pulling dockcross/$image"
-    podman pull dockcross/$image
+  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
+  for image in $(make OCI_EXE=podman -f ocix-Makefile display_images); do
+    echo "Pulling ocix/$image"
+    podman pull ocix/$image
   done
 
 Install all dockcross scripts
@@ -342,28 +297,28 @@ Install all dockcross scripts
 To automatically install in ``~/bin`` the dockcross scripts for each images
 already downloaded, the convenience target ``display_images`` could be used::
 
-  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o dockcross-Makefile
-  for image in $(make -f dockcross-Makefile display_images); do
-    if [[ $(docker images -q dockcross/$image) == "" ]]; then
-      echo "~/bin/dockcross-$image skipping: image not found locally"
+  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
+  for image in $(make -f ocix-Makefile display_images); do
+    if [[ $(docker images -q ocix/$image) == "" ]]; then
+      echo "~/bin/ocix-$image skipping: image not found locally"
       continue
     fi
-    echo "~/bin/dockcross-$image ok"
-    docker run dockcross/$image > ~/bin/dockcross-$image && \
-    chmod u+x  ~/bin/dockcross-$image
+    echo "~/bin/ocix-$image ok"
+    docker run ocix/$image > ~/bin/ocix-$image && \
+    chmod u+x  ~/bin/ocix-$image
   done
 
 For Podman users, set ``OCI_EXE=podman`` when invoking a ``make`` target::
 
-  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o dockcross-Makefile
-  for image in $(make OCI_EXE=podman -f dockcross-Makefile display_images); do
-    if [[ $(podman images -q dockcross/$image) == "" ]]; then
-      echo "~/bin/dockcross-$image skipping: image not found locally"
+  curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
+  for image in $(make OCI_EXE=podman -f ocix-Makefile display_images); do
+    if [[ $(podman images -q ocix/$image) == "" ]]; then
+      echo "~/bin/ocix-$image skipping: image not found locally"
       continue
     fi
-    echo "~/bin/dockcross-$image ok"
-    podman run dockcross/$image > ~/bin/dockcross-$image && \
-    chmod u+x  ~/bin/dockcross-$image
+    echo "~/bin/ocix-$image ok"
+    podman run ocix/$image > ~/bin/ocix-$image && \
+    chmod u+x  ~/bin/ocix-$image
   done
 
 Dockcross configuration
@@ -378,9 +333,9 @@ DOCKCROSS_CONFIG / --config|-c <path-to-config-file>
 This file is sourced, if it exists, before executing the rest of the dockcross
 script.
 
-Default: ``~/.dockcross``
+Default: ``~/.ocix``
 
-DOCKCROSS_IMAGE / --image|-i <container-image-name>
+OCIX_IMAGE / --image|-i <container-image-name>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The cross-compiler container image to run.
@@ -392,8 +347,6 @@ DOCKCROSS_ARGS / --args|-a <container-run-args>
 
 Extra arguments to pass to the ``docker run`` or ``podman run`` command.
 Quote the entire set of args if they contain spaces.
-
-
 Per-project dockcross configuration
 -----------------------------------
 
@@ -404,22 +357,20 @@ the dockcross script is started, it is executed before the dockcross script
 
 For example, commands like ``git config --global advice.detachedHead false`` can
 be added to this script.
-
-
 How to extend Dockcross images
 ------------------------------
 In order to extend Dockcross images with your own commands, one must:
 
-1. Use ``FROM dockcross/<name_of_image>``.
-2. Set ``DEFAULT_DOCKCROSS_IMAGE`` to a name of the tag you're planning to use
-   for the image. This tag must then be used during the build phase, unless you
-   mean to pass the resulting helper script the ``DOCKCROSS_IMAGE`` argument.
+1. Use ``FROM <registry>/<org_name>/<name_of_image>``.
+2. Set ``DEFAULT_OCIX_IMAGE`` to a name you're planning to use
+   for the image. This name must then be used during the build phase, unless you
+   mean to pass the resulting helper script the ``OCIX_IMAGE`` argument.
 
 An example Dockerfile would be::
 
-  FROM dockcross/linux-armv7:2.0.0
+  FROM docker.io/dockcross/ocix-linux-armv7:2.0.0
 
-  ENV DEFAULT_DOCKCROSS_IMAGE my_cool_image
+  ENV DEFAULT_OCIX_IMAGE my_cool_image
   RUN apt-get install nano
 
 And then in the shell::
@@ -429,7 +380,39 @@ And then in the shell::
   chmod +x linux-armv7                    # Gives the script execution permission.
   ./linux-armv7 bash                      # Runs the helper script with the argument "bash", which starts an interactive container using your extended image.
 
+Self-Hosting
+============
 
+Some use cases require that all code and infrastructure be under the control of
+an organization (e.g. regulated industries).
+This code base aims to support such use cases. The following describes how to
+setup one pipeline and does not cover configuring Git server, CI/CD server, or
+OCI registry.
+The images created are prefixed with ``ocix-*`` to prevent clashes with existing
+container image names in your registry.
+
+We welcome Pull-Requests adding support and instructions for other services.
+
+GitHub + CircleCI + Docker.io
+-----------------------------
+
+1. Fork the repository ``dockcross/dockcross`` to ``YourOrg/YourName``.
+1. Clone your fork to you local computer.
+1. Add your container registry name to the file ``ocix_registry``. 
+   Example: If you use commands such as ``docker login https://oci.example.com``
+   and ``docker pull oci.example.com/my-image``, then add ``oci.example.com``
+   to the file ``ocix_registry``. Default: ``docker.io``.
+1. Add your container registry port number to the file ``ocix_port``.
+   Default: ``443``.
+1. If you wish to make these containers available from your container registry
+   under the organization/user name ``MyProject`` (does not have to match the
+   Git server organization/user) then add ``MyProject`` to the file ``ocix_org``.
+   Default: ``dockcross``
+1. Add the git repository to you CircleCI account. Then:
+   a. Select CircleCI Project settings.
+   b. Select Environment variables.
+   c. Add ``OCIX_REGISTRY_USER`` with your OCI registry user name.
+   d. Add ``OCIX_REGISTRY_PASSWORD`` with your OCI registry password.
 What is the difference between `dockcross` and `dockbuild` ?
 ------------------------------------------------------------
 
@@ -453,8 +436,6 @@ x86_x64 / amd64.
 Linux x86_64 / amd64 container image (so that it can be used for building
 binaries on any system which can run Open Container Initiative compatible
 container images) and the target runtime system varies.
-
-
 ---
 
 Credits go to `sdt/docker-raspberry-pi-cross-compiler <https://github.com/sdt/docker-raspberry-pi-cross-compiler>`_, who invented the base of the **dockcross** script.

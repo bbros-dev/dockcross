@@ -24,8 +24,6 @@ function do_curl_build {
     make > /dev/null
     make install > /dev/null
 }
-
-
 function build_curl {
     local curl_fname=$1
     check_var ${curl_fname}

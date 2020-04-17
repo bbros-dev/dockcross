@@ -15,13 +15,14 @@
 # generate a configuration.
 
 # Install Debian packages required for `ct-ng`.
-RUN apt-get update --yes && apt-get install --no-install-recommends --yes \
-  gawk \
-  gperf \
-  help2man \
-  python-dev \
-  texinfo \
-&& apt-get clean --yes
+RUN apt-get update --yes && \
+    apt-get install --no-install-recommends --yes \
+    gawk \
+    gperf \
+    help2man \
+    python-dev \
+    texinfo && \
+  aptitude clean  --no-gui -f -q -y
 
 ENV XCC_PREFIX=/usr/xcc
 

@@ -1,6 +1,4 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
-
 # Revert back to "/bin/sh" as default shell
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4
 RUN rm /bin/sh && ln -s /bin/dash /bin/sh
@@ -16,41 +14,42 @@ RUN \
   bash -c "echo \"deb $REPO/debian-security buster/updates main\" >> /etc/apt/sources.list" && \
   bash -c "echo \"deb http://ftp.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
   apt-get update --yes && \
-  apt-get install --no-install-recommends --yes \
-    automake \
-    autogen \
-    bash \
-    build-essential \
-    bc \
-    bzip2 \
-    ca-certificates \
-    curl \
-    dirmngr \
-    file \
-    gettext \
-    gnupg2 \
-    gosu \
-    gzip \
-    zip \
-    make \
-    ncurses-dev \
-    pkg-config \
-    libtool \
-    python \
-    python-pip \
-    rsync \
-    sed \
-    ssh \
-    bison \
-    flex \
-    tar \
-    pax \
-    vim \
-    wget \
-    xz-utils \
-    zlib1g-dev \
-  && \
-  apt-get clean --yes && \
+  apt-get install --no-install-recommends --yes aptitude && \
+  aptitude update  --no-gui -f -q -y && \
+  aptitude install -q -f -y --no-gui --without-recommends \
+                    autogen \
+                    automake \
+                    bash \
+                    bc \
+                    bison \
+                    build-essential \
+                    bzip2 \
+                    ca-certificates \
+                    curl \
+                    dirmngr \
+                    file \
+                    flex \
+                    gettext \
+                    gzip \
+                    gnupg \
+                    initramfs-tools \
+                    libtool \
+                    make \
+                    ncurses-dev \
+                    pkg-config \
+                    pax \
+                    python \
+                    python-pip \
+                    rsync \
+                    sed \
+                    ssh \
+                    tar \
+                    vim \
+                    wget \
+                    xz-utils \
+                    zip \
+                    zlib1g-dev && \
+  aptitude clean  --no-gui -f -q -y && \
   /buildscripts/install-gosu-binary-wrapper.sh && \
   rm -rf /buildscripts
 
@@ -62,25 +61,23 @@ ENV PATH /emsdk_portable:/emsdk_portable/llvm/clang/bin/:/emsdk_portable/emscrip
 ENV CC=/emsdk_portable/emscripten/sdk/emcc \
   CXX=/emsdk_portable/emscripten/sdk/em++ \
   AR=/emsdk_portable/emscripten/sdk/emar
-
-
 ENV CMAKE_TOOLCHAIN_FILE /emsdk_portable/emscripten/sdk/cmake/Modules/Platform/Emscripten.cmake
 
-# Build-time metadata as defined at http://label-schema.org
+# OCI container annotations are as defined at  https://github.com/opencontainers/image-spec/blob/master/annotations.md
 ARG BUILD_DATE
-ARG IMAGE=${DOCKCROSS_ORG}/web-wasm
+ARG IMAGE=${OCIX_ORG}/web-wasm
 ARG VCS_REF
 ARG VCS_URL
-ARG DOCKCROSS_URL="https://github.com/${DOCKCROSS_ORG}/dockcross/blob/master/README.rst"
+ARG OCIX_URL="https://github.com/dockcross/dockcross/blob/master/README.rst"
 LABEL org.opencontainers.image.created=$BUILD_DATE \
       org.opencontainers.image.description=$IMAGE \
-      org.opencontainers.image.documentation=$DOCKCROSS_URL \
+      org.opencontainers.image.documentation=$OCIX_URL \
       org.opencontainers.image.licenses="SPDX-License-Identifier: MIT" \
       org.opencontainers.image.ref.name=$IMAGE \
       org.opencontainers.image.revision=$VCS_REF \
       org.opencontainers.image.source=$VCS_URL \
       org.opencontainers.image.title=$IMAGE \
-      org.opencontainers.image.url=$DOCKCROSS_URL \
-      org.opencontainers.image.vendor=$DOCKCROSS_ORG \
-      org.opencontainers.image.version=$DOCKCROSS_VERSION
-ENV DEFAULT_DOCKCROSS_IMAGE ${IMAGE}:${DOCKCROSS_VERSION}
+      org.opencontainers.image.url=$OCIX_URL \
+      org.opencontainers.image.vendor=$OCIX_ORG \
+      org.opencontainers.image.version=$OCIX_VERSION
+ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}

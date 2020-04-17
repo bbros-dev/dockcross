@@ -5,15 +5,13 @@
 #       https://docs.docker.com/engine/reference/builder/#scope
 ARG DOCKCROSS_ORG=dockcross
 ARG DOCKCROSS_VERSION=latest
-FROM ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
+FROM ${OCIX_ORG}/ocix-base:${OCIX_VERSION}
 ARG DOCKCROSS_ORG
 ARG DOCKCROSS_VERSION
 
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
-
-RUN apt-get update && \
-    apt-get --yes install \
-            libelf-dev
+RUN aptitude update  --no-gui -f -q -y && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      libelf-dev
 
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /usr/bin

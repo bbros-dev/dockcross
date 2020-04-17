@@ -5,23 +5,21 @@
 #       https://docs.docker.com/engine/reference/builder/#scope
 ARG DOCKCROSS_ORG=dockcross
 ARG DOCKCROSS_VERSION=latest
-FROM ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
+FROM ${OCIX_ORG}/ocix-base:${OCIX_VERSION}
 ARG DOCKCROSS_ORG
 ARG DOCKCROSS_VERSION
 
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
-
 RUN dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get --yes install \
-            gcc-multilib \
-            g++-multilib \
-            libc6:i386 \
-            libelf-dev:i386 \
-            libstdc++6:i386 \
-            libbz2-dev:i386 \
-            libexpat1-dev:i386 \
-            ncurses-dev:i386
+    aptitude update  --no-gui -f -q -y && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      gcc-multilib:i386 \
+                      g++-multilib:i386 \
+                      libc6:i386 \
+                      libelf-dev:i386 \
+                      libstdc++6:i386 \
+                      libbz2-dev:i386 \
+                      libexpat1-dev:i386 \
+                      ncurses-dev:i386
 
 ENV CROSS_TRIPLE i686-linux-gnu
 ENV CROSS_ROOT /usr/${CROSS_TRIPLE}

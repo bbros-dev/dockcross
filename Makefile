@@ -8,39 +8,39 @@ SHELL := /bin/bash
 OCI_EXE ?= docker
 
 # Docker organization to pull the images from
-DOCKCROSS_ORG ?= dockcross
+OCIX_ORG ?= dockcross
 
-# Exit if we don't have a DOCKCROSS_VERSION.
-# If the shell has `export DOCKCROSS_VERSION=m.n.o` we'll get that.
-ifndef DOCKCROSS_VERSION
-$(error DOCKCROSS_VERSION is not set)
+# Exit if we don't have a OCIX_VERSION.
+# If the shell has `export OCIX_VERSION=m.n.o` we'll get that.
+ifndef OCIX_VERSION
+$(error OCIX_VERSION is not set)
 endif
 
 # Check we have a semantic version, abend. Make doesn't have regular expressions
 # so delegate to the shell (defined above)
-SEMVER := $(shell [[ $(DOCKCROSS_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo matched)
+SEMVER := $(shell [[ $(OCIX_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo matched)
 
 ifdef SEMVER
-@echo Semantic version number given: $(DOCKCROSS_VERSION)
+@echo Semantic version number given: $(OCIX_VERSION)
 else
-$(error DOCKCROSS_VERSION is not semantic version number)
+$(error OCIX_VERSION is not semantic version number)
 endif
 
 # Tag images with semantic version number.
-TAG = $(DOCKCROSS_VERSION)
+TAG = $(OCIX_VERSION)
 
-# Directory where to generate the dockcross script for each images (e.g bin/dockcross-manylinux1-x64)
+# Directory where to generate the dockcross script for each images (e.g bin/ocix-manylinux1-x64)
 BIN = ./bin
 
 # These images are built using the "build implicit rule"
-STANDARD_IMAGES = linux-s390x android-arm android-arm64 linux-x86 linux-x64 linux-arm64 linux-armv5 linux-armv5-musl linux-armv6 linux-armv7 linux-armv7a linux-mips linux-mipsel linux-ppc64le windows-static-x86 windows-static-x64 windows-static-x64-posix windows-shared-x86 windows-shared-x64 windows-shared-x64-posix
+STANDARD_IMAGES = ocix-linux-s390x ocix-android-arm ocix-android-arm64 ocix-linux-x86 ocix-linux-x64 ocix-linux-arm64 ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-armv6 ocix-linux-armv7 ocix-linux-armv7a ocix-linux-mips ocix-linux-mipsel ocix-linux-ppc64el ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix
 
 # Generated Dockerfiles.
-GEN_IMAGES = linux-s390x linux-mips manylinux1-x64 manylinux1-x86 manylinux2010-x64 manylinux2010-x86 manylinux2014-x64 web-wasm linux-arm64 windows-static-x86 windows-static-x64 windows-static-x64-posix windows-shared-x86 windows-shared-x64 windows-shared-x64-posix linux-armv7 linux-armv7a linux-armv5 linux-armv5-musl linux-ppc64le
+GEN_IMAGES = ocix-linux-s390x ocix-linux-mips ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64 ocix-web-wasm ocix-linux-arm64 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix ocix-linux-armv7 ocix-linux-armv7a ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-ppc64el
 GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
 # These images are expected to have explicit rules for *both* build and testing
-NON_STANDARD_IMAGES = web-wasm manylinux1-x64 manylinux1-x86 manylinux2010-x64 manylinux2010-x86 manylinux2014-x64
+NON_STANDARD_IMAGES = ocix-web-wasm ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64
 
 DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux common.crosstool common.windows
 
@@ -48,7 +48,7 @@ DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux common.c
 IMAGES = $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)
 
 # Optional arguments for test runner (test/run.py) associated with "testing implicit rule"
-linux-ppc64le.test_ARGS = --languages C
+linux-ppc64el.test_ARGS = --languages C
 windows-static-x86.test_ARGS = --exe-suffix ".exe"
 windows-static-x64.test_ARGS = --exe-suffix ".exe"
 windows-static-x64-posix.test_ARGS = --exe-suffix ".exe"
@@ -66,12 +66,12 @@ endif
 #
 # images: This target builds all IMAGES (because it is the first one, it is built by default)
 #
-images: base $(IMAGES)
+images: ocix-base $(IMAGES)
 
 #
 # test: This target ensures all IMAGES are built and run the associated tests
 #
-test: base.test $(addsuffix .test,$(IMAGES))
+test: ocix-base.test $(addsuffix .test,$(IMAGES))
 
 #
 # Generic Targets (can specialize later).
@@ -89,136 +89,136 @@ $(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOS
 #
 # web-wasm
 #
-web-wasm: web-wasm/Dockerfile
+ocix-web-wasm: ocix-web-wasm/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	cp -r test web-wasm/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/web-wasm:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/web-wasm \
-		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
-    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	cp -r test ocix-web-wasm/
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-web-wasm:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-web-wasm \
+		--build-arg OCIX_ORG=$(OCIX_ORG) \
+    --build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		web-wasm
-	rm -rf web-wasm/test
+		ocix-web-wasm
+	rm -rf ocix-web-wasm/test
 	rm -rf $@/imagefiles
 
-web-wasm.test: web-wasm
-	cp -r test web-wasm/
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/web-wasm:$(TAG) > $(BIN)/dockcross-web-wasm && chmod +x $(BIN)/dockcross-web-wasm
-	$(BIN)/dockcross-web-wasm python test/run.py --exe-suffix ".js"
-	rm -rf web-wasm/test
+ocix-web-wasm.test: ocix-web-wasm
+	cp -r test ocix-web-wasm/
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-web-wasm:$(TAG) > $(BIN)/ocix-web-wasm && chmod +x $(BIN)/ocix-web-wasm
+	$(BIN)/ocix-web-wasm python test/run.py --exe-suffix ".js"
+	rm -rf ocix-web-wasm/test
 
 #
 # manylinux2014-x64
 #
-manylinux2014-x64: manylinux2014-x64/Dockerfile
+ocix-manylinux2014-x64: ocix-manylinux2014-x64/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux2014-x64:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux2014-x64 \
-		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
-    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2014-x64:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2014-x64 \
+		--build-arg OCIX_ORG=$(OCIX_ORG) \
+    --build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--file manylinux2014-x64/Dockerfile .
+		--file ocix-manylinux2014-x64/Dockerfile .
 	rm -rf $@/imagefiles
 
-manylinux2014-x64.test: manylinux2014-x64
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2014-x64:$(TAG) > $(BIN)/dockcross-manylinux2014-x64 && chmod +x $(BIN)/dockcross-manylinux2014-x64
-	$(BIN)/dockcross-manylinux2014-x64 /opt/python/cp35-cp35m/bin/python test/run.py
+ocix-manylinux2014-x64.test: ocix-manylinux2014-x64
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2014-x64:$(TAG) > $(BIN)/ocix-manylinux2014-x64 && chmod +x $(BIN)/ocix-manylinux2014-x64
+	$(BIN)/ocix-manylinux2014-x64 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
 # manylinux2010-x64
 #
 
-manylinux2010-x64: manylinux2010-x64/Dockerfile
+ocix-manylinux2010-x64: ocix-manylinux2010-x64/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux2010-x64:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux2010-x64 \
-		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
-    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2010-x64:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2010-x64 \
+		--build-arg OCIX_ORG=$(OCIX_ORG) \
+    --build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--file manylinux2010-x64/Dockerfile .
 	rm -rf $@/imagefiles
 
-manylinux2010-x64.test: manylinux2010-x64
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2010-x64:$(TAG) > $(BIN)/dockcross-manylinux2010-x64 && chmod +x $(BIN)/dockcross-manylinux2010-x64
-	$(BIN)/dockcross-manylinux2010-x64 /opt/python/cp35-cp35m/bin/python test/run.py
+ocix-manylinux2010-x64.test: ocix-manylinux2010-x64
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2010-x64:$(TAG) > $(BIN)/ocix-manylinux2010-x64 && chmod +x $(BIN)/ocix-manylinux2010-x64
+	$(BIN)/ocix-manylinux2010-x64 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
 # manylinux2010-x86
 #
 
-manylinux2010-x86: manylinux2010-x86/Dockerfile
+ocix-manylinux2010-x86: ocix-manylinux2010-x86/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux2010-x86:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux2010-x86 \
-		--build-arg--build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2010-x86:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2010-x86 \
+		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--file manylinux2010-x86/Dockerfile .
 	rm -rf $@/imagefiles
 
-manylinux2010-x86.test: manylinux2010-x86
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux2010-x86:$(TAG) > $(BIN)/dockcross-manylinux2010-x86 && chmod +x $(BIN)/dockcross-manylinux2010-x86
-	$(BIN)/dockcross-manylinux2010-x86 /opt/python/cp35-cp35m/bin/python test/run.py
+ocix-manylinux2010-x86.test: ocix-manylinux2010-x86
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2010-x86:$(TAG) > $(BIN)/ocix-manylinux2010-x86 && chmod +x $(BIN)/ocix-manylinux2010-x86
+	$(BIN)/ocix-manylinux2010-x86 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
 # manylinux1-x64
 #
 
-manylinux1-x64: manylinux1-x64/Dockerfile
+ocix-manylinux1-x64: ocix-manylinux1-x64/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux1-x64:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux1-x64 \
-		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
-    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux1-x64:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux1-x64 \
+		--build-arg OCIX_ORG=$(OCIX_ORG) \
+    --build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--file manylinux1-x64/Dockerfile .
 	rm -rf $@/imagefiles
 
-manylinux1-x64.test: manylinux1-x64
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux1-x64:$(TAG) > $(BIN)/dockcross-manylinux1-x64 && chmod +x $(BIN)/dockcross-manylinux1-x64
-	$(BIN)/dockcross-manylinux1-x64 /opt/python/cp35-cp35m/bin/python test/run.py
+ocix-manylinux1-x64.test: ocix-manylinux1-x64
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux1-x64:$(TAG) > $(BIN)/ocix-manylinux1-x64 && chmod +x $(BIN)/ocix-manylinux1-x64
+	$(BIN)/ocix-manylinux1-x64 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
 # manylinux1-x86
 #
 
-manylinux1-x86: manylinux1-x86/Dockerfile
+ocix-manylinux1-x86: ocix-manylinux1-x86/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/manylinux1-x86:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/manylinux1-x86 \
-		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
-    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux1-x86:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux1-x86 \
+		--build-arg OCIX_ORG=$(OCIX_ORG) \
+    --build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--file manylinux1-x86/Dockerfile .
 	rm -rf $@/imagefiles
 
-manylinux1-x86.test: manylinux1-x86
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/manylinux1-x86:$(TAG) > $(BIN)/dockcross-manylinux1-x86 && chmod +x $(BIN)/dockcross-manylinux1-x86
-	$(BIN)/dockcross-manylinux1-x86 /opt/python/cp35-cp35m/bin/python test/run.py
+ocix-manylinux1-x86.test: ocix-manylinux1-x86
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux1-x86:$(TAG) > $(BIN)/ocix-manylinux1-x86 && chmod +x $(BIN)/ocix-manylinux1-x86
+	$(BIN)/ocix-manylinux1-x86 /opt/python/cp35-cp35m/bin/python test/run.py
 
 #
 # base
 #
 
-base: Dockerfile imagefiles/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/dockcross-base:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/dockcross-base \
+ocix-base: Dockerfile imagefiles/
+	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-base:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/ocix-base \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		.
 
-base.test: base
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/dockcross-base:$(TAG) > $(BIN)/dockcross-base && chmod +x $(BIN)/dockcross-base
+ocix-base.test: base
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
 
 #
 # display
@@ -234,10 +234,10 @@ $(VERBOSE).SILENT: display_images
 
 $(STANDARD_IMAGES): %: %/Dockerfile base
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(DOCKCROSS_ORG)/$@:$(TAG) \
-		--build-arg IMAGE=$(DOCKCROSS_ORG)/$@ \
-		--build-arg DOCKCROSS_ORG=$(DOCKCROSS_ORG) \
-    --build-arg DOCKCROSS_VERSION=$(DOCKCROSS_VERSION) \
+	$(OCI_EXE) build --tag $(OCIX_ORG)/$@:$(TAG) \
+		--build-arg IMAGE=$(OCIX_ORG)/$@ \
+		--build-arg OCIX_ORG=$(OCIX_ORG) \
+    --build-arg OCIX_VERSION=$(OCIX_VERSION) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -249,8 +249,8 @@ $(STANDARD_IMAGES): %: %/Dockerfile base
 #
 .SECONDEXPANSION:
 $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
-	$(OCI_EXE) run $(RM) $(DOCKCROSS_ORG)/$(basename $@):$(TAG) > $(BIN)/dockcross-$(basename $@) && chmod +x $(BIN)/dockcross-$(basename $@)
-	$(BIN)/dockcross-$(basename $@) python test/run.py $($@_ARGS)
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/ocix-$(basename $@) && chmod +x $(BIN)/ocix-$(basename $@)
+	$(BIN)/ocix-$(basename $@) python test/run.py $($@_ARGS)
 
 #
 # testing prerequisites implicit rule

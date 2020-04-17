@@ -1,45 +1,47 @@
 version: 2.1
 
 executors:
-  dockcross:
+  ocix:
     machine: true
-    working_directory: ~/dockcross
+    working_directory: ~/ocix
 
 commands:
   setup_environment:
-    description: Setup custom environment 
+    description: Setup OCI-Cross environment variables 
     steps:
       - run: 
-          name: Export Org and Version
+          name: Export OCI-Cross Registry, Organization and Version
           command: |
-            echo "export DOCKCROSS_ORG=$(cat dockcross_org)" >> $BASH_ENV
-            echo "export DOCKCROSS_VERSION=$(cat dockcross_version)" >> $BASH_ENV
-  build_test_dockcross_image:
-    description: Build & test a dockcross container image
+            echo "export OCIX_REGISTRY=$(cat ocix_registry)" >> $BASH_ENV
+            echo "export OCIX_REGISTRY=$(cat ocix_port)" >> $BASH_ENV
+            echo "export OCIX_ORG=$(cat ocix_org)" >> $BASH_ENV
+            echo "export OCIX_VERSION=$(cat ocix_version)" >> $BASH_ENV
+  build_test_ocix_image:
+    description: Build & test an OCI-Cross container image
     parameters:
       image_name:
         type: string
     steps:
       - restore_cache:
-          key: dockcross-base-assets-{{ .Revision }}
+          key: ocix-base-assets-{{ .Revision }}
       - setup_environment
       - run:
           name: Build << parameters.image_name >>
           no_output_timeout: 1.5h
           command: |
-            docker load -i ~/docker/dockcross-base.tar
+            docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
-            docker save --output ~/docker/<< parameters.image_name >>.tar ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
+            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
       - run:
          name: Test << parameters.image_name >>
          command: |
             make << parameters.image_name >>.test
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
-          paths: ~/docker/<< parameters.image_name >>.tar
+          paths: ~/ocix/<< parameters.image_name >>.tar
 
-  deploy_dockcross_image:
-    description: Deploy a dockcross container image
+  deploy_ocix_image:
+    description: Deploy a OCI-Cross container image
     parameters:
       image_name:
         type: string
@@ -51,9 +53,9 @@ commands:
           name: Deploy << parameters.image_name >>
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              docker load -i ~/docker/<< parameters.image_name >>.tar
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-              docker push ${DOCKCROSS_ORG}/<< parameters.image_name >>:${DOCKCROSS_VERSION}
+              docker load --quiet --input ~/ocix/<< parameters.image_name >>.tar
+              echo $OCIX_REGISTRY_PASSWORD | docker login --username $OCIX_REGISTRY_USER --password-stdin https://${OCIX_REGISTRY}
+              docker push ${OCIX_REGISTRY}:${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
             fi
 
 references:
@@ -63,154 +65,179 @@ references:
         only: develop
 
 jobs:
-  base:
-    executor: dockcross
+  ocix-base:
+    executor: ocix
     steps:
       - checkout
       - setup_environment
       - run:
-          name: base build
+          name: Build ocix-base
           command: |
             docker pull debian:10.3-slim
-            make base
-            mkdir -p ~/docker
-            docker save --output ~/docker/dockcross-base.tar debian:10.3-slim ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
+            make ocix-base
+            mkdir -p ~/ocix
+            docker save --output ~/ocix/ocix-base.tar debian:10.3-slim ${OCIX_ORG}/ocix-base:${OCIX_VERSION}
       - run:
-         name: base test
+         name: Test ocix-base
          command: |
-           make base.test
+           make ocix-base.test
       - save_cache:
-          key: dockcross-base-assets-{{ .Revision }}
+          key: ocix-base-assets-{{ .Revision }}
           paths:
-            - ~/docker/dockcross-base.tar
-            - ~/dockcross
+            - ~/ocix/ocix-base.tar
+            - ~/ocix
 
-  make_dockcross:
-    description: Invoke the Dockcross Build and Test Command
+  ocix:
+    description: Invoke the OCI-Cross Build and Test Command
     parameters:
       image:
-        description: "The OCI Container Image Name"
+        description: "The OCI-Cross Container Image Name"
         type: string
-    executor: dockcross
+    executor: ocix
     steps:
-      - build_test_dockcross_image:
+      - build_test_ocix_image:
           image_name: << parameters.image >>
-      - deploy_dockcross_image:
+      - deploy_ocix_image:
           image_name: << parameters.image >>
 
   deploy:
-    executor: dockcross
+    executor: ocix
     steps:
-      - deploy_dockcross_image:
-          image_name: "dockcross-base"
+      - deploy_ocix_image:
+          image_name: "ocix-base"
 
 workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - base:
+      - ocix-base:
           <<: *workflow-settings
-      - make_dockcross:
-          image: "linux-x64"
+      - ocix:
+          name: "linux-x64"
+          image: "ocix-linux-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "android-arm"
+            - ocix-base
+      - ocix:
+          name: "android-arm"
+          image: "ocix-android-arm"
           requires:
-            - base
-      - make_dockcross:
-          image: "android-arm64"
+            - ocix-base
+      - ocix:
+          name: "android-arm64"
+          image: "ocix-android-arm64"
           requires:
-            - base
-      - make_dockcross:
-          image: "web-wasm"
+            - ocix-base
+      - ocix:
+          name: "web-wasm"
+          image: "ocix-web-wasm"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-arm64"
+            - ocix-base
+      - ocix:
+          name: "linux-arm64"
+          image: "ocix-linux-arm64"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-armv5"
+            - ocix-base
+      - ocix:
+          name: "linux-armv5"
+          image: "ocix-linux-armv5"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-armv6"
+            - ocix-base
+      - ocix:
+          name: "linux-armv6"
+          image: "ocix-linux-armv6"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-armv7"
+            - ocix-base
+      - ocix:
+          name: "linux-armv7"
+          image: "ocix-linux-armv7"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-armv7a"
+            - ocix-base
+      - ocix:
+          name: "linux-armv7a"
+          image: "ocix-linux-armv7a"
           requires:
-            - base
+            - ocix-base
       # Image build currently broken. See #209
-      #- make_dockcross:
-      #    image: "linux-mipsel"
+      #- ocix:
+      #    name: "linux-mipsel"
+      #    image: "ocix-linux-mipsel"
       #    requires:
-      #      - base
-      - make_dockcross:
-          image: "linux-s390x"
+      #      - ocix-base
+      - ocix:
+          name: "linux-s390x"
+          image: "ocix-linux-s390x"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-ppc64le"
+            - ocix-base
+      - ocix:
+          name: "linux-ppc64el"
+          image: "ocix-linux-ppc64el"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-x64"
+            - ocix-base
+      - ocix:
+          name: "linux-x64"
+          image: "ocix-linux-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "linux-x86"
+            - ocix-base
+      - ocix:
+          name: "linux-x86"
+          image: "ocix-linux-x86"
           requires:
-            - base
-      - make_dockcross:
-          image: "manylinux1-x64"
+            - ocix-base
+      - ocix:
+          name: "manylinux1-x64"
+          image: "ocix-manylinux1-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "manylinux1-x86"
+            - ocix-base
+      - ocix:
+          name: "manylinux1-x86"
+          image: "ocix-manylinux1-x86"
           requires:
-            - base
-      - make_dockcross:
-          image: "manylinux2010-x64"
+            - ocix-base
+      - ocix:
+          name: "manylinux2010-x64"
+          image: "ocix-manylinux2010-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "manylinux2010-x86"
+            - ocix-base
+      - ocix:
+          name: "manylinux2010-x86"
+          image: "ocix-manylinux2010-x86"
           requires:
-            - base
-      - make_dockcross:
-          image: "manylinux2014-x64"
+            - ocix-base
+      - ocix:
+          name: "manylinux2014-x64"
+          image: "ocix-manylinux2014-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "windows-static-x64"
+            - ocix-base
+      - ocix:
+          name: "windows-static-x64"
+          image: "ocix-windows-static-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "windows-static-x64-posix"
+            - ocix-base
+      - ocix:
+          name: "windows-static-x64-posix"
+          image: "ocix-windows-static-x64-posix"
           requires:
-            - base
-      - make_dockcross:
-          image: "windows-static-x86"
+            - ocix-base
+      - ocix:
+          name: "windows-static-x86"
+          image: "ocix-windows-static-x86"
           requires:
-            - base
-      - make_dockcross:
-          image: "windows-shared-x64"
+            - ocix-base
+      - ocix:
+          name: "windows-shared-x64"
+          image: "ocix-windows-shared-x64"
           requires:
-            - base
-      - make_dockcross:
-          image: "windows-shared-x64-posix"
+            - ocix-base
+      - ocix:
+          name: "windows-shared-x64-posix"
+          image: "ocix-windows-shared-x64-posix"
           requires:
-            - base
-      - make_dockcross:
-          image: "windows-shared-x86"
+            - ocix-base
+      - ocix:
+          name: "windows-shared-x86"
+          image: "ocix-windows-shared-x86"
           requires:
-            - base
+            - ocix-base
       - deploy:
           requires:
-            - base
+            - ocix-base

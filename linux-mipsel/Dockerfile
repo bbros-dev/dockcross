@@ -15,19 +15,18 @@ MAINTAINER Sergi Alvarez "pancake@nopcode.org"
 # VFP instructions (mipshf).
 
 # From https://wiki.debian.org/CrossToolchains, installing for jessie
-RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/emdebian.list \
-&& curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - \
-&& sed -i 's/httpredir.debian.org/http.debian.net/' /etc/apt/sources.list \
-&& dpkg --add-architecture mipsel \
-&& apt-get update && apt-get install -y crossbuild-essential-mipsel
-
-# The cross-compiling emulator
-RUN dpkg --add-architecture mips64el && \
+RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/emdebian.list && \
+    curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - && \
+    sed -i 's/httpredir.debian.org/http.debian.net/' /etc/apt/sources.list && \
+    dpkg --add-architecture mipsel && \ 
     apt-get update && \
-    apt-get install --yes \
-            libelf-dev:mips64el \
-            qemu-user \
-            qemu-user-static
+    apt-get install --no-install-recommends --yes aptitude && \
+    aptitude update  --no-gui -f -q -y && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      crossbuild-essential-mipsel:mips64el \
+                      libelf-dev:mips64el \
+                      qemu-user:mips64el \
+                      qemu-user-static:mips64el
 
 ENV CROSS_TRIPLE mipsel-linux-gnu
 ENV CROSS_ROOT /usr/bin
