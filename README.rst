@@ -1,5 +1,5 @@
-dockcross
-=========
+ocix
+====
 
 Cross compiling toolchains in OCI container images.
 

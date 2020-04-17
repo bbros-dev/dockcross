@@ -5,7 +5,7 @@ FROM debian:10.3-slim
 #include "common.docker"
 
 ARG BUILD_DATE
-ARG OCIX_ORG=dockcross
+ARG OCIX_ORG=ocix
 ARG IMAGE
 ARG VCS_REF
 ARG VCS_URL

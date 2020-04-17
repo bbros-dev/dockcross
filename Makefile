@@ -4,11 +4,12 @@ SHELL := /bin/bash
 # Parameters
 #
 
-# Name of the container engine executable
+OCI_EXE := $(shell command -v podman 2> /dev/null)
 OCI_EXE ?= docker
 
 # Docker organization to pull the images from
-OCIX_ORG ?= dockcross
+OCIX_ORG_FILE := ocix_org
+OCIX_ORG := $(shell cat ${OCIX_ORG_FILE})
 
 # Exit if we don't have a OCIX_VERSION.
 # If the shell has `export OCIX_VERSION=m.n.o` we'll get that.
@@ -217,7 +218,7 @@ ocix-base: Dockerfile imagefiles/
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		.
 
-ocix-base.test: base
+ocix-base.test: ocix-base
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
 
 #
@@ -232,7 +233,7 @@ $(VERBOSE).SILENT: display_images
 # build implicit rule
 #
 
-$(STANDARD_IMAGES): %: %/Dockerfile base
+$(STANDARD_IMAGES): %: %/Dockerfile ocix-base
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(OCI_EXE) build --tag $(OCIX_ORG)/$@:$(TAG) \
 		--build-arg IMAGE=$(OCIX_ORG)/$@ \
@@ -258,9 +259,9 @@ $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
 test.prerequisites:
 	mkdir -p $(BIN)
 
-$(addsuffix .test,base $(IMAGES)): test.prerequisites
+$(addsuffix .test,ocix-base $(IMAGES)): test.prerequisites
 
-.PHONY: base images $(IMAGES) test %.test
+.PHONY: ocix-base images $(IMAGES) test %.test
 
 .PHONY: list
 list:
