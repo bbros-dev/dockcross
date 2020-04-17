@@ -29,15 +29,15 @@ Features
 Examples
 --------
 
-1. ``dockcross make``: Build the *Makefile* in the current directory.
-2. ``dockcross cmake -Bbuild -H. -GNinja``: Run CMake with a build directory
+1. ``ocix make``: Build the *Makefile* in the current directory.
+2. ``ocix cmake -Bbuild -H. -GNinja``: Run CMake with a build directory
    ``./build`` for a *CMakeLists.txt* file in the current directory and generate
    ``ninja`` build configuration files.
-3. ``dockcross ninja -Cbuild``: Run ninja in the ``./build`` directory.
-4. ``dockcross bash -c '$CC test/C/hello.c -o hello'``: Build the *hello.c* file
+3. ``ocix ninja -Cbuild``: Run ninja in the ``./build`` directory.
+4. ``ocix bash -c '$CC test/C/hello.c -o hello'``: Build the *hello.c* file
    with the compiler identified with the ``CC`` environmental variable in the
    build environment.
-5. ``dockcross bash``: Run an interactive shell in the build environment.
+5. ``ocix bash``: Run an interactive shell in the build environment.
 
 Note that commands are executed verbatim. If any shell processing for
 environment variable expansion or redirection is required, please use
@@ -53,15 +53,15 @@ script is bundled with the image.
 To install the helper script, run one of the images with no arguments, and
 redirect the output to a file::
 
-  docker run --rm CROSS_COMPILER_IMAGE_NAME > ./dockcross
-  chmod +x ./dockcross
-  mv ./dockcross ~/bin/
+  docker run --rm CROSS_COMPILER_IMAGE_NAME > ./ocix
+  chmod +x ./ocix
+  mv ./ocix ~/bin/
 
 Podman users can replace `docker` with `podman` in all documentation examples::
 
-  podman run --rm CROSS_COMPILER_IMAGE_NAME > ./dockcross
-  chmod +x ./dockcross
-  mv ./dockcross ~/bin/
+  podman run --rm CROSS_COMPILER_IMAGE_NAME > ./ocix
+  chmod +x ./ocix
+  mv ./ocix ~/bin/
 
 Where `CROSS_COMPILER_IMAGE_NAME` is the name of the cross-compiler toolchain
 container 'slug', e.g. `dockcross/linux-armv7`.
@@ -73,17 +73,17 @@ Usage
 
 For the impatient, here's how to compile a hello world for armv7 using Docker::
 
-  cd ~/src/dockcross
+  cd ~/src/ocix
   docker run --rm ocix/linux-armv7 > ./ocix-linux-armv7
   chmod +x ./ocix-linux-armv7
   ./ocix-linux-armv7 bash -c '$CC test/C/hello.c -o hello_arm'
 
 Note how invoking any toolchain command (make, gcc, etc.) is just a matter of
-prepending the **dockcross** script on the commandline::
+prepending the **ocix** script on the commandline::
 
   ./ocix-linux-armv7 [command] [args...]
 
-The **dockcross** script will select between the `docker` and `podman` container
+The **ocix** script will select between the `docker` and `podman` container
 engines, then execute the given command-line inside the container,
 along with all arguments passed after the command. 
 If `podman` is installed and responds to `command -v podman` it is selected.
@@ -262,15 +262,15 @@ Built-in update commands
 ------------------------
 
 A special update command can be executed that will update the
-source cross-compiler container image or the dockcross script itself.
+source cross-compiler container image or the ocix script itself.
 
-- ``dockcross [--] command [args...]``: Forces a command to run inside the
+- ``ocix [--] command [args...]``: Forces a command to run inside the
   container (in case of a name clash with a built-in command), use ``--``
   before the command.
-- ``dockcross update-image``: Fetch the latest version of the container image.
-- ``dockcross update-script``: Update the installed dockcross script with the
+- ``ocix update-image``: Fetch the latest version of the container image.
+- ``ocix update-script``: Update the installed ocix script with the
   one bundled in the image.
-- ``dockcross update``: Update both the container image, and the dockcross script.
+- ``ocix update``: Update both the container image, and the ocix script.
 Download all images
 -------------------
 
@@ -291,10 +291,10 @@ For Podman users, set ``OCI_EXE=podman`` when invoking a ``make`` target::
     podman pull ocix/$image
   done
 
-Install all dockcross scripts
+Install all ocix scripts
 -----------------------------
 
-To automatically install in ``~/bin`` the dockcross scripts for each images
+To automatically install in ``~/bin`` the ocix scripts for each images
 already downloaded, the convenience target ``display_images`` could be used::
 
   curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
@@ -330,7 +330,7 @@ all cases, the command-line option overrides the environment variable.
 DOCKCROSS_CONFIG / --config|-c <path-to-config-file>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This file is sourced, if it exists, before executing the rest of the dockcross
+This file is sourced, if it exists, before executing the rest of the ocix
 script.
 
 Default: ``~/.ocix``
@@ -347,11 +347,11 @@ DOCKCROSS_ARGS / --args|-a <container-run-args>
 
 Extra arguments to pass to the ``docker run`` or ``podman run`` command.
 Quote the entire set of args if they contain spaces.
-Per-project dockcross configuration
+Per-project ocix configuration
 -----------------------------------
 
-If a shell script named ``.dockcross`` is found in the current directory where
-the dockcross script is started, it is executed before the dockcross script
+If a shell script named ``.ocix`` is found in the current directory where
+the ocix script is started, it is executed before the ocix script
 ``command`` argument.  The shell script is expected to have a shebang like
 ``#!/usr/bin/env bash``.
 
@@ -375,7 +375,7 @@ An example Dockerfile would be::
 
 And then in the shell::
 
-  docker build -t my_cool_image .         # Builds the dockcross image.
+  docker build -t my_cool_image .         # Builds the ocix image.
   docker run my_cool_image > linux-armv7  # Creates a helper script named linux-armv7.
   chmod +x linux-armv7                    # Gives the script execution permission.
   ./linux-armv7 bash                      # Runs the helper script with the argument "bash", which starts an interactive container using your extended image.
@@ -431,8 +431,8 @@ it can be used for building binaries on any system which can run Open Container
 Initiative compatible container images) and the target runtime system is Linux
 x86_x64 / amd64.
 
-`dockcross` is used to build binaries for many different platforms.
-`dockcross` performs a cross compilation where the host build system is a
+`ocix` is used to build binaries for many different platforms.
+`ocix` performs a cross compilation where the host build system is a
 Linux x86_64 / amd64 container image (so that it can be used for building
 binaries on any system which can run Open Container Initiative compatible
 container images) and the target runtime system varies.

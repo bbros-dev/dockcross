@@ -3,7 +3,7 @@
 # Common Docker instructions to install "crosstool-ng" and build a full
 # cross-compiler suite from a crosstool-ng configuration, CROSSTOOL_CONFIG.
 #
-# This import complements the "dockcross-base" image, adding:
+# This import complements the "ocix-base" image, adding:
 # - "ct-ng", a cross-compiler building utilty.
 # - A cross-compiler suite configured in "crosstool-ng.config".
 #
@@ -27,22 +27,22 @@ RUN apt-get update --yes && \
 ENV XCC_PREFIX=/usr/xcc
 
 # Add the crosstool-ng script and image-specific toolchain configuration into
-# /dockcross/.
+# /ocix/.
 #
 # Afterwards, we will leave the "ct-ng" config in the image as a reference
 # for users.
 COPY \
   imagefiles/install-crosstool-ng-toolchain.sh \
   crosstool-ng.config \
-  /dockcross/
+  /ocix/
 
 # Build and install the toolchain, cleaning up artifacts afterwards.
-RUN mkdir /dockcross/crosstool \
-&& cd /dockcross/crosstool \
-&& /dockcross/install-crosstool-ng-toolchain.sh \
+RUN mkdir /ocix/crosstool \
+&& cd /ocix/crosstool \
+&& /ocix/install-crosstool-ng-toolchain.sh \
   -p "${XCC_PREFIX}" \
-  -c /dockcross/crosstool-ng.config \
-&& rm -rf /dockcross/crosstool /dockcross/install-crosstool-ng-toolchain.sh
+  -c /ocix/crosstool-ng.config \
+&& rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
 
-# Restore our default workdir (from "dockcross-base" image).
+# Restore our default workdir (from "ocix-base" image).
 WORKDIR /work

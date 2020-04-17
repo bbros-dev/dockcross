@@ -1,5 +1,5 @@
 bin
-dockcross
+ocix
 */test/
 Dockerfile
 web-wasm/Dockerfile

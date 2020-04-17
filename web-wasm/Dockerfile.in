@@ -36,8 +36,8 @@ RUN \
                     libtool \
                     make \
                     ncurses-dev \
-                    pkg-config \
                     pax \
+                    pkg-config \
                     python \
                     python-pip \
                     rsync \

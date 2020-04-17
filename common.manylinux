@@ -29,4 +29,4 @@ RUN \
   rm -rf /buildscripts
 
 # Runtime scripts
-COPY manylinux-common/pre_exec.sh /dockcross/
+COPY manylinux-common/pre_exec.sh /ocix/

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-linux32 "/dockcross/entrypoint.sh" "$@"
+linux32 "/ocix/entrypoint.sh" "$@"

@@ -78,7 +78,7 @@ help:update() {
 command:help() {
     if [[ $# != 0 ]]; then
         if ! has command $1; then
-            err \"$1\" is not an dockcross command
+            err \"$1\" is not an ocix command
             command:help
         elif ! has help $1; then
             err No help found for \"$1\"
@@ -236,7 +236,7 @@ fi
 TTY_ARGS=
 oci_exe
 tty -s && [ -z "$MSYS" ] && TTY_ARGS=-ti
-CONTAINER_NAME=dockcross_$RANDOM
+CONTAINER_NAME=ocix_$RANDOM
 ${OCI_EXE} run $TTY_ARGS --name $CONTAINER_NAME \
     --volume "$HOST_PWD":/work \
     $HOST_VOLUMES \
@@ -263,12 +263,12 @@ exit $run_exit_code
 #
 # This image is not intended to be run manually.
 #
-# To create a dockcross helper script for the
+# To create a ocix helper script for the
 # ${OCIX_ORG}/ocix-linux-armv7 image, run:
 #
 # ${OCI_EXE} run --rm ocix/linux-armv7 > ocix-linux-armv7
 # chmod +x ocix-linux-armv7
 #
-# You may then wish to move the dockcross script to your PATH.
+# You may then wish to move the ocix script to your PATH.
 #
 ################################################################################

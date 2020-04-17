@@ -29,7 +29,7 @@ endif
 # Tag images with semantic version number.
 TAG = $(OCIX_VERSION)
 
-# Directory where to generate the dockcross script for each images (e.g bin/ocix-manylinux1-x64)
+# Directory where to generate the ocix script for each images (e.g bin/ocix-manylinux1-x64)
 BIN = ./bin
 
 # These images are built using the "build implicit rule"

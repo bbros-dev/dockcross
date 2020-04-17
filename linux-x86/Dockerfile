@@ -50,12 +50,12 @@ ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH x86
 
-COPY linux32-entrypoint.sh /dockcross/
-ENTRYPOINT ["/dockcross/linux32-entrypoint.sh"]
+COPY linux32-entrypoint.sh /ocix/
+ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
-ARG DOCKCROSS_ORG=dockcross
+ARG DOCKCROSS_ORG
 ARG IMAGE=${DOCKCROSS_ORG}/linux-x86
 ARG DOCKCROSS_VERSION
 ARG VCS_REF

@@ -30,7 +30,7 @@ ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
-ARG DOCKCROSS_ORG=dockcross
+ARG DOCKCROSS_ORG
 ARG IMAGE=${DOCKCROSS_ORG}/linux-x64
 ARG DOCKCROSS_VERSION
 ARG VCS_REF

@@ -5,13 +5,13 @@
 
 if [[ $# == 0 ]]; then
     # Presumably the image has been run directly, so help the user get
-    # started by outputting the dockcross script
+    # started by outputting the ocix script
     if [[ -n $DEFAULT_OCIX_IMAGE ]]; then
         head -n 2 /ocix/ocix
         echo "DEFAULT_OCIX_IMAGE=$DEFAULT_OCIX_IMAGE"
         tail -n +4 /ocix/ocix |
-          sed -e "s@dockcross\/linux\-armv7@${DEFAULT_OCIX_IMAGE}@g" |
-          sed -e "s@dockcross\-linux\-armv7@${DEFAULT_OCIX_IMAGE//[\/:]/-}@g"
+          sed -e "s@ocix\/linux\-armv7@${DEFAULT_OCIX_IMAGE}@g" |
+          sed -e "s@ocix\-linux\-armv7@${DEFAULT_OCIX_IMAGE//[\/:]/-}@g"
     else
         cat /ocix/ocix
     fi
@@ -21,7 +21,7 @@ fi
 # If we are running a container natively, we want to create a user in the container
 # with the same UID and GID as the user on the host machine, so that any files
 # created are owned by that user. Without this they are all owned by root.
-# The dockcross script sets the BUILDER_UID and BUILDER_GID vars.
+# The ocix script sets the BUILDER_UID and BUILDER_GID vars.
 if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
 
     groupadd -o -g $BUILDER_GID $BUILDER_GROUP 2> /dev/null
@@ -32,13 +32,13 @@ if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
     chown -R $BUILDER_UID:$BUILDER_GID $HOME
 
     # Additional updates specific to the image
-    if [[ -e /dockcross/pre_exec.sh ]]; then
-        /dockcross/pre_exec.sh
+    if [[ -e /ocix/pre_exec.sh ]]; then
+        /ocix/pre_exec.sh
     fi
 
     # Execute project specific pre execution hook
-    if [[ -e /work/.dockcross ]]; then
-       gosu $BUILDER_UID:$BUILDER_GID /work/.dockcross
+    if [[ -e /work/.ocix ]]; then
+       gosu $BUILDER_UID:$BUILDER_GID /work/.ocix
     fi
 
     # Enable passwordless sudo capabilities for the user

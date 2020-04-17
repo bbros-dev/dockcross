@@ -28,8 +28,8 @@ COPY linux-x86/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 COPY manylinux2010-x86/Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
-COPY linux-x86/linux32-entrypoint.sh /dockcross/
-ENTRYPOINT ["/dockcross/linux32-entrypoint.sh"]
+COPY linux-x86/linux32-entrypoint.sh /ocix/
+ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 # OCI container annotations are as defined at  https://github.com/opencontainers/image-spec/blob/master/annotations.md
 ARG BUILD_DATE
