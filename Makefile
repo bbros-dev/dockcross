@@ -4,8 +4,7 @@ SHELL := /bin/bash
 # Parameters
 #
 
-OCI_EXE := $(shell command -v podman 2> /dev/null)
-OCI_EXE ?= docker
+OCI_EXE := $(shell command -v podman || command -v docker 2> /dev/null)
 
 # Docker organization to pull the images from
 OCIX_ORG_FILE := ocix_org
