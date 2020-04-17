@@ -10,11 +10,17 @@ Features
 --------
 
 * Supports `Docker <https://www.docker.com/>`_ and `Podman <https://podman.io/>`_
-  container engines.
+  container engines at buildtime and at runtime.
 * Supports `Open Container Initiative (OCI) <https://www.opencontainers.org/>`_
   compatible containers and registries.
 * Supports use cases where code and containers must be self-hosted. See
-  Self-Hosting below.
+  Self-Hosting below. To see a list of containers available: ``make list``.
+* Supports single container users: ``make ocix-linux-x64`` builds and uploads
+  to your registry the container ``ocix-linux-x64``. See Self-Hosting below.
+* Supports single container users cases where this project is a `git-subrepo 
+  <https://github.com/ingydotnet/git-subrepo>`_ of a project: 
+  ``make ocix-linux-x64`` builds and uploads to your registry the container 
+  ``ocix-linux-x64``. See Self-Hosting below.
 * Pre-built and configured toolchains for cross compiling.
 * Most images also contain an emulator for the target system.
 * Clean separation of build tools, source code, and build artifacts.
@@ -283,10 +289,10 @@ be used::
     docker pull ocix/$image
   done
 
-For Podman users, set ``OCI_EXE=podman`` when invoking a ``make`` target::
+For Podman users cut-and-paste::
 
   curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
-  for image in $(make OCI_EXE=podman -f ocix-Makefile display_images); do
+  for image in $(make -f ocix-Makefile display_images); do
     echo "Pulling ocix/$image"
     podman pull ocix/$image
   done
@@ -308,10 +314,10 @@ already downloaded, the convenience target ``display_images`` could be used::
     chmod u+x  ~/bin/ocix-$image
   done
 
-For Podman users, set ``OCI_EXE=podman`` when invoking a ``make`` target::
+For Podman users cut-and-paste::
 
   curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
-  for image in $(make OCI_EXE=podman -f ocix-Makefile display_images); do
+  for image in $(make -f ocix-Makefile display_images); do
     if [[ $(podman images -q ocix/$image) == "" ]]; then
       echo "~/bin/ocix-$image skipping: image not found locally"
       continue
@@ -393,8 +399,8 @@ container image names in your registry.
 
 We welcome Pull-Requests adding support and instructions for other services.
 
-GitHub + CircleCI + Docker.io
------------------------------
+GitHub + CircleCI + Docker.io/Quay.io
+-------------------------------------
 
 1. Fork the repository ``dockcross/dockcross`` to ``YourOrg/YourName``.
 1. Clone your fork to you local computer.
@@ -408,11 +414,15 @@ GitHub + CircleCI + Docker.io
    under the organization/user name ``MyProject`` (does not have to match the
    Git server organization/user) then add ``MyProject`` to the file ``ocix_org``.
    Default: ``dockcross``
-1. Add the git repository to you CircleCI account. Then:
+1. To build and upload a single container: ``make oci-linux-arm64``. To see a 
+   list of containers available: ``make list``.
+1. To build and upload all containers:
+   Add the git repository to you CircleCI account. Then:
    a. Select CircleCI Project settings.
    b. Select Environment variables.
    c. Add ``OCIX_REGISTRY_USER`` with your OCI registry user name.
    d. Add ``OCIX_REGISTRY_PASSWORD`` with your OCI registry password.
+
 What is the difference between `dockcross` and `dockbuild` ?
 ------------------------------------------------------------
 
