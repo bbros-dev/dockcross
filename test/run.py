@@ -36,6 +36,7 @@ def test_none_build_system(build_dir, language, source, linker_flags, exe_suffix
     sys.stdout.flush()
 
     return subprocess.call(build_cmd)
+
 def test_cmake_build_system(build_dir, language, source, emulator, linker_flags,
         exe_suffix):
     shutil.copy(source, build_dir)
@@ -67,6 +68,7 @@ def test_cmake_build_system(build_dir, language, source, emulator, linker_flags,
             return 1
     shutil.copy('a.out' + exe_suffix, build_dir)
     return 0
+
 def test_source(source, language, build_system, emulator, linker_flags,
         exe_suffix, debug):
     result = 0
@@ -100,6 +102,7 @@ def test_source(source, language, build_system, emulator, linker_flags,
 
     sys.stdout.flush()
     return result
+
 def test_build_system(test_dir, language, build_system, emulator, linker_flags,
         exe_suffix, debug):
     print('\n\n--------------------------------------------------------')
@@ -111,6 +114,7 @@ def test_build_system(test_dir, language, build_system, emulator, linker_flags,
         result += test_source(source, language, build_system, emulator,
                 linker_flags, exe_suffix, debug)
     return result
+
 def test_language(test_dir, language, build_systems, emulator, linker_flags,
         exe_suffix, debug):
     result = 0
@@ -123,6 +127,7 @@ def test_language(test_dir, language, build_systems, emulator, linker_flags,
                 exe_suffix,
                 debug)
     return result
+
 def run_tests(test_dir, languages=('C', 'C++'), build_systems=('None', 'CMake'),
         emulator=None, linker_flags=None, exe_suffix='', debug=False):
     """Run the tests found in test_dir where each directory corresponds to an
