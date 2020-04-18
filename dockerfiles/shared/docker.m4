@@ -35,4 +35,4 @@ ENTRYPOINT ["/ocix/entrypoint.sh"]
 # Runtime scripts
 COPY scripts/cmake.sh /usr/local/bin/cmake
 COPY scripts/ccmake.sh /usr/local/bin/ccmake
-COPY scripts/entrypoint.sh scripts/ocix /ocix/
+COPY scripts/entrypoint.sh scripts/ocix.sh /ocix/
