@@ -1,5 +1,7 @@
 SHELL := /bin/bash
 
+# http://bobbynorton.com/posts/includes-in-dockerfiles-with-m4-and-make/
+
 #
 # Parameters
 #
@@ -7,14 +9,11 @@ SHELL := /bin/bash
 OCI_EXE := $(shell command -v podman || command -v docker 2> /dev/null)
 
 # Docker organization to pull the images from
-OCIX_ORG_FILE := ocix_org
-OCIX_ORG := $(shell cat ${OCIX_ORG_FILE})
+OCIX_ORG := $(shell cat ocix_org)
 
 # Exit if we don't have a OCIX_VERSION.
 # If the shell has `export OCIX_VERSION=m.n.o` we'll get that.
-ifndef OCIX_VERSION
-$(error OCIX_VERSION is not set)
-endif
+OCIX_VERSION := $(shell cat ocix_version)
 
 # Check we have a semantic version, abend. Make doesn't have regular expressions
 # so delegate to the shell (defined above)
@@ -33,7 +32,7 @@ TAG = $(OCIX_VERSION)
 BIN = ./bin
 
 # These images are built using the "build implicit rule"
-STANDARD_IMAGES = ocix-linux-s390x ocix-android-arm ocix-android-arm64 ocix-linux-x86 ocix-linux-x64 ocix-linux-arm64 ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-armv6 ocix-linux-armv7 ocix-linux-armv7a ocix-linux-mips ocix-linux-mipsel ocix-linux-ppc64el ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix
+STANDARD_IMAGES = ocix-base ocix-android-arm ocix-android-arm64 ocix-linux-s390x ocix-linux-arm64 ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-armv6 ocix-linux-armv7 ocix-linux-armv7a ocix-linux-mips ocix-linux-mipsel ocix-linux-ppc64el ocix-linux-x64 ocix-linux-x86 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix
 
 # Generated Dockerfiles.
 GEN_IMAGES = ocix-linux-s390x ocix-linux-mips ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64 ocix-web-wasm ocix-linux-arm64 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix ocix-linux-armv7 ocix-linux-armv7a ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-ppc64el
@@ -46,6 +45,8 @@ DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux common.c
 
 # This list all available images
 IMAGES = $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)
+DOCKERFILES=$(shell find dockerfiles/ -maxdepth 1 -type f -iname '*.m4' -execdir basename -s '.m4' {} +)
+IMAGES=$(subst /,\:,$(subst /Dockerfile,,$(DOCKERFILES)))
 
 # Optional arguments for test runner (test/run.py) associated with "testing implicit rule"
 linux-ppc64el.test_ARGS = --languages C
@@ -63,6 +64,18 @@ ifeq ("$(CIRCLECI)", "true")
 	RM =
 endif
 
+# all targets are phony (no files to check).
+.PHONY: check-ocix-base $(IMAGES)
+# Prevent implict rule search for files triggering a rebuild of this Makefile
+Makefile: ;
+
+LIB = ./dockerfiles
+
+Dockerfile: $(LIB)/*.m4
+	m4 -I $(LIB) $(LIB)/$@.m4 > Dockerfile
+
+build: dockerfile
+
 #
 # images: This target builds all IMAGES (because it is the first one, it is built by default)
 #
@@ -71,40 +84,40 @@ images: ocix-base $(IMAGES)
 #
 # test: This target ensures all IMAGES are built and run the associated tests
 #
-test: ocix-base.test $(addsuffix .test,$(IMAGES))
+test: $(addsuffix .test,$(IMAGES))
 
 #
 # Generic Targets (can specialize later).
 #
 
-$(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOSITE_SOURCES)
-	sed \
-		-e '/common.docker/ r common.docker' \
-		-e '/common.debian/ r common.debian' \
-		-e '/common.manylinux/ r common.manylinux' \
-		-e '/common.crosstool/ r common.crosstool' \
-		-e '/common.windows/ r common.windows' \
-		$< > $@
+# $(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOSITE_SOURCES)
+# 	sed \
+# 		-e '/common.docker/ r common.docker' \
+# 		-e '/common.debian/ r common.debian' \
+# 		-e '/common.manylinux/ r common.manylinux' \
+# 		-e '/common.crosstool/ r common.crosstool' \
+# 		-e '/common.windows/ r common.windows' \
+# 		$< > $@
 
 #
 # web-wasm
 #
-ocix-web-wasm: ocix-web-wasm/Dockerfile
-# BUILT=$(shell $(OCI_EXE) images -q ocix-web-wasm:$(TAG) 2> /dev/null)
-# ifeq ($(strip $(BUILT)),)
-	mkdir -p $@/imagefiles && cp -r imagefiles $@/ 
-	cp -r test ocix-web-wasm/
-	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-web-wasm:$(TAG) \
-		--build-arg IMAGE=$(OCIX_ORG)/ocix-web-wasm \
-		--build-arg OCIX_ORG=$(OCIX_ORG) \
-		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg VCS_URL=`git config --get remote.origin.url` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		ocix-web-wasm
-	rm -rf ocix-web-wasm/test
-	# rm -rf $@/imagefiles
-# endif
+# ocix-web-wasm: ocix-web-wasm/Dockerfile
+# # BUILT=$(shell $(OCI_EXE) images -q ocix-web-wasm:$(TAG) 2> /dev/null)
+# # ifeq ($(strip $(BUILT)),)
+# 	mkdir -p $@/imagefiles && cp -r imagefiles $@/ 
+# 	cp -r test ocix-web-wasm/
+# 	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-web-wasm:$(TAG) \
+# 		--build-arg IMAGE=$(OCIX_ORG)/ocix-web-wasm \
+# 		--build-arg OCIX_ORG=$(OCIX_ORG) \
+# 		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+# 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+# 		--build-arg VCS_URL=`git config --get remote.origin.url` \
+# 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+# 		ocix-web-wasm
+# 	rm -rf ocix-web-wasm/test
+# 	# rm -rf $@/imagefiles
+# # endif
 
 ocix-web-wasm.test: ocix-web-wasm
 	cp -r test ocix-web-wasm/
@@ -115,20 +128,17 @@ ocix-web-wasm.test: ocix-web-wasm
 #
 # manylinux2014-x64
 #
-ocix-manylinux2014-x64: ocix-manylinux2014-x64/Dockerfile
-# BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux2014-x64:$(TAG) 2> /dev/null)
-# ifeq ($(strip $(BUILT)),)
-	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2014-x64:$(TAG) \
-		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2014-x64 \
-		--build-arg OCIX_ORG=$(OCIX_ORG) \
-		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg VCS_URL=`git config --get remote.origin.url` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--file ocix-manylinux2014-x64/Dockerfile .
-	# rm -rf $@/imagefiles
-# endif
+# ocix-manylinux2014-x64: ocix-manylinux2014-x64/Dockerfile
+# 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
+# 	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2014-x64:$(TAG) \
+# 		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2014-x64 \
+# 		--build-arg OCIX_ORG=$(OCIX_ORG) \
+# 		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+# 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+# 		--build-arg VCS_URL=`git config --get remote.origin.url` \
+# 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+# 		--file ocix-manylinux2014-x64/Dockerfile .
+# 	rm -rf $@/imagefiles
 
 ocix-manylinux2014-x64.test: ocix-manylinux2014-x64
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2014-x64:$(TAG) > $(BIN)/ocix-manylinux2014-x64 && chmod +x $(BIN)/ocix-manylinux2014-x64
@@ -138,20 +148,17 @@ ocix-manylinux2014-x64.test: ocix-manylinux2014-x64
 # manylinux2010-x64
 #
 
-ocix-manylinux2010-x64: ocix-manylinux2010-x64/Dockerfile
-# BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux2010-x64:$(TAG) 2> /dev/null)
-# ifeq ($(strip $(BUILT)),)
-	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2010-x64:$(TAG) \
-		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2010-x64 \
-		--build-arg OCIX_ORG=$(OCIX_ORG) \
-		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg VCS_URL=`git config --get remote.origin.url` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--file manylinux2010-x64/Dockerfile .
-	# rm -rf $@/imagefiles
-# endif
+# ocix-manylinux2010-x64: ocix-manylinux2010-x64/Dockerfile
+# 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
+# 	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2010-x64:$(TAG) \
+# 		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2010-x64 \
+# 		--build-arg OCIX_ORG=$(OCIX_ORG) \
+# 		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+# 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+# 		--build-arg VCS_URL=`git config --get remote.origin.url` \
+# 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+# 		--file manylinux2010-x64/Dockerfile .
+# 	rm -rf $@/imagefiles
 
 ocix-manylinux2010-x64.test: ocix-manylinux2010-x64
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2010-x64:$(TAG) > $(BIN)/ocix-manylinux2010-x64 && chmod +x $(BIN)/ocix-manylinux2010-x64
@@ -161,19 +168,19 @@ ocix-manylinux2010-x64.test: ocix-manylinux2010-x64
 # manylinux2010-x86
 #
 
-ocix-manylinux2010-x86: ocix-manylinux2010-x86/Dockerfile
-# BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux2010-x86:$(TAG) 2> /dev/null)
-# ifeq ($(strip $(BUILT)),)
-	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2010-x86:$(TAG) \
-		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2010-x86 \
-		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg VCS_URL=`git config --get remote.origin.url` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--file manylinux2010-x86/Dockerfile .
-	# rm -rf $@/imagefiles
-# endif
+# ocix-manylinux2010-x86: ocix-manylinux2010-x86/Dockerfile
+# # BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux2010-x86:$(TAG) 2> /dev/null)
+# # ifeq ($(strip $(BUILT)),)
+# 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
+# 	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux2010-x86:$(TAG) \
+# 		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux2010-x86 \
+# 		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+# 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+# 		--build-arg VCS_URL=`git config --get remote.origin.url` \
+# 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+# 		--file manylinux2010-x86/Dockerfile .
+# 	# rm -rf $@/imagefiles
+# # endif
 
 ocix-manylinux2010-x86.test: ocix-manylinux2010-x86
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2010-x86:$(TAG) > $(BIN)/ocix-manylinux2010-x86 && chmod +x $(BIN)/ocix-manylinux2010-x86
@@ -183,20 +190,20 @@ ocix-manylinux2010-x86.test: ocix-manylinux2010-x86
 # manylinux1-x64
 #
 
-ocix-manylinux1-x64: ocix-manylinux1-x64/Dockerfile
-# BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux1-x64:$(TAG) 2> /dev/null)
-# ifeq ($(strip $(BUILT)),)
-	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux1-x64:$(TAG) \
-		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux1-x64 \
-		--build-arg OCIX_ORG=$(OCIX_ORG) \
-		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg VCS_URL=`git config --get remote.origin.url` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--file manylinux1-x64/Dockerfile .
-	# rm -rf $@/imagefiles
-# endif
+# ocix-manylinux1-x64: ocix-manylinux1-x64/Dockerfile
+# # BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux1-x64:$(TAG) 2> /dev/null)
+# # ifeq ($(strip $(BUILT)),)
+# 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
+# 	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux1-x64:$(TAG) \
+# 		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux1-x64 \
+# 		--build-arg OCIX_ORG=$(OCIX_ORG) \
+# 		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+# 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+# 		--build-arg VCS_URL=`git config --get remote.origin.url` \
+# 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+# 		--file manylinux1-x64/Dockerfile .
+# 	# rm -rf $@/imagefiles
+# # endif
 
 ocix-manylinux1-x64.test: ocix-manylinux1-x64
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux1-x64:$(TAG) > $(BIN)/ocix-manylinux1-x64 && chmod +x $(BIN)/ocix-manylinux1-x64
@@ -206,20 +213,20 @@ ocix-manylinux1-x64.test: ocix-manylinux1-x64
 # manylinux1-x86
 #
 
-ocix-manylinux1-x86: ocix-manylinux1-x86/Dockerfile
-# BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux1-x86:$(TAG) 2> /dev/null)
-# ifeq ($(strip $(BUILT)),)
-	mkdir -p $@/imagefiles && cp -f -r imagefiles $@/
-	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux1-x86:$(OCIX_VERSION) \
-		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux1-x86 \
-		--build-arg OCIX_ORG=$(OCIX_ORG) \
-		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg VCS_URL=`git config --get remote.origin.url` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--file manylinux1-x86/Dockerfile .
-	# rm -rf $@/imagefiles
-# endif
+# ocix-manylinux1-x86: ocix-manylinux1-x86/Dockerfile
+# # BUILT=$(shell $(OCI_EXE) images -q ocix-manylinux1-x86:$(TAG) 2> /dev/null)
+# # ifeq ($(strip $(BUILT)),)
+# 	mkdir -p $@/imagefiles && cp -f -r imagefiles $@/
+# 	$(OCI_EXE) build --tag $(OCIX_ORG)/ocix-manylinux1-x86:$(OCIX_VERSION) \
+# 		--build-arg IMAGE=$(OCIX_ORG)/ocix-manylinux1-x86 \
+# 		--build-arg OCIX_ORG=$(OCIX_ORG) \
+# 		--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+# 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+# 		--build-arg VCS_URL=`git config --get remote.origin.url` \
+# 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+# 		--file manylinux1-x86/Dockerfile .
+# 	# rm -rf $@/imagefiles
+# # endif
 
 ocix-manylinux1-x86.test: ocix-manylinux1-x86
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux1-x86:$(TAG) > $(BIN)/ocix-manylinux1-x86 && chmod +x $(BIN)/ocix-manylinux1-x86
@@ -229,9 +236,8 @@ ocix-manylinux1-x86.test: ocix-manylinux1-x86
 # base
 #
 
-ocix-base: Dockerfile imagefiles/
-	OCIX_DIR=.
-	./scripts/make_base.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $(OCIX_DIR)
+ocix-base:
+	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
 
 ocix-base.test: ocix-base
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
@@ -245,30 +251,38 @@ display_images:
 
 $(VERBOSE).SILENT: display_images
 
+
+check-ocix-base:
+ifndef BASE_BUILT
+	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) ocix-base $(OCIX_VERSION) ocix-base
+BASE_BUILT:=true
+endif
+
+
 #
 # build implicit rule
 #
 
-$(STANDARD_IMAGES): %: %/Dockerfile ocix-base
-	if [ "$($(OCI_EXE) images -q $@:$(TAG) 2> /dev/null)" = "" ]; then
-		mkdir -p $@/imagefiles && cp -r imagefiles $@/
-		$(OCI_EXE) build --tag $(OCIX_ORG)/$@:$(TAG) \
-			--build-arg IMAGE=$(OCIX_ORG)/$@ \
-			--build-arg OCIX_ORG=$(OCIX_ORG) \
-			--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-			--build-arg VCS_REF=`git rev-parse --short HEAD` \
-			--build-arg VCS_URL=`git config --get remote.origin.url` \
-			--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-			$@
-		rm -rf $@/imagefiles
-	fi
+$(STANDARD_IMAGES): check-ocix-base
+	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
+	# mkdir -p $@/imagefiles && cp -r imagefiles $@/
+	# $(OCI_EXE) build --tag $(OCIX_ORG)/$@:$(TAG) \
+	# 	--build-arg IMAGE=$(OCIX_ORG)/$@ \
+	# 	--build-arg OCIX_ORG=$(OCIX_ORG) \
+	# 	--build-arg OCIX_VERSION=$(OCIX_VERSION) \
+	# 	--build-arg VCS_REF=`git rev-parse --short HEAD` \
+	# 	--build-arg VCS_URL=`git config --get remote.origin.url` \
+	# 	--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+	# 	$@
+	# rm -rf $@/imagefiles
+
 #
 # testing implicit rule
 #
 .SECONDEXPANSION:
 $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/ocix-$(basename $@) && chmod +x $(BIN)/ocix-$(basename $@)
-	$(BIN)/ocix-$(basename $@) python test/run.py $($@_ARGS)
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
+	$(BIN)/$(basename $@) python test/run.py $($@_ARGS)
 
 #
 # testing prerequisites implicit rule
@@ -276,9 +290,9 @@ $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
 test.prerequisites:
 	mkdir -p $(BIN)
 
-$(addsuffix .test,ocix-base $(IMAGES)): test.prerequisites
+$(addsuffix .test,$(IMAGES)): test.prerequisites
 
-.PHONY: ocix-base images $(IMAGES) test %.test
+.PHONY: images $(IMAGES) test %.test
 
 .PHONY: list
 list:

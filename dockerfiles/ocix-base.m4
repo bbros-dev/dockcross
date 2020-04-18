@@ -1,11 +1,12 @@
 FROM debian:10.3-slim
 
-#include "common.debian"
+include(shared/debian.m4)
 
-#include "common.docker"
+include(shared/docker.m4)
 
 ARG BUILD_DATE
-ARG OCIX_ORG=ocix
+ARG OCIX_ORG
+ARG OCIX_VERSION
 ARG IMAGE
 ARG VCS_REF
 ARG VCS_URL

@@ -331,7 +331,7 @@ Dockcross configuration
 The following environmental variables and command-line options are used. In
 all cases, the command-line option overrides the environment variable.
 
-DOCKCROSS_CONFIG / --config|-c <path-to-config-file>
+OCIX_CONFIG / --config|-c <path-to-config-file>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This file is sourced, if it exists, before executing the rest of the ocix
