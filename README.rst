@@ -13,11 +13,9 @@ Features
   container engines at buildtime and at runtime.
 * Supports `Open Container Initiative (OCI) <https://www.opencontainers.org/>`_
   compatible containers and registries.
-* Supports use cases where code and containers must be self-hosted. See
+* Supports use cases where code and all containers must be self-hosted. See
   Self-Hosting below. To see a list of containers available: ``make list``.
-* Supports single container users: ``make ocix-linux-x64`` builds and uploads
-  to your registry the container ``ocix-linux-x64``. See Self-Hosting below.
-* Supports single container users cases where this project is a `git-subrepo 
+* Supports single container use cases where this project is a `git-subrepo 
   <https://github.com/ingydotnet/git-subrepo>`_ of a project: 
   ``make ocix-linux-x64`` builds and uploads to your registry the container 
   ``ocix-linux-x64``. See Self-Hosting below.
