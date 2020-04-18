@@ -5,9 +5,9 @@ ARG OCIX_VERSION
 
 ENV DEFAULT_OCIX_IMAGE ${OCIX_ORG}/manylinux1-x64:${OCIX_VERSION}
 
-#include "common.manylinux"
+include(shared/manylinux.m4)
 
-#include "common.docker"
+include(shared/docker.m4)
 
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /opt/rh/devtoolset-2/root/usr/bin
@@ -24,22 +24,6 @@ COPY linux-x64/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 COPY manylinux1-x64/Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
-# OCI container annotations are as defined at  https://github.com/opencontainers/image-spec/blob/master/annotations.md
-ARG BUILD_DATE
-ARG IMAGE=${OCIX_ORG}/ocix-manylinux1-x64
-ARG VCS_REF
-ARG VCS_URL
-ARG OCIX_URL="https://github.com/dockcross/dockcross/blob/master/README.rst"
+include(shared/label.m4)
 
-LABEL org.opencontainers.image.created=$BUILD_DATE \
-      org.opencontainers.image.description=$IMAGE \
-      org.opencontainers.image.documentation=$OCIX_URL \
-      org.opencontainers.image.licenses="SPDX-License-Identifier: MIT" \
-      org.opencontainers.image.ref.name=$IMAGE \
-      org.opencontainers.image.revision=$VCS_REF \
-      org.opencontainers.image.source=$VCS_URL \
-      org.opencontainers.image.title=$IMAGE \
-      org.opencontainers.image.url=$OCIX_URL \
-      org.opencontainers.image.vendor=$OCIX_ORG \
-      org.opencontainers.image.version=$OCIX_VERSION
 ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}

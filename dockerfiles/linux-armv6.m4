@@ -1,25 +1,14 @@
-# NOTE: Arguments are reset to empty after the FROM statement.
-#       Unless they are not.
-#       This funkyness is from Docker world: 
-#       https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-#       https://docs.docker.com/engine/reference/builder/#scope
-ARG DOCKCROSS_ORG=dockcross
-ARG DOCKCROSS_VERSION=latest
-FROM ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
-ARG DOCKCROSS_ORG
-ARG DOCKCROSS_VERSION
-
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
+include(shared/base.m4)
 
 # Enable 32 bits binaries
 RUN dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get install -y libstdc++6:i386 libgcc1:i386 zlib1g:i386
-
-# The cross-compiling emulator
-RUN apt-get update && apt-get install -y \
-  qemu-user \
-  qemu-user-static
+    aptitude update && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      libstdc++6:i386 \
+                      libgcc1:i386 \
+                      zlib1g:i386 \
+                      qemu-user:i386 \
+                      qemu-user-static:i386
 
 ENV CROSS_TRIPLE arm-linux-gnueabihf
 ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
@@ -42,9 +31,15 @@ ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
 # Instead of cloning the whole repo (>1GB at the of writing this), we want to do a so-called "sparse checkout" with "shallow cloning":
 # https://stackoverflow.com/questions/600079/is-there-any-way-to-clone-a-git-repositorys-sub-directory-only/13738951#13738951
 
-RUN mkdir rpi_tools && cd rpi_tools && git init && git remote add -f origin https://github.com/raspberrypi/tools && \
-    git config core.sparseCheckout true && echo "arm-bcm2708/gcc-linaro-${CROSS_TRIPLE}-raspbian" >> .git/info/sparse-checkout && \
-    git pull --depth=1 origin master && rsync -av arm-bcm2708/gcc-linaro-${CROSS_TRIPLE}-raspbian/ /usr/ && rm -rf ../rpi_tools
+RUN mkdir rpi_tools && \
+    cd rpi_tools && \
+    git init && \
+    git remote add -f origin https://github.com/raspberrypi/tools && \
+    git config core.sparseCheckout true && \
+    echo "arm-bcm2708/gcc-linaro-${CROSS_TRIPLE}-raspbian" >> .git/info/sparse-checkout && \
+    git pull --depth=1 origin master && \
+    rsync -av arm-bcm2708/gcc-linaro-${CROSS_TRIPLE}-raspbian/ /usr/ && \
+    rm -rf ../rpi_tools
 
 # Allow dynamically linked executables to run with qemu-arm
 ENV QEMU_LD_PREFIX ${CROSS_ROOT}/libc
@@ -58,17 +53,6 @@ ENV PATH ${PATH}:${CROSS_ROOT}/bin
 ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH arm
 
-# Build-time metadata as defined at http://label-schema.org
-ARG BUILD_DATE
-ARG DOCKCROSS_ORG=dockcross
-ARG DOCKCROSS_VERSION
-ARG IMAGE=${DOCKCROSS_ORG}/linux-armv6
-ARG VCS_REF
-ARG VCS_URL
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.version=$DOCKCROSS_VERSION \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
-ENV DEFAULT_DOCKCROSS_IMAGE ${IMAGE}:${VERSION}
+include(shared/label.m4)
+
+ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${VERSION}

@@ -3,7 +3,7 @@ FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4
 RUN rm /bin/sh && ln -s /bin/dash /bin/sh
 
-COPY imagefiles/install-gosu-binary-wrapper.sh /buildscripts/
+COPY scripts/install-gosu-binary-wrapper.sh /buildscripts/
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG REPO=http://cdn-fastly.deb.debian.org
@@ -53,7 +53,7 @@ RUN \
   /buildscripts/install-gosu-binary-wrapper.sh && \
   rm -rf /buildscripts
 
-#include "common.docker"
+include(shared/docker.m4)
 
 ENV EMSCRIPTEN_VERSION 1.39.10
 
@@ -63,21 +63,6 @@ ENV CC=/emsdk_portable/emscripten/sdk/emcc \
   AR=/emsdk_portable/emscripten/sdk/emar
 ENV CMAKE_TOOLCHAIN_FILE /emsdk_portable/emscripten/sdk/cmake/Modules/Platform/Emscripten.cmake
 
-# OCI container annotations are as defined at  https://github.com/opencontainers/image-spec/blob/master/annotations.md
-ARG BUILD_DATE
-ARG IMAGE=${OCIX_ORG}/web-wasm
-ARG VCS_REF
-ARG VCS_URL
-ARG OCIX_URL="https://github.com/dockcross/dockcross/blob/master/README.rst"
-LABEL org.opencontainers.image.created=$BUILD_DATE \
-      org.opencontainers.image.description=$IMAGE \
-      org.opencontainers.image.documentation=$OCIX_URL \
-      org.opencontainers.image.licenses="SPDX-License-Identifier: MIT" \
-      org.opencontainers.image.ref.name=$IMAGE \
-      org.opencontainers.image.revision=$VCS_REF \
-      org.opencontainers.image.source=$VCS_URL \
-      org.opencontainers.image.title=$IMAGE \
-      org.opencontainers.image.url=$OCIX_URL \
-      org.opencontainers.image.vendor=$OCIX_ORG \
-      org.opencontainers.image.version=$OCIX_VERSION
+include(shared/label.m4)
+
 ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}

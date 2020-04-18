@@ -1,25 +1,12 @@
-# NOTE: Arguments are reset to empty after the FROM statement.
-#       Unless they are not.
-#       This funkyness is from Docker world: 
-#       https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-#       https://docs.docker.com/engine/reference/builder/#scope
-ARG DOCKCROSS_ORG=dockcross
-ARG DOCKCROSS_VERSION=latest
-FROM ${DOCKCROSS_ORG}/dockcross-base:${DOCKCROSS_VERSION}
-ARG DOCKCROSS_ORG
-ARG DOCKCROSS_VERSION
+include(shared/base.m4)
 
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
-RUN \
-  sed -i '/debian-security/d' /etc/apt/sources.list && \
-  dpkg --add-architecture arm64 && \
-  apt-get update
-
-# The cross-compiling emulator
-RUN apt-get update && apt-get install -y \
-  qemu-user \
-  qemu-user-static \
-  unzip
+RUN sed -i '/debian-security/d' /etc/apt/sources.list && \
+    dpkg --add-architecture arm64 && \
+    aptitude update && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+    qemu-user \
+    qemu-user-static \
+    unzip
 
 ENV CROSS_TRIPLE=aarch64-linux-android
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}
@@ -52,17 +39,6 @@ RUN mkdir -p /build && \
 COPY Toolchain.cmake ${CROSS_ROOT}/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
 
-# Build-time metadata as defined at http://label-schema.org
-ARG BUILD_DATE
-ARG DOCKCROSS_ORG=dockcross
-ARG IMAGE=${DOCKCROSS_ORG}/android-arm64
-ARG DOCKCROSS_VERSION
-ARG VCS_REF
-ARG VCS_URL
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.version=$VERSION \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
-ENV DEFAULT_DOCKCROSS_IMAGE ${IMAGE}:${VERSION}
+include(shared/label.m4)
+
+ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${VERSION}

@@ -12,10 +12,7 @@ commands:
       - run: 
           name: Export OCI-Cross Registry, Organization and Version
           command: |
-            echo "export OCIX_REGISTRY=$(cat ocix_registry)" >> $BASH_ENV
-            echo "export OCIX_REGISTRY=$(cat ocix_port)" >> $BASH_ENV
-            echo "export OCIX_ORG=$(cat ocix_org)" >> $BASH_ENV
-            echo "export OCIX_VERSION=$(cat ocix_version)" >> $BASH_ENV
+            ./scripts/ocix-env.sh >> $BASH_ENV
   build_test_ocix_image:
     description: Build & test an OCI-Cross container image
     parameters:
@@ -112,132 +109,132 @@ workflows:
     jobs:
       - ocix-base:
           <<: *workflow-settings
-      - ocix:
-          name: "linux-x64"
-          image: "ocix-linux-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "android-arm"
-          image: "ocix-android-arm"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "android-arm64"
-          image: "ocix-android-arm64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "web-wasm"
-          image: "ocix-web-wasm"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-arm64"
-          image: "ocix-linux-arm64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv5"
-          image: "ocix-linux-armv5"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv6"
-          image: "ocix-linux-armv6"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv7"
-          image: "ocix-linux-armv7"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv7a"
-          image: "ocix-linux-armv7a"
-          requires:
-            - ocix-base
-      # Image build currently broken. See #209
-      #- ocix:
-      #    name: "linux-mipsel"
-      #    image: "ocix-linux-mipsel"
-      #    requires:
-      #      - ocix-base
-      - ocix:
-          name: "linux-s390x"
-          image: "ocix-linux-s390x"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-ppc64el"
-          image: "ocix-linux-ppc64el"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-x64"
-          image: "ocix-linux-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-x86"
-          image: "ocix-linux-x86"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "manylinux1-x64"
-          image: "ocix-manylinux1-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "manylinux1-x86"
-          image: "ocix-manylinux1-x86"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "manylinux2010-x64"
-          image: "ocix-manylinux2010-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "manylinux2010-x86"
-          image: "ocix-manylinux2010-x86"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "manylinux2014-x64"
-          image: "ocix-manylinux2014-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-static-x64"
-          image: "ocix-windows-static-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-static-x64-posix"
-          image: "ocix-windows-static-x64-posix"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-static-x86"
-          image: "ocix-windows-static-x86"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-shared-x64"
-          image: "ocix-windows-shared-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-shared-x64-posix"
-          image: "ocix-windows-shared-x64-posix"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-shared-x86"
-          image: "ocix-windows-shared-x86"
-          requires:
-            - ocix-base
-      - deploy:
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "linux-x64"
+      #     image: "ocix-linux-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "android-arm"
+      #     image: "ocix-android-arm"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "android-arm64"
+      #     image: "ocix-android-arm64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "web-wasm"
+      #     image: "ocix-web-wasm"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-arm64"
+      #     image: "ocix-linux-arm64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv5"
+      #     image: "ocix-linux-armv5"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv6"
+      #     image: "ocix-linux-armv6"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv7"
+      #     image: "ocix-linux-armv7"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv7a"
+      #     image: "ocix-linux-armv7a"
+      #     requires:
+      #       - ocix-base
+      # # Image build currently broken. See #209
+      # #- ocix:
+      # #    name: "linux-mipsel"
+      # #    image: "ocix-linux-mipsel"
+      # #    requires:
+      # #      - ocix-base
+      # - ocix:
+      #     name: "linux-s390x"
+      #     image: "ocix-linux-s390x"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-ppc64el"
+      #     image: "ocix-linux-ppc64el"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-x64"
+      #     image: "ocix-linux-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-x86"
+      #     image: "ocix-linux-x86"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "manylinux1-x64"
+      #     image: "ocix-manylinux1-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "manylinux1-x86"
+      #     image: "ocix-manylinux1-x86"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "manylinux2010-x64"
+      #     image: "ocix-manylinux2010-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "manylinux2010-x86"
+      #     image: "ocix-manylinux2010-x86"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "manylinux2014-x64"
+      #     image: "ocix-manylinux2014-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "windows-static-x64"
+      #     image: "ocix-windows-static-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "windows-static-x64-posix"
+      #     image: "ocix-windows-static-x64-posix"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "windows-static-x86"
+      #     image: "ocix-windows-static-x86"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "windows-shared-x64"
+      #     image: "ocix-windows-shared-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "windows-shared-x64-posix"
+      #     image: "ocix-windows-shared-x64-posix"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "windows-shared-x86"
+      #     image: "ocix-windows-shared-x86"
+      #     requires:
+      #       - ocix-base
+      # - deploy:
+      #     requires:
+      #       - ocix-base

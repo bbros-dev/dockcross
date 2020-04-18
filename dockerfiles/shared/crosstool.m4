@@ -15,14 +15,16 @@
 # generate a configuration.
 
 # Install Debian packages required for `ct-ng`.
-RUN apt-get update --yes && \
-    apt-get install --no-install-recommends --yes \
-    gawk \
-    gperf \
-    help2man \
-    python-dev \
-    texinfo && \
-  aptitude clean  --no-gui -f -q -y
+RUN aptitude update --yes && \
+    apt-get install --no-install-recommends --yes aptitude && \
+    aptitude update  --no-gui -f -q -y && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      gawk \
+                      gperf \
+                      help2man \
+                      python-dev \
+                      texinfo && \
+    aptitude clean  --no-gui -f -q -y
 
 ENV XCC_PREFIX=/usr/xcc
 
@@ -31,18 +33,16 @@ ENV XCC_PREFIX=/usr/xcc
 #
 # Afterwards, we will leave the "ct-ng" config in the image as a reference
 # for users.
-COPY \
-  imagefiles/install-crosstool-ng-toolchain.sh \
-  crosstool-ng.config \
-  /ocix/
+COPY scripts/install-crosstool-ng-toolchain.sh \
+     crosstool-ng.config \
+     /ocix/
 
 # Build and install the toolchain, cleaning up artifacts afterwards.
-RUN mkdir /ocix/crosstool \
-&& cd /ocix/crosstool \
-&& /ocix/install-crosstool-ng-toolchain.sh \
-  -p "${XCC_PREFIX}" \
-  -c /ocix/crosstool-ng.config \
-&& rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
+RUN mkdir /ocix/crosstool && \
+    cd /ocix/crosstool && \
+    /ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
+                                            -c /ocix/crosstool-ng.config && \
+    rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
 
 # Restore our default workdir (from "ocix-base" image).
 WORKDIR /work

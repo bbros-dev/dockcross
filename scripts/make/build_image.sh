@@ -17,7 +17,7 @@ then
     --build-arg VCS_REF=`git rev-parse --short HEAD` \
     --build-arg VCS_URL=`git config --get remote.origin.url` \
     --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-    --file ${OCIX_DIR}/Dockerfile .
+    --file ${OCIX_DIR}/Dockerfile ${OCIX_DIR}
   rm -rf ${OCIX_DIR}/scripts
   rm -f ${OCIX_DIR}/Dockerfile
 fi

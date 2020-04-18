@@ -1,4 +1,3 @@
-
 #
 # Before including this script, make sure to set:
 #
@@ -29,52 +28,48 @@ ARG DEBIAN_FRONTEND=noninteractive
 #   http://mxe.cc/#requirements
 # 'cmake' is omitted because it is installed from source in the base image
 #
-RUN \
-  apt-get update && \
-  apt-get install --no-install-recommends --yes \
-    autoconf \
-    automake \
-    autopoint \
-    bash \
-    bison \
-    bzip2 \
-    flex \
-    gettext \
-    git \
-    g++ \
-    g++-multilib \
-    gperf \
-    intltool \
-    libffi-dev \
-    libgdk-pixbuf2.0-dev \
-    libtool-bin \
-    libltdl-dev \
-    libssl-dev \
-    libxml-parser-perl \
-    libc6-dev-i386 \
-    lzip \
-    make \
-    openssl \
-    p7zip-full \
-    patch \
-    perl \
-    pkg-config \
-    python \
-    ruby \
-    scons \
-    sed \
-    unzip \
-    wget \
-    wine \
-    xz-utils \
-  && \
+RUN aptitude update && \
+    aptitude install -q -f -y --no-gui --without-recommends \
+                      autoconf \
+                      automake \
+                      autopoint \
+                      bash \
+                      bison \
+                      bzip2 \
+                      flex \
+                      gettext \
+                      git \
+                      g++ \
+                      g++-multilib \
+                      gperf \
+                      intltool \
+                      libffi-dev \
+                      libgdk-pixbuf2.0-dev \
+                      libtool-bin \
+                      libltdl-dev \
+                      libssl-dev \
+                      libxml-parser-perl \
+                      libc6-dev-i386 \
+                      lzip \
+                      make \
+                      openssl \
+                      p7zip-full \
+                      patch \
+                      perl \
+                      pkg-config \
+                      python \
+                      ruby \
+                      scons \
+                      sed \
+                      unzip \
+                      wget \
+                      wine \
+                      xz-utils && \
   #
   # Install Wine
   #
   dpkg --add-architecture i386 && \
-  apt-get update && \
-  apt-get install --no-install-recommends --yes aptitude && \
-  aptitude update  --no-gui -f -q -y && \
+  aptitude update && \
   aptitude install -q -f -y --no-gui --without-recommends \
                     wine32 && \
   wine hostname && \
