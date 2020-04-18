@@ -241,7 +241,7 @@ ocix-base:
 
 ocix-base.test: ocix-base
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
-	$(BIN)/ocix-base python test/run.py
+	$(BIN)/ocix-base /usr/local/bin/python4ocixtest test/run.py
 
 #
 # display

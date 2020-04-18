@@ -235,6 +235,6 @@ workflows:
       #     image: "ocix-windows-shared-x86"
       #     requires:
       #       - ocix-base
-      # - deploy:
-      #     requires:
-      #       - ocix-base
+      - deploy:
+          requires:
+            - ocix-base
