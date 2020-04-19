@@ -122,7 +122,7 @@ test: $(addsuffix .test,$(IMAGES))
 ocix-web-wasm.test: ocix-web-wasm
 	cp -r test ocix-web-wasm/
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-web-wasm:$(TAG) > $(BIN)/ocix-web-wasm && chmod +x $(BIN)/ocix-web-wasm
-	$(BIN)/ocix-web-wasm python test/run.py --exe-suffix ".js"
+	$(BIN)/ocix-web-wasm /usr/local/bin/python4ocixtest test/run.py --exe-suffix ".js"
 	rm -rf ocix-web-wasm/test
 
 #
@@ -142,7 +142,7 @@ ocix-web-wasm.test: ocix-web-wasm
 
 ocix-manylinux2014-x64.test: ocix-manylinux2014-x64
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2014-x64:$(TAG) > $(BIN)/ocix-manylinux2014-x64 && chmod +x $(BIN)/ocix-manylinux2014-x64
-	$(BIN)/ocix-manylinux2014-x64 /opt/python/cp35-cp35m/bin/python test/run.py
+	$(BIN)/ocix-manylinux2014-x64 /usr/local/bin/python4ocixtest test/run.py
 
 #
 # manylinux2010-x64
@@ -162,7 +162,7 @@ ocix-manylinux2014-x64.test: ocix-manylinux2014-x64
 
 ocix-manylinux2010-x64.test: ocix-manylinux2010-x64
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2010-x64:$(TAG) > $(BIN)/ocix-manylinux2010-x64 && chmod +x $(BIN)/ocix-manylinux2010-x64
-	$(BIN)/ocix-manylinux2010-x64 /opt/python/cp35-cp35m/bin/python test/run.py
+	$(BIN)/ocix-manylinux2010-x64 /usr/local/bin/python4ocixtest test/run.py
 
 #
 # manylinux2010-x86
@@ -184,7 +184,7 @@ ocix-manylinux2010-x64.test: ocix-manylinux2010-x64
 
 ocix-manylinux2010-x86.test: ocix-manylinux2010-x86
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux2010-x86:$(TAG) > $(BIN)/ocix-manylinux2010-x86 && chmod +x $(BIN)/ocix-manylinux2010-x86
-	$(BIN)/ocix-manylinux2010-x86 /opt/python/cp35-cp35m/bin/python test/run.py
+	$(BIN)/ocix-manylinux2010-x86 /usr/local/bin/python4ocixtest test/run.py
 
 #
 # manylinux1-x64
@@ -207,7 +207,7 @@ ocix-manylinux2010-x86.test: ocix-manylinux2010-x86
 
 ocix-manylinux1-x64.test: ocix-manylinux1-x64
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux1-x64:$(TAG) > $(BIN)/ocix-manylinux1-x64 && chmod +x $(BIN)/ocix-manylinux1-x64
-	$(BIN)/ocix-manylinux1-x64 /opt/python/cp35-cp35m/bin/python test/run.py
+	$(BIN)/ocix-manylinux1-x64 /usr/local/bin/python4ocixtest test/run.py
 
 #
 # manylinux1-x86
@@ -230,7 +230,7 @@ ocix-manylinux1-x64.test: ocix-manylinux1-x64
 
 ocix-manylinux1-x86.test: ocix-manylinux1-x86
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-manylinux1-x86:$(TAG) > $(BIN)/ocix-manylinux1-x86 && chmod +x $(BIN)/ocix-manylinux1-x86
-	$(BIN)/ocix-manylinux1-x86 /opt/python/cp35-cp35m/bin/python test/run.py
+	$(BIN)/ocix-manylinux1-x86 /usr/local/bin/python4ocixtest test/run.py
 
 #
 # base
@@ -282,7 +282,7 @@ $(STANDARD_IMAGES): check-ocix-base
 .SECONDEXPANSION:
 $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
-	$(BIN)/$(basename $@) python test/run.py $($@_ARGS)
+	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 
 #
 # testing prerequisites implicit rule
