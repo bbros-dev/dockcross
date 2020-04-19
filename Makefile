@@ -9,6 +9,10 @@ SHELL := /bin/bash
 OCI_EXE := $(shell command -v podman || command -v docker 2> /dev/null)
 
 # Docker organization to pull the images from
+OCIX_REGISTRY := $(shell cat ocix_registry)
+# Docker organization to pull the images from
+OCIX_PORT := $(shell cat ocix_port)
+# Docker organization to pull the images from
 OCIX_ORG := $(shell cat ocix_org)
 
 # Exit if we don't have a OCIX_VERSION.
@@ -121,7 +125,7 @@ test: $(addsuffix .test,$(IMAGES))
 
 ocix-web-wasm.test: ocix-web-wasm
 	cp -r test ocix-web-wasm/
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-web-wasm:$(TAG) > $(BIN)/ocix-web-wasm && chmod +x $(BIN)/ocix-web-wasm
+	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY):$(OCIX_PORT)/$(OCIX_ORG)/ocix-web-wasm:$(TAG) > $(BIN)/ocix-web-wasm && chmod +x $(BIN)/ocix-web-wasm
 	$(BIN)/ocix-web-wasm /usr/local/bin/python4ocixtest test/run.py --exe-suffix ".js"
 	rm -rf ocix-web-wasm/test
 
@@ -240,7 +244,7 @@ ocix-base:
 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
 
 ocix-base.test: ocix-base
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
+	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY):$(OCIX_PORT)/$(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
 	$(BIN)/ocix-base /usr/local/bin/python4ocixtest test/run.py
 
 #
@@ -281,7 +285,7 @@ $(STANDARD_IMAGES): check-ocix-base
 #
 .SECONDEXPANSION:
 $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
+	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY):$(OCIX_PORT)/$(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 
 #
