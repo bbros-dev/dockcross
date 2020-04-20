@@ -2,7 +2,7 @@ FROM quay.io/pypa/manylinux1_i686:latest
 ARG OCIX_ORG=dockcross
 ARG OCIX_VERSION
 
-ENV DEFAULT_OCIX_IMAGE ${OCIX_ORG}/manylinux1-x86:${OCIX_VERSION}
+ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}
 
 include(shared/manylinux.m4)
 
