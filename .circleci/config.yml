@@ -28,7 +28,7 @@ commands:
           command: |
             docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
-            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}:${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
       - run:
          name: Test << parameters.image_name >>
          command: |
@@ -50,11 +50,11 @@ commands:
           name: Deploy << parameters.image_name >>
           command: |
             echo ${OCIX_REGISTRY}
-            echo ${OCIX_REGISTRY}:${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+            echo ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               docker load --quiet --input ~/ocix/<< parameters.image_name >>.tar
-              echo "${OCIX_REGISTRY_PASSWORD}" | docker login --username ${OCIX_REGISTRY_USER} --password-stdin https://${OCIX_REGISTRY}:${OCIX_PORT}
-              docker push ${OCIX_REGISTRY}:${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+              echo "${OCIX_REGISTRY_PASSWORD}" | docker login --username ${OCIX_REGISTRY_USER} --password-stdin https://${OCIX_REGISTRY}${OCIX_PORT}
+              docker push ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
             fi
 
 references:
@@ -75,7 +75,7 @@ jobs:
             docker pull debian:10.3-slim
             make ocix-base
             mkdir -p ~/ocix
-            docker save --output ~/ocix/ocix-base.tar debian:10.3-slim ${OCIX_REGISTRY}:${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
+            docker save --output ~/ocix/ocix-base.tar debian:10.3-slim ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
       - run:
          name: Test ocix-base
          command: |

@@ -4,12 +4,12 @@ OCIX_ORG=$2
 OCIX_IMAGE=$3
 OCIX_VERSION=$4
 OCIX_DIR=$5
-if [ "$(${OCI_EXE} images -q ${OCIX_IMAGE}:${OCIX_VERSION} 2> /dev/null)" = "" ]
+if [ "$(${OCI_EXE} images -q ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION} 2> /dev/null)" = "" ]
 then
   m4 -I ./dockerfiles ./dockerfiles/${OCIX_IMAGE}.m4 > ${OCIX_DIR}/Dockerfile
 	mkdir -p ${OCIX_DIR}/scripts 
   cp -f scripts/image/*.sh ${OCIX_DIR}/scripts/
-  ${OCI_EXE} build --tag ${OCIX_REGISTRY}:${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION} \
+  ${OCI_EXE} build --tag ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION} \
     --build-arg IMAGE=${OCIX_ORG}/${OCIX_IMAGE} \
     --build-arg OCIX_ORG=${OCIX_ORG} \
     --build-arg OCIX_VERSION=${OCIX_VERSION} \
