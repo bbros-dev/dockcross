@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -o xtrace
+
 OCI_EXE=$1
 OCIX_ORG=$2
 OCIX_IMAGE=$3
@@ -10,23 +12,24 @@ function oci_tag_exists() {
   local EXISTS
   local U=${OCIX_REGISTRY_USER}
   local P=${OCIX_REGISTRY_PASSWORD}
+  local R=${OCIX_REGISTRY}${OCIX_PORT}
   # get token to be able to talk to Docker Hub
   TOKEN=$(curl --location \
                --silent \
                --header "Content-Type: application/json" \
                --request POST \
                --data '{"username": "'${U}'", "password": "'${P}'"}' \
-               https://${OCIX_REGISTRY}${OCIX_PORT}/v2/users/login/ | \
+               https://${R}/v2/users/login/ | \
                jq -r .token)
   EXISTS=$(curl --location \
                 --silent \
                 --header "Authorization: JWT ${TOKEN}" \
-                https://${OCIX_REGISTRY}${OCIX_PORT}/v2/repositories/$1/tags/?page_size=1000 | \
+                https://${R}/v2/repositories/$1/tags/?page_size=1000 | \
                 jq -r "[.results | .[] | .name == \"$2\"] | any")
   test "${EXISTS}" = "true"
 }
 
-if oci_tag_exists ${OCIX_ORG}/${OCIX_IMAGE} ${OCIX_VERSION}
+if ! oci_tag_exists ${OCIX_ORG}/${OCIX_IMAGE} ${OCIX_VERSION}
 then
   m4 -I ./dockerfiles ./dockerfiles/${OCIX_IMAGE}.m4 > ${OCIX_DIR}/Dockerfile
 	mkdir -p ${OCIX_DIR}/scripts 
