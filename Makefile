@@ -35,20 +35,20 @@ TAG = $(OCIX_VERSION)
 # Directory where to generate the ocix script for each images (e.g bin/ocix-manylinux1-x64)
 BIN = ./bin
 
-# These images are built using the "build implicit rule"
-STANDARD_IMAGES = ocix-base ocix-android-arm ocix-android-arm64 ocix-linux-s390x ocix-linux-arm64 ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-armv6 ocix-linux-armv7 ocix-linux-armv7a ocix-linux-mips ocix-linux-mipsel ocix-linux-ppc64el ocix-linux-x64 ocix-linux-x86 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix
+# # These images are built using the "build implicit rule"
+# STANDARD_IMAGES = ocix-base ocix-android-arm ocix-android-arm64 ocix-linux-s390x ocix-linux-arm64 ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-armv6 ocix-linux-armv7 ocix-linux-armv7a ocix-linux-mips ocix-linux-mipsel ocix-linux-ppc64el ocix-linux-x64 ocix-linux-x86 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix
 
-# Generated Dockerfiles.
-GEN_IMAGES = ocix-linux-s390x ocix-linux-mips ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64 ocix-web-wasm ocix-linux-arm64 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix ocix-linux-armv7 ocix-linux-armv7a ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-ppc64el
-GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
+# # Generated Dockerfiles.
+# GEN_IMAGES = ocix-linux-s390x ocix-linux-mips ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64 ocix-web-wasm ocix-linux-arm64 ocix-windows-static-x86 ocix-windows-static-x64 ocix-windows-static-x64-posix ocix-windows-shared-x86 ocix-windows-shared-x64 ocix-windows-shared-x64-posix ocix-linux-armv7 ocix-linux-armv7a ocix-linux-armv5 ocix-linux-armv5-musl ocix-linux-ppc64el
+# GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
-# These images are expected to have explicit rules for *both* build and testing
-NON_STANDARD_IMAGES = ocix-web-wasm ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64
+# # These images are expected to have explicit rules for *both* build and testing
+# NON_STANDARD_IMAGES = ocix-web-wasm ocix-manylinux1-x64 ocix-manylinux1-x86 ocix-manylinux2010-x64 ocix-manylinux2010-x86 ocix-manylinux2014-x64
 
-DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux common.crosstool common.windows
+# DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux common.crosstool common.windows
 
-# This list all available images
-IMAGES = $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)
+# # This list all available images
+# IMAGES = $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)
 DOCKERFILES=$(shell find dockerfiles/ -maxdepth 1 -type f -iname '*.m4' -execdir basename -s '.m4' {} +)
 IMAGES=$(subst /,\:,$(subst /Dockerfile,,$(DOCKERFILES)))
 
@@ -269,16 +269,6 @@ endif
 
 $(STANDARD_IMAGES): check-ocix-base
 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
-	# mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	# $(OCI_EXE) build --tag $(OCIX_ORG)/$@:$(TAG) \
-	# 	--build-arg IMAGE=$(OCIX_ORG)/$@ \
-	# 	--build-arg OCIX_ORG=$(OCIX_ORG) \
-	# 	--build-arg OCIX_VERSION=$(OCIX_VERSION) \
-	# 	--build-arg VCS_REF=`git rev-parse --short HEAD` \
-	# 	--build-arg VCS_URL=`git config --get remote.origin.url` \
-	# 	--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-	# 	$@
-	# rm -rf $@/imagefiles
 
 #
 # testing implicit rule

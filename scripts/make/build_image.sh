@@ -10,7 +10,7 @@ function oci_tag_exists() {
   local EXISTS
   TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${OCIX_REGISTRY_USER}'", "password": "'${OCIX_REGISTRY_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
   EXISTS=$(curl -s -H "Authorization: JWT ${TOKEN}" https://${OCIX_REGISTRY}${OCIX_PORT}/v2/repositories/$1/tags/?page_size=1 | jq -r "[.results | .[] | .name == \"$2\"] | any")
-  test $EXISTS = true
+  test "$EXISTS" = "true"
 }
 
 if oci_tag_exists ${OCIX_ORG}/${OCIX_IMAGE} ${OCIX_VERSION}

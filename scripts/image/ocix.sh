@@ -38,11 +38,7 @@ has() {
 #       Podman are implementations of (some) of the OCI specifications. Podman
 #       is compatible with Docker command and option syntax.
 oci_exe() {
-  if [ -x "$(command -v podman)" ]; then
-    OCI_EXE=podman
-  else
-    OCI_EXE=docker
-  fi
+  OCI_EXE="$(command -v podman || command -v docker 2> /dev/null)"
 }
 
 #------------------------------------------------------------------------------
