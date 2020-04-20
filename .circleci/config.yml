@@ -30,8 +30,8 @@ commands:
             make << parameters.image_name >>
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
       - run:
-         name: Test << parameters.image_name >>
-         command: |
+          name: Test << parameters.image_name >>
+          command: |
             make << parameters.image_name >>.test
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
@@ -49,7 +49,6 @@ commands:
       - deploy:
           name: Deploy << parameters.image_name >>
           command: |
-            echo ${OCIX_REGISTRY}
             echo ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               docker load --quiet --input ~/ocix/<< parameters.image_name >>.tar
@@ -85,6 +84,8 @@ jobs:
           paths:
             - ~/ocix/ocix-base.tar
             - ~/ocix
+      - deploy_ocix_image:
+          image_name: ocix-base
 
   ocix:
     description: Invoke the OCI-Cross Build and Test Command
@@ -237,6 +238,6 @@ workflows:
       #     image: "ocix-windows-shared-x86"
       #     requires:
       #       - ocix-base
-      - deploy:
-          requires:
-            - ocix-base
+      # - deploy:
+      #     requires:
+      #       - ocix-base
