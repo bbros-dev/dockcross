@@ -53,7 +53,7 @@ commands:
             echo ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               docker load --quiet --input ~/ocix/<< parameters.image_name >>.tar
-              echo "${OCIX_REGISTRY_PASSWORD}" | docker login --username ${OCIX_REGISTRY_USER} --password-stdin https://${OCIX_REGISTRY}${OCIX_PORT}
+              echo "${OCIX_REGISTRY_PASSWORD}" | docker login --username ${OCIX_REGISTRY_USER} --password-stdin ${OCIX_REGISTRY}${OCIX_PORT}
               docker push ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
             fi
 
