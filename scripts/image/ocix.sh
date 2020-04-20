@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-OCIX_ORG=${OCIX_ORG:-dockcross}
-if [[ -z "${OCIX_VERSION}" ]]; then
-    echo "You must provide an OCIX_VERSION environment variable" 1>&2
+if [[ -z "${DEFAULT_OCIX_IMAGE}" ]]; then
+    echo "You must provide an DEFAULT_OCIX_IMAGE environment variable" 1>&2
     exit 1
 fi
-DEFAULT_OCIX_IMAGE=${OCIX_ORG}/ocix-base:${OCIX_VERSION}  # DO NOT MOVE THIS LINE (see entrypoint.sh)
+
+OCIX_ORG=${DEFAULT_OCIX_IMAGE%\/*}
+OCIX_NAME_VERSION=${DEFAULT_OCIX_IMAGE#*\/}
+OCIX_NAME=${OCIX_NAME_VERSION%:*}
+OCIX_VERSION=${OCIX_NAME_VERSION#*:}
 
 #------------------------------------------------------------------------------
 # Helpers
