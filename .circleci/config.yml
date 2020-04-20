@@ -127,11 +127,6 @@ workflows:
       #     requires:
       #       - ocix-base
       # - ocix:
-      #     name: "web-wasm"
-      #     image: "ocix-web-wasm"
-      #     requires:
-      #       - ocix-base
-      # - ocix:
       #     name: "linux-arm64"
       #     image: "ocix-linux-arm64"
       #     requires:
@@ -172,11 +167,11 @@ workflows:
       #     image: "ocix-linux-ppc64el"
       #     requires:
       #       - ocix-base
-      # - ocix:
-      #     name: "linux-x64"
-      #     image: "ocix-linux-x64"
-      #     requires:
-      #       - ocix-base
+      - ocix:
+          name: "linux-x64"
+          image: "ocix-linux-x64"
+          requires:
+            - ocix-base
       # - ocix:
       #     name: "linux-x86"
       #     image: "ocix-linux-x86"
@@ -205,6 +200,11 @@ workflows:
       # - ocix:
       #     name: "manylinux2014-x64"
       #     image: "ocix-manylinux2014-x64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "web-wasm"
+      #     image: "ocix-web-wasm"
       #     requires:
       #       - ocix-base
       # - ocix:
