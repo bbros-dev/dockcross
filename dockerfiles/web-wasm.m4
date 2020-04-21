@@ -65,4 +65,4 @@ ENV CMAKE_TOOLCHAIN_FILE /emsdk_portable/emscripten/sdk/cmake/Modules/Platform/E
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}
+ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

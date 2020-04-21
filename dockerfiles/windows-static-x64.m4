@@ -9,4 +9,4 @@ include(shared/windows.m4)
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}
+ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

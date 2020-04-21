@@ -1,9 +1,9 @@
 # Recent versions address yum functionality
 FROM quay.io/pypa/manylinux2014_x86_64:latest
-ARG OCIX_ORG=dockcross
+ARG OCIX_ORG
 ARG OCIX_VERSION
 
-ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}
+ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
 
 include(shared/manylinux.m4)
 
@@ -31,4 +31,4 @@ ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${OCIX_VERSION}
+ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

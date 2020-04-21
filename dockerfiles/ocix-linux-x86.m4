@@ -1,4 +1,7 @@
 include(shared/base.m4)
+
+ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+
 RUN dpkg --add-architecture i386 && \
     aptitude update  --no-gui -f -q -y && \
     aptitude install -q -f -y --no-gui --without-recommends \
@@ -11,8 +14,8 @@ RUN dpkg --add-architecture i386 && \
                       libexpat1-dev:i386 \
                       ncurses-dev:i386
 
-ENV CROSS_TRIPLE i686-linux-gnu
-ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
+ENV CROSS_TRIPLE=i686-linux-gnu
+ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}
 ENV PATH ${PATH}:${CROSS_ROOT}/bin
 RUN mkdir -p ${CROSS_ROOT}/bin
 COPY ${CROSS_TRIPLE}.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}.sh
@@ -34,15 +37,13 @@ ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     CXX=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-g++
 
 COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
-ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
+ENV CMAKE_TOOLCHAIN_FILE=/usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 # Linux kernel cross compilation variables
-ENV CROSS_COMPILE ${CROSS_TRIPLE}-
-ENV ARCH x86
+ENV CROSS_COMPILE=${CROSS_TRIPLE}-
+ENV ARCH=x86
 
 COPY linux32-entrypoint.sh /ocix/
 ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${VERSION}

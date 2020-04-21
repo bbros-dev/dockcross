@@ -35,7 +35,7 @@ then
 	mkdir -p ${OCIX_DIR}/scripts 
   cp -f scripts/image/*.sh ${OCIX_DIR}/scripts/
   ${OCI_EXE} build --tag ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION} \
-    --build-arg IMAGE=${OCIX_ORG}/${OCIX_IMAGE} \
+    --build-arg OCIX_NAME=${OCIX_ORG}/${OCIX_IMAGE} \
     --build-arg OCIX_ORG=${OCIX_ORG} \
     --build-arg OCIX_VERSION=${OCIX_VERSION} \
     --build-arg VCS_URL=$(git config --get remote.origin.url) \

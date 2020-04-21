@@ -1,4 +1,5 @@
 include(shared/base.m4)
+
 RUN aptitude update  --no-gui -f -q -y && \
     aptitude install -q -f -y --no-gui --without-recommends \
                       libelf-dev
@@ -19,5 +20,3 @@ COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
 ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE ${IMAGE}:${VERSION}
