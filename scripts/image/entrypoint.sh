@@ -15,9 +15,11 @@ if [[ $# == 0 ]]; then
     #       sed -e "s@ocix\/linux\-armv7@${DEFAULT_OCIX_IMAGE}@g" |
     #       sed -e "s@ocix\-linux\-armv7@${DEFAULT_OCIX_IMAGE//[\/:]/-}@g"
     # else
-        cat /ocix/ocix.sh
+  echo '#!/usr/bin/env bash'
+  cat /etc/profile.d/00-ocix-env.sh
+  cat /ocix/ocix.sh
     # fi
-    exit 0
+  exit 0
 fi
 
 # If we are running a container natively, we want to create a user in the container
