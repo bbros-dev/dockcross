@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+source /etc/profile.d/00-ocix-env.sh
+
 if [[ -z "${DEFAULT_OCIX_IMAGE}" ]]; then
     echo "You must provide an DEFAULT_OCIX_IMAGE environment variable" 1>&2
     exit 1
@@ -38,7 +41,7 @@ has() {
 #       Podman are implementations of (some) of the OCI specifications. Podman
 #       is compatible with Docker command and option syntax.
 oci_exe() {
-  OCI_EXE="$(command -v podman || command -v docker 2> /dev/null)"
+  OCI_EXE="$( command -v podman || command -v docker 2> /dev/null )"
 }
 
 #------------------------------------------------------------------------------

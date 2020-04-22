@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
 
+source /etc/profile.d/00-ocix-env.sh
+
 # This is the entrypoint script for the dockerfile. Executed in the
 # container at runtime.
 
 if [[ $# == 0 ]]; then
     # Presumably the image has been run directly, so help the user get
     # started by outputting the ocix script
-    if [[ -n $DEFAULT_OCIX_IMAGE ]]; then
-        head -n 2 /ocix/ocix.sh
-        echo "DEFAULT_OCIX_IMAGE=$DEFAULT_OCIX_IMAGE"
-        tail -n +4 /ocix/ocix.sh |
-          sed -e "s@ocix\/linux\-armv7@${DEFAULT_OCIX_IMAGE}@g" |
-          sed -e "s@ocix\-linux\-armv7@${DEFAULT_OCIX_IMAGE//[\/:]/-}@g"
-    else
+    # if [[ -n $DEFAULT_OCIX_IMAGE ]]; then
+    #     head -n 2 /ocix/ocix.sh
+    #     echo "DEFAULT_OCIX_IMAGE=$DEFAULT_OCIX_IMAGE"
+    #     tail -n +4 /ocix/ocix.sh |
+    #       sed -e "s@ocix\/linux\-armv7@${DEFAULT_OCIX_IMAGE}@g" |
+    #       sed -e "s@ocix\-linux\-armv7@${DEFAULT_OCIX_IMAGE//[\/:]/-}@g"
+    # else
         cat /ocix/ocix.sh
-    fi
+    # fi
     exit 0
 fi
 

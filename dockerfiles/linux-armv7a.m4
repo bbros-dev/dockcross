@@ -1,15 +1,16 @@
 include(shared/base.m4)
+
 # This is for 32-bit ARMv7 Linux
+
 include(shared/crosstool.m4)
 
 # The cross-compiling emulator
 RUN aptitude update && \
-    apt-get install --no-install-recommends --yes aptitude && \
-    aptitude update  --no-gui -f -q -y && \
     aptitude install -q -f -y --no-gui --without-recommends \
-                    qemu-user \
-                    qemu-user-static \
-&& aptitude clean  --no-gui -f -q -y
+                      qemu-user \
+                      qemu-user-static && \
+    aptitude clean  --no-gui -f -q -y
+
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 #ENV CROSS_TRIPLE armv7-unknown-linux-gnueabi
 ENV CROSS_TRIPLE arm-cortexa8_neon-linux-gnueabihf
@@ -38,5 +39,3 @@ ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH arm
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

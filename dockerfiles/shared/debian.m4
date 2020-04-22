@@ -1,4 +1,14 @@
 # Image build scripts
+
+RUN echo "#!/usr/bin/env bash\n\
+OCIX_IMAGE=$OCIX_IMAGE\n\
+OCIX_NAME=$OCIX_NAME\n\
+OCIX_ORG=$OCIX_ORG\n\
+OCIX_VERSION=$OCIX_VERSION\n\
+DEFAULT_OCIX_IMAGE=$OCIX_NAME:$OCIX_VERSION\n " \
+>> /etc/profile.d/00-ocix-env.sh && \
+chmod +x /etc/profile.d/00-ocix-env.sh
+
 COPY scripts/install-gosu-binary.sh \
      scripts/install-gosu-binary-wrapper.sh \
      /buildscripts/
