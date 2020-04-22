@@ -13,18 +13,19 @@ function oci_tag_exists() {
   local U=${OCIX_REGISTRY_USER}
   local P=${OCIX_REGISTRY_PASSWORD}
   local R=${OCIX_REGISTRY}${OCIX_PORT}
+  local A=${OCIX_API_SERVER}
   # get token to be able to talk to Docker Hub
   TOKEN=$(curl --location \
                --silent \
                --header "Content-Type: application/json" \
                --request POST \
                --data '{"username": "'${U}'", "password": "'${P}'"}' \
-               https://${R}/v2/users/login/ | \
+               https://${L}/v2/users/login/ | \
                jq -r .token)
   EXISTS=$(curl --location \
                 --silent \
                 --header "Authorization: JWT ${TOKEN}" \
-                https://${R}/v2/repositories/$1/tags/?page_size=1000 | \
+                https://${L}/v2/repositories/$1/tags/?page_size=1000 | \
                 jq -r "[.results | .[] | .name == \"$2\"] | any")
   test "${EXISTS}" = "true"
 }
