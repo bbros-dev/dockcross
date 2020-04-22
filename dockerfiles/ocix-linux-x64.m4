@@ -17,6 +17,6 @@ ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
 COPY ${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
 COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
-ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
+ENV CMAKE_TOOLCHAIN_FILE=/usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 include(shared/label.m4)
