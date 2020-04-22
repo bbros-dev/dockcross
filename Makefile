@@ -21,7 +21,7 @@ OCIX_VERSION := $(shell cat ocix_version)
 
 # Check we have a semantic version, abend. Make doesn't have regular expressions
 # so delegate to the shell (defined above)
-SEMVER := $(shell [[ $(OCIX_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo matched)
+SEMVER := $(shell [[ $(OCIX_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo semver)
 
 ifdef SEMVER
 @echo Semantic version number given: $(OCIX_VERSION)
@@ -75,15 +75,15 @@ Makefile: ;
 
 LIB = ./dockerfiles
 
-Dockerfile: $(LIB)/*.m4
-	m4 -I $(LIB) $(LIB)/$@.m4 > Dockerfile
+# Dockerfile: $(LIB)/*.m4
+# 	m4 -I $(LIB) $(LIB)/$@.m4 > Dockerfile
 
-build: dockerfile
+# build: dockerfile
 
 #
 # images: This target builds all IMAGES (because it is the first one, it is built by default)
 #
-images: ocix-base $(IMAGES)
+images: $(IMAGES)
 
 #
 # test: This target ensures all IMAGES are built and run the associated tests
@@ -240,12 +240,12 @@ ocix-manylinux1-x86.test: ocix-manylinux1-x86
 # base
 #
 
-ocix-base:
-	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
+# ocix-base:
+# 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
 
-ocix-base.test: ocix-base
-	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY)$(OCIX_PORT)/$(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
-	$(BIN)/ocix-base /usr/local/bin/python4ocixtest test/run.py
+# ocix-base.test: ocix-base
+# 	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY)$(OCIX_PORT)/$(OCIX_ORG)/ocix-base:$(TAG) > $(BIN)/ocix-base && chmod +x $(BIN)/ocix-base
+# 	$(BIN)/ocix-base /usr/local/bin/python4ocixtest test/run.py
 
 #
 # display
@@ -267,14 +267,14 @@ endif
 # build implicit rule
 #
 
-$(STANDARD_IMAGES): check-ocix-base
+$(IMAGES): check-ocix-base
 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
 
 #
 # testing implicit rule
 #
 .SECONDEXPANSION:
-$(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
+$(addsuffix .test,$(IMAGES)): $$(basename $$@)
 	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY)$(OCIX_PORT)/$(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 
