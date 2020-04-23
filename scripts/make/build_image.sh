@@ -34,7 +34,7 @@ if ! oci_tag_exists ${OCIX_ORG}/${OCIX_IMAGE} ${OCIX_VERSION}
 then
   m4 --include=./dockerfiles ./dockerfiles/${OCIX_IMAGE}.m4 > ${OCIX_DIR}/Dockerfile
 	mkdir -p ${OCIX_DIR}/scripts 
-  cp -f scripts/image/ ${OCIX_DIR}/scripts/
+  cp -f scripts/image/* ${OCIX_DIR}/scripts/
   ${OCI_EXE} build --tag ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION} \
     --build-arg OCIX_IMAGE=${OCIX_IMAGE} \
     --build-arg OCIX_NAME=${OCIX_ORG}/${OCIX_IMAGE} \
