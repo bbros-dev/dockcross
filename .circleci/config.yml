@@ -12,7 +12,7 @@ commands:
       - run: 
           name: Export OCI-Cross Registry, Organization and Version
           command: |
-            ./scripts/ocix-env.sh >> $BASH_ENV
+            ./scripts/ocix-ci-env.sh >> $BASH_ENV
   build_test_ocix_image:
     description: Build & test an OCI-Cross container image
     parameters:

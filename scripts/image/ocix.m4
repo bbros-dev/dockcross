@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-if [[ -z "${DEFAULT_OCIX_IMAGE}" ]]; then
+include(/etc/profile.d/00-ocix-env.sh)
+
+if [ "${DEFAULT_OCIX_IMAGE}" = ":" ]; || [ -z "${DEFAULT_OCIX_IMAGE}" ]
+then
     echo "You must provide an DEFAULT_OCIX_IMAGE environment variable" 1>&2
     exit 1
 fi

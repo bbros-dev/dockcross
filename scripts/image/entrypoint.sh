@@ -6,19 +6,9 @@ source /etc/profile.d/00-ocix-env.sh
 # container at runtime.
 
 if [[ $# == 0 ]]; then
-    # Presumably the image has been run directly, so help the user get
-    # started by outputting the ocix script
-    # if [[ -n $DEFAULT_OCIX_IMAGE ]]; then
-    #     head -n 2 /ocix/ocix.sh
-    #     echo "DEFAULT_OCIX_IMAGE=$DEFAULT_OCIX_IMAGE"
-    #     tail -n +4 /ocix/ocix.sh |
-    #       sed -e "s@ocix\/linux\-armv7@${DEFAULT_OCIX_IMAGE}@g" |
-    #       sed -e "s@ocix\-linux\-armv7@${DEFAULT_OCIX_IMAGE//[\/:]/-}@g"
-    # else
-  echo '#!/usr/bin/env bash'
-  cat /etc/profile.d/00-ocix-env.sh
-  cat /ocix/ocix.sh
-    # fi
+  # Presumably the image has been run directly, so help the user get
+  # started by outputting the ocix script
+  m4 --include=/etc/profile.d /ocix/ocix.m4
   exit 0
 fi
 

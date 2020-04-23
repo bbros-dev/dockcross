@@ -412,7 +412,7 @@ GitHub + CircleCI + Docker.io/Quay.io
    under the organization/user name ``MyProject`` (does not have to match the
    Git server organization/user) then add ``MyProject`` to the file ``ocix_org``.
    Default: ``dockcross``
-1. To build and upload a single container: ``make oci-linux-arm64``. To see a 
+1. To build and upload a single container: ``make ocix-linux-arm64``. To see a 
    list of containers available: ``make list``.
 1. To build and upload all containers:
    Add the git repository to you CircleCI account. Then:
