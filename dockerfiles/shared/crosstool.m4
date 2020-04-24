@@ -14,7 +14,7 @@
 # generate its cross-compiler. This can be built using "ct-ng menuconfig" to
 # generate a configuration.
 
-# Install Debian packages required for `ct-ng`.
+# Install Debian packages required for $(ct-ng).
 RUN aptitude update --yes && \
     apt-get install --no-install-recommends --yes aptitude && \
     aptitude update  --no-gui -f -q -y && \

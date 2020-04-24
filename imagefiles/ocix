@@ -29,7 +29,7 @@ has() {
 # DESC: Select a container engine executable.  
 # ARGS: None
 # OUTS: $OCI_EXE: Either `docker` or `podman`. If `podman` is not available the
-#       default is `docker`.
+#       default is $(docker).
 # NOTE: The selected tool manages Open Container Initative (OCI) compatible
 #       container runtime, storage/format and images. Docker and
 #       Podman are implementations of (some) of the OCI specifications. Podman
@@ -187,7 +187,7 @@ if [ "$special_update_command" != "" ]; then
     esac
 fi
 
-# Set the OCI engine `run` command extra args (if any)
+# Set the OCI engine $(run) command extra args (if any)
 FINAL_ARGS=${ARG_ARGS-${DOCKCROSS_ARGS}}
 
 # Bash on Ubuntu on Windows
@@ -210,7 +210,7 @@ if [ -n "$UBUNTU_ON_WINDOWS" ]; then
 			WSL_ROOT=$root
 		fi
 	fi
-    HOST_PWD=`pwd -P`
+    HOST_PWD=$(pwd -P)
     HOST_PWD=${HOST_PWD/$WSL_ROOT//}
 elif [ -n "$MSYS" ]; then
     HOST_PWD=$PWD

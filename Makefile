@@ -16,7 +16,7 @@ OCIX_PORT := $(shell cat ocix_port)
 OCIX_ORG := $(shell cat ocix_org)
 
 # Exit if we don't have a OCIX_VERSION.
-# If the shell has `export OCIX_VERSION=m.n.o` we'll get that.
+# If the shell has $(export OCIX_VERSION=m.n.o) we'll get that.
 OCIX_VERSION := $(shell cat ocix_version)
 
 # Check we have a semantic version, abend. Make doesn't have regular expressions
