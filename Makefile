@@ -275,7 +275,7 @@ $(IMAGES): check-ocix-base
 #
 .SECONDEXPANSION:
 $(addsuffix .test,$(IMAGES)): $$(basename $$@)
-	$(OCI_EXE) run $(RM) $(OCIX_REGISTRY)$(OCIX_PORT)/$(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 
 #
