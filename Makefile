@@ -273,7 +273,6 @@ $(IMAGES): check-ocix-base
 #
 # testing implicit rule
 #
-.SECONDEXPANSION:
 $(addsuffix .test,$(IMAGES)): $$(basename $$@)
   mkdir -p $(BIN)
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
