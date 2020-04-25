@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+ 
+ set -o xtrace
 
 include(/etc/profile.d/00-ocix-env.sh)
 
