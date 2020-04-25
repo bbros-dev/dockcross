@@ -251,17 +251,16 @@ ocix-manylinux1-x86.test: ocix-manylinux1-x86
 # display
 #
 display_images:
+	$(info The following are the OCI-Cross images this Makefile can build)
 	for image in $(IMAGES); do echo $$image; done
 
 $(VERBOSE).SILENT: display_images
-
 
 check-ocix-base:
 ifndef BASE_BUILT
 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) ocix-base $(OCIX_VERSION) ocix-base
 BASE_BUILT:=true
 endif
-
 
 #
 # build implicit rule
