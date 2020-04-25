@@ -266,7 +266,6 @@ endif
 #
 # build implicit rule
 #
-
 $(IMAGES): check-ocix-base
 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
 

@@ -28,11 +28,8 @@ commands:
           command: |
             docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
-            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
-      - run:
-          name: Test << parameters.image_name >>
-          command: |
             make << parameters.image_name >>.test
+            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/ocix/<< parameters.image_name >>.tar
