@@ -275,16 +275,19 @@ $(IMAGES): check-ocix-base
 #
 .SECONDEXPANSION:
 $(addsuffix .test,$(IMAGES)): $$(basename $$@)
+  mkdir -p $(BIN)
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
+	echo $(BIN)/$(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
+	rm -rf $(BIN)
 
 #
 # testing prerequisites implicit rule
 #
-test.prerequisites:
-	mkdir -p $(BIN)
+# test.prerequisites:
+# 	mkdir -p $(BIN)
 
-$(addsuffix .test,$(IMAGES)): test.prerequisites
+# $(addsuffix .test,$(IMAGES)): test.prerequisites
 
 .PHONY: images $(IMAGES) test %.test
 
