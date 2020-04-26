@@ -274,6 +274,9 @@ $(IMAGES): check-ocix-base
 $(addsuffix .test,$(IMAGES)): $(basename $@)
 	mkdir -p $(BIN)
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) cat /etc/profile.d/00-ocix-env.sh
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) cat /etc/profile.d/00-ocix-env.sh
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) m4 --include=/etc/profile.d /ocix/ocix.m4
 	echo $(BIN)/$(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 	rm -rf $(BIN)
