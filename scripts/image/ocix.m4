@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
  
- set -o xtrace
+set -o xtrace
 
 include(/etc/profile.d/00-ocix-env.sh)
 
@@ -232,7 +232,7 @@ fi
 
 HOST_VOLUMES=
 if [ -e "$SSH_DIR" -a -z "$MSYS" ]; then
-    HOST_VOLUMES+="-v $SSH_DIR:/home/$(id -un)/.ssh"
+    HOST_VOLUMES+="--volume $SSH_DIR:/home/$(id -un)/.ssh"
 fi
 
 #------------------------------------------------------------------------------
