@@ -7,9 +7,9 @@ executors:
 
 commands:
   setup_environment:
-    description: Setup OCI-Cross environment variables 
+    description: Setup OCI-Cross environment variables
     steps:
-      - run: 
+      - run:
           name: Export OCI-Cross Registry, Organization and Version
           command: |
             ./scripts/ocix-ci-env.sh >> $BASH_ENV
@@ -70,12 +70,9 @@ jobs:
           command: |
             docker pull debian:10.3-slim
             make ocix-base
+            make ocix-base.test
             mkdir -p ~/ocix
             docker save --output ~/ocix/ocix-base.tar debian:10.3-slim ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
-      - run:
-         name: Test ocix-base
-         command: |
-           make ocix-base.test
       - save_cache:
           key: ocix-base-assets-{{ .Revision }}
           paths:
