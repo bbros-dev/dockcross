@@ -5,9 +5,7 @@ include(shared/base.m4)
 include(shared/crosstool.m4)
 
 # The cross-compiling emulator
-RUN aptitude update && \
-    apt-get install --no-install-recommends --yes aptitude && \
-    aptitude update  --no-gui -f -q -y && \
+RUN aptitude --no-gui -f -q -y update&& \
     aptitude install -q -f -y --no-gui --without-recommends \
                       qemu-user \
                       qemu-user-static && \

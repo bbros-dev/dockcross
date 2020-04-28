@@ -3,9 +3,7 @@ ENV CROSS_TRIPLE powerpc64el-linux-gnu
 
 COPY sources.list /etc/apt/sources.list
 RUN dpkg --add-architecture ppc64el && \
-    aptitude update && \
-    apt-get install --no-install-recommends --yes aptitude && \
-    aptitude update  --no-gui -f -q -y && \
+    aptitude --no-gui -f -q -y update&& \
     aptitude install -q -f -y --no-gui --without-recommends \
                       crossbuild-essential-ppc64el:ppc64el \
                       libbz2-dev:ppc64el \

@@ -15,16 +15,14 @@
 # generate a configuration.
 
 # Install Debian packages required for $(ct-ng).
-RUN aptitude update --yes && \
-    apt-get install --no-install-recommends --yes aptitude && \
-    aptitude update  --no-gui -f -q -y && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+RUN aptitude --no-gui -f -q -y update && \
+    aptitude -q -f -y --no-gui --without-recommends install \
                       gawk \
                       gperf \
                       help2man \
                       python-dev \
                       texinfo && \
-    aptitude clean  --no-gui -f -q -y
+    aptitude --no-gui -f -q -y clean
 
 ENV XCC_PREFIX=/usr/xcc
 

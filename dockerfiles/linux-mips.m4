@@ -5,9 +5,7 @@ include(shared/crosstool.m4)
 
 # The cross-compiling emulator
 RUN dpkg --add-architecture mips && \
-    aptitude update && \
-    apt-get install --no-install-recommends --yes aptitude && \
-    aptitude update  --no-gui -f -q -y && \
+    aptitude  --no-gui -f -q -y update && \
     aptitude install -q -f -y --no-gui --without-recommends \
                       libelf-dev:mips \
                       qemu-user:mips \

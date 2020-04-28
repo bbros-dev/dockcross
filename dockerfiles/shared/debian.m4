@@ -29,8 +29,8 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
     apt-get update --yes && \
     apt-get install --no-install-recommends --yes apt-transport-https \
                                                   aptitude && \
-    aptitude update  --no-gui -f -q -y && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude --no-gui -f -q -y update && \
+    aptitude -q -f -y --no-gui --without-recommends install \
                       autogen \
                       automake \
                       bash \
@@ -65,7 +65,7 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
                       xz-utils \
                       zip \
                       zlib1g-dev && \
-    aptitude clean -f -y -q --no-gui && \
+    aptitude -f -y -q --no-gui clean && \
     /buildscripts/install-gosu-binary.sh && \
     /buildscripts/install-gosu-binary-wrapper.sh && \
     rm -rf /buildscripts
