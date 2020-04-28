@@ -121,11 +121,11 @@ workflows:
       #     image: "ocix-android-arm64"
       #     requires:
       #       - ocix-base
-      # - ocix:
-      #     name: "linux-arm64"
-      #     image: "ocix-linux-arm64"
-      #     requires:
-      #       - ocix-base
+      - ocix:
+          name: "linux-arm64"
+          image: "ocix-linux-arm64"
+          requires:
+            - ocix-base
       # - ocix:
       #     name: "linux-armv5"
       #     image: "ocix-linux-armv5"

@@ -7,8 +7,6 @@ include(shared/crosstool.m4)
 # The cross-compiling emulator
 RUN dpkg --add-architecture arm64 && \
     aptitude update && \
-    apt-get install --no-install-recommends --yes aptitude && \
-    aptitude update  --no-gui -f -q -y && \
     aptitude install -q -f -y --no-gui --without-recommends \
                       crossbuild-essential-arm64:arm64 \
                       libelf-dev:arm64 \
@@ -42,5 +40,3 @@ ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH arm64
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

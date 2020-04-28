@@ -1,7 +1,5 @@
 include(shared/base.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
-
 RUN dpkg --add-architecture i386 && \
     aptitude update  --no-gui -f -q -y && \
     aptitude install -q -f -y --no-gui --without-recommends \
