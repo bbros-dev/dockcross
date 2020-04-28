@@ -167,8 +167,9 @@ FINAL_CONFIG=${ARG_CONFIG-${OCIX_CONFIG-${DEFAULT_OCIX_CONFIG}}}
 
 [[ -f "$FINAL_CONFIG" ]] && source "$FINAL_CONFIG"
 
+docker images
 # Set the OCI image
-FINAL_IMAGE=${ARG_IMAGE-${OCIX_IMAGE-$DEFAULT_OCIX_IMAGE}}
+FINAL_IMAGE=${ARG_IMAGE-${DEFAULT_OCIX_IMAGE}}
 
 # Handle special update command
 if [ "$special_update_command" != "" ]; then
