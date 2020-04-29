@@ -6,7 +6,7 @@ include(shared/crosstool.m4)
 
 # The cross-compiling emulator
 RUN dpkg --add-architecture arm64 && \
-    aptitude update && \
+    aptitude -q -f -y --no-gui update && \
     aptitude -q -f -y --no-gui --without-recommends install \
                       crossbuild-essential-arm64:arm64 \
                       libelf-dev:arm64 \

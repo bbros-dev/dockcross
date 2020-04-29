@@ -22,7 +22,8 @@ RUN aptitude --no-gui -f -q -y update && \
                       help2man \
                       python-dev \
                       texinfo && \
-    aptitude --no-gui -f -q -y clean
+    aptitude --no-gui -f -q -y clean && \
+    mkdir -p /ocix/crosstool
 
 ENV XCC_PREFIX=/usr/xcc
 
@@ -36,9 +37,8 @@ COPY scripts/install-crosstool-ng-toolchain.sh \
      /ocix/
 
 # Build and install the toolchain, cleaning up artifacts afterwards.
-RUN mkdir /ocix/crosstool && \
-    cd /ocix/crosstool && \
-    /ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
+WORKDIR /ocix/crosstool
+RUN /ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
                                             -c /ocix/crosstool-ng.config && \
     rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
 
