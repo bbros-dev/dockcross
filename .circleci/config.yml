@@ -26,7 +26,8 @@ commands:
           name: Build << parameters.image_name >>
           no_output_timeout: 1.5h
           command: |
-            docker load -i ~/ocix/ocix-base.tar
+            echo "${OCIX_REGISTRY_PASSWORD}" | docker login --username ${OCIX_REGISTRY_USER} --password-stdin ${OCIX_REGISTRY}${OCIX_PORT}
+            docker pull ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
             make << parameters.image_name >>
             make << parameters.image_name >>.test
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
