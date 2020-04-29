@@ -31,7 +31,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # 'cmake' is omitted because it is installed from source in the base image
 #
 RUN aptitude update && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude -q -f -y --no-gui --without-recommends install \
                       autoconf \
                       automake \
                       autopoint \
@@ -63,7 +63,6 @@ RUN aptitude update && \
                       ruby \
                       scons \
                       sed \
-                      unzip \
                       wget \
                       wine \
                       xz-utils && \
@@ -72,9 +71,11 @@ RUN aptitude update && \
   #
   dpkg --add-architecture i386 && \
   aptitude update && \
-  aptitude install -q -f -y --no-gui --without-recommends \
-                    wine32 && \
+  aptitude -q -f -y --no-gui --without-recommends install \
+                    unzip:i386 \
+                    wine32:i386 && \
   wine hostname && \
+  
   #
   # Download MXE sources
   #
@@ -82,6 +83,7 @@ RUN aptitude update && \
   git clone https://github.com/mxe/mxe.git && \
   cd mxe && \
   git checkout ${MXE_GIT_TAG} && \
+  
   #
   # Configure "settings.mk" required to build MXE
   #
@@ -92,20 +94,24 @@ RUN aptitude update && \
   echo "LOCAL_PKG_LIST := cc cmake"                                              >> settings.mk && \
   echo ".DEFAULT local-pkg-list:"                                                >> settings.mk && \
   echo "local-pkg-list: \$(LOCAL_PKG_LIST)"                                      >> settings.mk && \
+  
   #
   # Build MXE
   #
   cd /usr/src/mxe && \
   make JOBS=$(nproc) && \
+  
   #
   # Cleanup: By keeping the MXE build system (Makefile, ...), derived images will be able to install
   #          additional packages.
   #
   rm -rf log pkg && \
+  
   #
   # Update MXE toolchain file
   #
   echo 'set(CMAKE_CROSSCOMPILING_EMULATOR "/usr/bin/wine")' >> ${CMAKE_TOOLCHAIN_FILE} && \
+  
   #
   # Replace cmake and cpack binaries
   #

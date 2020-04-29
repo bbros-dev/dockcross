@@ -6,10 +6,11 @@ include(shared/crosstool.m4)
 # The cross-compiling emulator
 RUN dpkg --add-architecture mips && \
     aptitude  --no-gui -f -q -y update && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude -q -f -y --no-gui --without-recommends install \
                       libelf-dev:mips \
                       qemu-user:mips \
-                      qemu-user-static:mips && \
+                      qemu-user-static:mips
+                      unzip:mips && \
       aptitude clean  --no-gui -f -q -y
 
 # The CROSS_TRIPLE is a configured alias of the "mips-unknown-linux-gnu" target.

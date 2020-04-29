@@ -1,4 +1,6 @@
 FROM quay.io/pypa/manylinux1_i686:latest
+ARG OCIX_IMAGE
+ARG OCIX_NAME
 ARG OCIX_ORG
 ARG OCIX_VERSION
 

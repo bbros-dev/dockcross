@@ -3,7 +3,7 @@ ENV CROSS_TRIPLE powerpc64el-linux-gnu
 
 COPY sources.list /etc/apt/sources.list
 RUN dpkg --add-architecture ppc64el && \
-    aptitude --no-gui -f -q -y update&& \
+    aptitude --no-gui -f -q -y update && \
     aptitude install -q -f -y --no-gui --without-recommends \
                       crossbuild-essential-ppc64el:ppc64el \
                       libbz2-dev:ppc64el \
@@ -14,7 +14,8 @@ RUN dpkg --add-architecture ppc64el && \
                       libssl-dev:ppc64el \
                       ncurses-dev:ppc64el \
                       python-dev:ppc64el \
-                      zlib1g-dev:ppc64el
+                      zlib1g-dev:ppc64el \
+                      unzip:ppc64el
 
 include(shared/crosstool.m4)
 

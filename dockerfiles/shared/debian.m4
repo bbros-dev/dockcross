@@ -16,6 +16,8 @@ DEFAULT_OCIX_IMAGE=$OCIX_ORG/$OCIX_IMAGE:$OCIX_VERSION\n " \
 >> /etc/profile.d/00-ocix-env.sh && \
 chmod +x /etc/profile.d/00-ocix-env.sh
 
+WORKDIR /work
+
 COPY scripts/install-gosu-binary.sh \
      scripts/install-gosu-binary-wrapper.sh \
      /buildscripts/

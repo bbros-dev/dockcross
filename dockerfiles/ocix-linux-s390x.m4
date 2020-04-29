@@ -10,7 +10,8 @@ RUN dpkg --add-architecture s390x && \
               bash:s390x=5.0-4 \
               libelf-dev:s390x=0.176-1.1 \
               qemu-user:s390x=1:3.1+dfsg-8+deb10u3 \
-              qemu-user-static:s390x=1:3.1+dfsg-8+deb10u3 && \
+              qemu-user-static:s390x=1:3.1+dfsg-8+deb10u3
+              unzip:s390x && \
     aptitude clean  --no-gui -f -q -y
 
 # The CROSS_TRIPLE is a configured alias of the "s390x-ibm-linux-gnu" target.

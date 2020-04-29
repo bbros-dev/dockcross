@@ -107,11 +107,6 @@ workflows:
       - ocix-base:
           <<: *workflow-settings
       # - ocix:
-      #     name: "linux-x64"
-      #     image: "ocix-linux-x64"
-      #     requires:
-      #       - ocix-base
-      # - ocix:
       #     name: "android-arm"
       #     image: "ocix-android-arm"
       #     requires:

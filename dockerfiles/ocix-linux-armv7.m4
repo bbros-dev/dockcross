@@ -6,7 +6,8 @@ include(shared/crosstool.m4)
 RUN aptitude --no-gui -f -q -y update && \
     aptitude install -q -f -y --no-gui --without-recommends \
                       qemu-user \
-                      qemu-user-static && \
+                      qemu-user-static \
+                      unzip && \
     aptitude clean  --no-gui -f -q -y
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 ENV CROSS_TRIPLE armv7-unknown-linux-gnueabi

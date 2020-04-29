@@ -8,7 +8,8 @@ RUN dpkg --add-architecture i386 && \
                       libgcc1:i386 \
                       zlib1g:i386 \
                       qemu-user:i386 \
-                      qemu-user-static:i386
+                      qemu-user-static:i386 \
+                      unzip:i386
 
 ENV CROSS_TRIPLE arm-linux-gnueabihf
 ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
