@@ -132,6 +132,11 @@ workflows:
           requires:
             - ocix-base
       - ocix:
+          name: "linux-armv5-musl"
+          image: "ocix-linux-armv5-musl"
+          requires:
+            - ocix-base
+      - ocix:
           name: "linux-armv6"
           image: "ocix-linux-armv6"
           requires:
