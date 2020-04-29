@@ -15,7 +15,7 @@
 # generate a configuration.
 
 # Install Debian packages required for $(ct-ng).
-RUN aptitude -q -f -y --no-gui --without-recommends -u install \
+RUN aptitude -q -f -y --no-gui --without-recommends install \
                       gawk \
                       gperf \
                       help2man \
