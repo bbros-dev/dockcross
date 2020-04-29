@@ -1,3 +1,5 @@
+# Start include from shared/docker.m4
+#
 WORKDIR /usr/src
 
 ARG GIT_VERSION=2.22.0
@@ -36,3 +38,6 @@ ENTRYPOINT ["/ocix/entrypoint.sh"]
 COPY scripts/cmake.sh /usr/local/bin/cmake
 COPY scripts/ccmake.sh /usr/local/bin/ccmake
 COPY scripts/entrypoint.sh scripts/ocix.m4 /ocix/
+
+#
+# End include from shared/docker.m4

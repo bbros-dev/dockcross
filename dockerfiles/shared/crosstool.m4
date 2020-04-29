@@ -1,4 +1,4 @@
-# crosstool.common
+# Start include from shared/crosstool.m4
 #
 # Common Docker instructions to install "crosstool-ng" and build a full
 # cross-compiler suite from a crosstool-ng configuration, CROSSTOOL_CONFIG.
@@ -15,8 +15,7 @@
 # generate a configuration.
 
 # Install Debian packages required for $(ct-ng).
-RUN aptitude --no-gui -f -q -y update && \
-    aptitude -q -f -y --no-gui --without-recommends install \
+RUN aptitude -q -f -y --no-gui --without-recommends -u install \
                       gawk \
                       gperf \
                       help2man \
@@ -44,3 +43,6 @@ RUN /ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
 
 # Restore our default workdir (from "ocix-base" image).
 WORKDIR /work
+
+#
+# End include from shared/crosstool.m4

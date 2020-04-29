@@ -18,5 +18,6 @@ LABEL org.opencontainers.image.created=$BUILD_DATE \
       org.opencontainers.image.url=$OCIX_URL \
       org.opencontainers.image.vendor=$OCIX_ORG \
       org.opencontainers.image.version=$OCIX_VERSION
+
 #
 # End include from shared/label.m4

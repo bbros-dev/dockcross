@@ -1,3 +1,5 @@
+# Start include from shared/manylinux.m4
+#
 # Image build scripts
 COPY \
   scripts/install-gosu-binary.sh \
@@ -29,3 +31,6 @@ RUN set -x && \
 
 # Runtime scripts
 COPY manylinux-common/pre_exec.sh /ocix/
+
+#
+# End include from shared/manylinux.m4

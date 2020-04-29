@@ -126,52 +126,52 @@ workflows:
           image: "ocix-linux-arm64"
           requires:
             - ocix-base
-      # - ocix:
-      #     name: "linux-armv5"
-      #     image: "ocix-linux-armv5"
-      #     requires:
-      #       - ocix-base
-      # - ocix:
-      #     name: "linux-armv6"
-      #     image: "ocix-linux-armv6"
-      #     requires:
-      #       - ocix-base
-      # - ocix:
-      #     name: "linux-armv7"
-      #     image: "ocix-linux-armv7"
-      #     requires:
-      #       - ocix-base
-      # - ocix:
-      #     name: "linux-armv7a"
-      #     image: "ocix-linux-armv7a"
-      #     requires:
-      #       - ocix-base
-      # # Image build currently broken. See #209
-      # #- ocix:
-      # #    name: "linux-mipsel"
-      # #    image: "ocix-linux-mipsel"
-      # #    requires:
-      # #      - ocix-base
-      # - ocix:
-      #     name: "linux-s390x"
-      #     image: "ocix-linux-s390x"
-      #     requires:
-      #       - ocix-base
-      # - ocix:
-      #     name: "linux-ppc64el"
-      #     image: "ocix-linux-ppc64el"
-      #     requires:
-      #       - ocix-base
+      - ocix:
+          name: "linux-armv5"
+          image: "ocix-linux-armv5"
+          requires:
+            - ocix-base
+      - ocix:
+          name: "linux-armv6"
+          image: "ocix-linux-armv6"
+          requires:
+            - ocix-base
+      - ocix:
+          name: "linux-armv7"
+          image: "ocix-linux-armv7"
+          requires:
+            - ocix-base
+      - ocix:
+          name: "linux-armv7a"
+          image: "ocix-linux-armv7a"
+          requires:
+            - ocix-base
+      # Image build currently broken. See #209
+      #- ocix:
+      #    name: "linux-mipsel"
+      #    image: "ocix-linux-mipsel"
+      #    requires:
+      #      - ocix-base
+      - ocix:
+          name: "linux-s390x"
+          image: "ocix-linux-s390x"
+          requires:
+            - ocix-base
+      - ocix:
+          name: "linux-ppc64el"
+          image: "ocix-linux-ppc64el"
+          requires:
+            - ocix-base
       - ocix:
           name: "linux-x64"
           image: "ocix-linux-x64"
           requires:
             - ocix-base
-      # - ocix:
-      #     name: "linux-x86"
-      #     image: "ocix-linux-x86"
-      #     requires:
-      #       - ocix-base
+      - ocix:
+          name: "linux-x86"
+          image: "ocix-linux-x86"
+          requires:
+            - ocix-base
       # - ocix:
       #     name: "manylinux1-x64"
       #     image: "ocix-manylinux1-x64"

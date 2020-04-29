@@ -1,8 +1,9 @@
 include(shared/base.m4)
 
-RUN aptitude update  --no-gui -f -q -y && \
-    aptitude install -q -f -y --no-gui --without-recommends \
-                      libelf-dev
+RUN dpkg --add-architecture amd64
+    aptitude -q -f -y --no-gui --without-recommends -u install\
+                      libelf-dev:amd64 \
+                      unzip:amd64
 
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /usr/bin

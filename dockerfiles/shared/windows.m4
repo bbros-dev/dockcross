@@ -1,3 +1,5 @@
+# Start include from shared/windows.m4
+#
 #
 # Before including this script, make sure to set:
 #
@@ -123,3 +125,6 @@ ENV AS=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-as \
     FC=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-gfortran
 
 WORKDIR /work
+
+#
+# End include from shared/windows.m4

@@ -1,3 +1,5 @@
+# Start include from shared/debian.m4
+#
 # Image build scripts
 
 ARG OCIX_IMAGE=${OCIX_IMAGE}
@@ -69,3 +71,6 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
     /buildscripts/install-gosu-binary.sh && \
     /buildscripts/install-gosu-binary-wrapper.sh && \
     rm -rf /buildscripts
+
+#
+# End include from shared/debian.m4

@@ -1,3 +1,5 @@
+# Start include from shared/base.m4
+#
 # NOTE: Arguments are reset to empty after the FROM statement.
 #       Unless they are not.
 #       This funkyness is from Docker world: 
@@ -14,3 +16,6 @@ ARG OCIX_ORG
 ARG OCIX_VERSION
 
 ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+
+#
+# End include from shared/base.m4

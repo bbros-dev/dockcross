@@ -6,12 +6,12 @@ include(shared/crosstool.m4)
 
 # The cross-compiling emulator
 RUN dpkg --add-architecture arm64 && \
-    aptitude -q -f -y --no-gui update && \
-    aptitude -q -f -y --no-gui --without-recommends install \
+    aptitude -q -f -y --no-gui --without-recommends -u install \
                       crossbuild-essential-arm64:arm64 \
                       libelf-dev:arm64 \
                       qemu-user:arm64 \
-                      qemu-user-static:arm64 && \
+                      qemu-user-static:arm64 \
+                      unzip:arm64 && \
     aptitude --no-gui -f -q -y clean
 
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
