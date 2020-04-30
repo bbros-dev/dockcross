@@ -90,5 +90,10 @@ cd "${BUILD}"
 
 cp "${CONFIG_PATH}" "${BUILD}/.config"
 
+# Upgrade configuration....
+"${BOOTSTRAP_PREFIX}/bin/ct-ng" upgradeconfig
+# ... and copy it back.
+cp -f "${BUILD}/.config" "${CONFIG_PATH}.bak"
+
 # Build and install the toolchain!
 "${BOOTSTRAP_PREFIX}/bin/ct-ng" build
