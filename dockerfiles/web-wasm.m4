@@ -15,7 +15,7 @@ RUN \
   bash -c "echo \"deb http://deb.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
   apt-get update --yes && \
   apt-get install --no-install-recommends --yes aptitude && \
-  aptitude update  --no-gui -f -q -y && \
+  aptitude update  -f --no-gui -q -y&& \
   aptitude install -f --no-gui -q -y --without-recommends \
                     autogen \
                     automake \
@@ -49,7 +49,7 @@ RUN \
                     xz-utils \
                     zip \
                     zlib1g-dev && \
-  aptitude clean  --no-gui -f -q -y && \
+  aptitude clean  -f --no-gui -q -y&& \
   /buildscripts/install-gosu-binary-wrapper.sh && \
   rm -rf /buildscripts
 

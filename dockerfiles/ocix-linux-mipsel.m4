@@ -8,13 +8,16 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.
     curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - && \
     sed -i 's/httpredir.debian.org/http.debian.net/' /etc/apt/sources.list && \
     dpkg --add-architecture mipsel && \ 
-    aptitude --no-gui -f -q -y update && \
-    aptitude install -f --no-gui -q -y --without-recommends \
-                      crossbuild-essential-mipsel:mips64el \
-                      libelf-dev:mips64el \
-                      qemu-user:mips64el \
-                      qemu-user-static:mips64el \
-                      unzip:mips64el
+    aptitude -f --no-gui -q -y update && \
+    aptitude -f --no-gui -q -y --without-recommends install \
+              crossbuild-essential-mipsel:mips64el \
+              libelf-dev:mips64el \
+              libtool:mips64el \
+              qemu-user:mips64el \
+              qemu-user-static:mips64el \
+              texinfo:mips64el \
+              unzip:mips64el && \
+    aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE mipsel-linux-gnu
 ENV CROSS_ROOT /usr/bin

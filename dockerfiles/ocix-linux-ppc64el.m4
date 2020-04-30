@@ -5,18 +5,20 @@ COPY sources.list /etc/apt/sources.list
 RUN dpkg --add-architecture ppc64el && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-                      crossbuild-essential-ppc64el:ppc64el \
-                      libbz2-dev:ppc64el \
-                      libelf-dev:ppc64el \
-                      libexpat1-dev:ppc64el \
-                      libglib2.0-dev:ppc64el \
-                      libpixman-1-dev:ppc64el \
-                      libssl-dev:ppc64el \
-                      ncurses-dev:ppc64el \
-                      python-dev:ppc64el \
-                      texinfo:ppc64el \
-                      zlib1g-dev:ppc64el \
-                      unzip:ppc64el
+              crossbuild-essential-ppc64el:ppc64el \
+              libbz2-dev:ppc64el \
+              libelf-dev:ppc64el \
+              libexpat1-dev:ppc64el \
+              libglib2.0-dev:ppc64el \
+              libpixman-1-dev:ppc64el \
+              libssl-dev:ppc64el \
+              libtool:ppc64el \
+              ncurses-dev:ppc64el \
+              python-dev:ppc64el \
+              texinfo:ppc64el \
+              zlib1g-dev:ppc64el \
+              unzip:ppc64el && \
+    aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)
 

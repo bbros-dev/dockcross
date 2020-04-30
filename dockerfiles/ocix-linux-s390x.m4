@@ -5,12 +5,12 @@ include(shared/base.m4)
 RUN dpkg --add-architecture s390x && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-              bash:s390x=5.0-4 \
               libelf-dev:s390x=0.176-1.1 \
-              libtool:s390x \
+              libtool:s390x=2.4.6-9 \
               qemu-user:s390x=1:3.1+dfsg-8+deb10u3 \
               qemu-user-static:s390x=1:3.1+dfsg-8+deb10u3 \
-              unzip:s390x=6.0-21ubuntu1 && \
+              unzip:s390x=6.0-23+deb10u1 \
+              zlib1g-dev:s390x && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)

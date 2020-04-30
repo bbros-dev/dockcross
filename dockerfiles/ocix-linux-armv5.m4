@@ -2,15 +2,16 @@ include(shared/base.m4)
 # This is for ARMv5 "legacy" (armel) devices which do NOT support hard float
 # VFP instructions (armhf).
 
-include(shared/crosstool.m4)
-
 # The cross-compiling emulator
-RUN aptitude --no-gui -f -q -y update && \
-    aptitude install -f --no-gui -q -y --without-recommends \
-                      qemu-user \
-                      qemu-user-static && \
-    aptitude clean  --no-gui -f -q -y
+RUN aptitude -f --no-gui -q -y update && \
+    aptitude -f --no-gui -q -y --without-recommends install\
+              libtool \
+              qemu-user \
+              qemu-user-static \
+              texinfo && \
+    aptitude -f --no-gui -q -y clean
 
+include(shared/crosstool.m4)
 
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 ENV CROSS_TRIPLE armv5-unknown-linux-gnueabi

@@ -2,17 +2,19 @@ include(shared/base.m4)
 
 # This is for 64-bit ARM Linux machine
 
-include(shared/crosstool.m4)
-
 # The cross-compiling emulator
 RUN dpkg --add-architecture arm64 && \
     aptitude -f --no-gui -q -y --without-recommends install \
-                      crossbuild-essential-arm64:arm64 \
-                      libelf-dev:arm64 \
-                      qemu-user:arm64 \
-                      qemu-user-static:arm64 \
-                      unzip:arm64 && \
-    aptitude --no-gui -f -q -y clean
+              crossbuild-essential-arm64:arm64 \
+              libelf-dev:arm64 \
+              libtool:arm64 \
+              qemu-user:arm64 \
+              qemu-user-static:arm64 \
+              texinfo:arm64 \
+              unzip:arm64 && \
+    aptitude -f --no-gui -q -y clean
+
+include(shared/crosstool.m4)
 
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 ENV CROSS_TRIPLE aarch64-unknown-linux-gnueabi

@@ -2,15 +2,17 @@ include(shared/base.m4)
 
 # This is for 32-bit ARMv7 Linux
 
-include(shared/crosstool.m4)
-
 # The cross-compiling emulator
 RUN aptitude update && \
-    aptitude install -f --no-gui -q -y --without-recommends \
-                      qemu-user \
-                      qemu-user-static \
-                      unzip:arm64 && \
-    aptitude clean  --no-gui -f -q -y
+    aptitude -f --no-gui -q -y --without-recommends install\
+              libtool \
+              qemu-user \
+              qemu-user-static \
+              texinfo \
+              unzip && \
+    aptitude -f --no-gui -q -y clean
+
+include(shared/crosstool.m4)
 
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 #ENV CROSS_TRIPLE armv7-unknown-linux-gnueabi

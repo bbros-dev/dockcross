@@ -1,17 +1,19 @@
 include(shared/base.m4)
 # This is for 32-bit Big-Endian MIPS devices with hard floating point enabled
 
-include(shared/crosstool.m4)
-
 # The cross-compiling emulator
 RUN dpkg --add-architecture mips && \
-    aptitude  --no-gui -f -q -y update && \
+    aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-                      libelf-dev:mips \
-                      qemu-user:mips \
-                      qemu-user-static:mips
-                      unzip:mips && \
-      aptitude clean  --no-gui -f -q -y
+              libelf-dev:mips \
+              libtool:mips \
+              qemu-user:mips \
+              qemu-user-static:mips
+              texinfo:mips \
+              unzip:mips && \
+    aptitude -f --no-gui -q -y clean
+
+include(shared/crosstool.m4)
 
 # The CROSS_TRIPLE is a configured alias of the "mips-unknown-linux-gnu" target.
 ENV CROSS_TRIPLE mips-unknown-linux-gnu

@@ -1,7 +1,7 @@
 include(shared/base.m4)
 
 RUN dpkg --add-architecture i386 && \
-    aptitude update  --no-gui -f -q -y && \
+    aptitude update  -f --no-gui -q -y&& \
     aptitude install -f --no-gui -q -y --without-recommends \
                       gcc-multilib:i386 \
                       g++-multilib:i386 \
@@ -11,7 +11,8 @@ RUN dpkg --add-architecture i386 && \
                       libbz2-dev:i386 \
                       libexpat1-dev:i386 \
                       ncurses-dev:i386 \
-                      unzip:i386
+                      unzip:i386 && \
+    aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE=i686-linux-gnu
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}

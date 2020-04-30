@@ -5,9 +5,12 @@ RUN mkdir /build && \
     dpkg --add-architecture arm64 && \
     aptitude update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-    qemu-user:arm64 \
-    qemu-user-static:arm64 \
-    unzip:arm64
+              libtool:arm64 \
+              qemu-user:arm64 \
+              qemu-user-static:arm64 \
+              texinfo:arm64 \
+              unzip:arm64 && \
+    aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE=aarch64-linux-android
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}

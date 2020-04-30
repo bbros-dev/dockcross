@@ -33,7 +33,7 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
     apt-get update --yes && \
     apt-get install --no-install-recommends --yes apt-transport-https \
                                                   aptitude && \
-    aptitude --no-gui -f -q -y update && \
+    aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
                       autogen \
                       automake \

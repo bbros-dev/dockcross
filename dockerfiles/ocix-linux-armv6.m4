@@ -3,13 +3,15 @@ include(shared/base.m4)
 # Enable 32 bits binaries
 RUN dpkg --add-architecture i386 && \
     aptitude update && \
-    aptitude install -f --no-gui -q -y --without-recommends \
-                      libstdc++6:i386 \
-                      libgcc1:i386 \
-                      zlib1g:i386 \
-                      qemu-user:i386 \
-                      qemu-user-static:i386 \
-                      unzip:i386
+    aptitude -f --no-gui -q -y --without-recommends install \
+              libgcc1:i386 \
+              libstdc++6:i386 \
+              libtool \
+              qemu-user:i386 \
+              qemu-user-static:i386 \
+              unzip:i386 \
+              zlib1g:i386 && \
+    aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE arm-linux-gnueabihf
 ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
