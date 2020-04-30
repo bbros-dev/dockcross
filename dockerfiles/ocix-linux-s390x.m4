@@ -6,7 +6,7 @@ RUN dpkg --add-architecture s390x && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
               libelf-dev:s390x=0.176-1.1 \
-              libtool:s390x=2.4.6-9 \
+              libtool-bin:s390x=2.4.6-9 \
               qemu-user:s390x=1:3.1+dfsg-8+deb10u3 \
               qemu-user-static:s390x=1:3.1+dfsg-8+deb10u3 \
               unzip:s390x=6.0-23+deb10u1 \

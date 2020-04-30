@@ -12,7 +12,7 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.
     aptitude -f --no-gui -q -y --without-recommends install \
               crossbuild-essential-mipsel:mips64el \
               libelf-dev:mips64el \
-              libtool:mips64el \
+              libtool-bin:mips64el \
               qemu-user:mips64el \
               qemu-user-static:mips64el \
               texinfo:mips64el \

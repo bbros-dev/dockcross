@@ -51,7 +51,7 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
                       gzip \
                       gnupg \
                       initramfs-tools \
-                      libtool \
+                      libtool-bin \
                       m4 \
                       make \
                       ncurses-dev \

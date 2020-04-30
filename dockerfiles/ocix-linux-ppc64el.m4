@@ -12,7 +12,7 @@ RUN dpkg --add-architecture ppc64el && \
               libglib2.0-dev:ppc64el \
               libpixman-1-dev:ppc64el \
               libssl-dev:ppc64el \
-              libtool:ppc64el \
+              libtool-bin:ppc64el \
               ncurses-dev:ppc64el \
               python-dev:ppc64el \
               texinfo:ppc64el \

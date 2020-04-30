@@ -6,7 +6,7 @@ RUN dpkg --add-architecture mips && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
               libelf-dev:mips \
-              libtool:mips \
+              libtool-bin:mips \
               qemu-user:mips \
               qemu-user-static:mips
               texinfo:mips \

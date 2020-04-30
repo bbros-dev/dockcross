@@ -6,7 +6,7 @@ include(shared/base.m4)
 # The cross-compiling emulator
 RUN aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install\
-              libtool \
+              libtool-bin \
               qemu-user \
               qemu-user-static \
               unzip && \

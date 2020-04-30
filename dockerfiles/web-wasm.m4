@@ -33,7 +33,7 @@ RUN \
                     gzip \
                     gnupg \
                     initramfs-tools \
-                    libtool \
+                    libtool-bin \
                     make \
                     ncurses-dev \
                     pax \

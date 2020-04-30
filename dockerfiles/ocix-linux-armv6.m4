@@ -6,7 +6,7 @@ RUN dpkg --add-architecture i386 && \
     aptitude -f --no-gui -q -y --without-recommends install \
               libgcc1:i386 \
               libstdc++6:i386 \
-              libtool \
+              libtool-bin \
               qemu-user:i386 \
               qemu-user-static:i386 \
               unzip:i386 \

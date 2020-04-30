@@ -19,7 +19,7 @@ RUN aptitude -f --no-gui -q -y --without-recommends install \
                       gawk \
                       gperf \
                       help2man \
-                      libtool \
+                      libtool-bin \
                       python-dev \
                       texinfo \
                       unzip && \

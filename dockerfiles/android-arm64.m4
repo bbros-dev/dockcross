@@ -5,7 +5,7 @@ RUN mkdir /build && \
     dpkg --add-architecture arm64 && \
     aptitude update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-              libtool:arm64 \
+              libtool-bin:arm64 \
               qemu-user:arm64 \
               qemu-user-static:arm64 \
               texinfo:arm64 \
