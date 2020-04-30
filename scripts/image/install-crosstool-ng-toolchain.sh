@@ -97,8 +97,7 @@ echo 'CT-NG upgraded configuration'
 echo "${BUILD}/.config"
 echo "${CONFIG_PATH}.bak"
 cat "${BUILD}/.config"
-cp -f "${BUILD}/.config" "${CONFIG_PATH}.bak"
-cat "${BUILD}/.config"
+cp -f "${BUILD}/.config" "${CONFIG_PATH}.v2"
 
 # Build and install the toolchain!
 "${BOOTSTRAP_PREFIX}/bin/ct-ng" build
