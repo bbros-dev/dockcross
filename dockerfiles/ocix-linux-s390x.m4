@@ -1,18 +1,19 @@
 include(shared/base.m4)
 # This is for 64-bit S390X Linux machine
 
-include(shared/crosstool.m4)
-
 # The cross-compiling emulator
 RUN dpkg --add-architecture s390x && \
-    aptitude update  -f --no-gui -q -y && \
-    aptitude install -f --no-gui -q -y --without-recommends \
+    aptitude -f --no-gui -q -y update && \
+    aptitude -f --no-gui -q -y --without-recommends install \
               bash:s390x=5.0-4 \
               libelf-dev:s390x=0.176-1.1 \
+              libtool:s390x \
               qemu-user:s390x=1:3.1+dfsg-8+deb10u3 \
               qemu-user-static:s390x=1:3.1+dfsg-8+deb10u3 \
               unzip:s390x=6.0-21ubuntu1 && \
-    aptitude clean -f --no-gui -q -y
+    aptitude -f --no-gui -q -y clean
+
+include(shared/crosstool.m4)
 
 # The CROSS_TRIPLE is a configured alias of the "s390x-ibm-linux-gnu" target.
 ENV CROSS_TRIPLE s390x-ibm-linux-gnu
