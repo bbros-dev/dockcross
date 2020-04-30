@@ -30,6 +30,9 @@ commands:
             make << parameters.image_name >>
             make << parameters.image_name >>.test
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+      - store_artifacts:
+          path: /ocix/crosstool/toolchain/.config
+          destination: ct-ng-config
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/ocix/<< parameters.image_name >>.tar
@@ -116,52 +119,52 @@ workflows:
       #     image: "ocix-android-arm64"
       #     requires:
       #       - ocix-base
-      - ocix:
-          name: "linux-arm64"
-          image: "ocix-linux-arm64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv5"
-          image: "ocix-linux-armv5"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv5-musl"
-          image: "ocix-linux-armv5-musl"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv6"
-          image: "ocix-linux-armv6"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv7"
-          image: "ocix-linux-armv7"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv7a"
-          image: "ocix-linux-armv7a"
-          requires:
-            - ocix-base
-      # Image build currently broken. See #209
-      #- ocix:
-      #    name: "linux-mipsel"
-      #    image: "ocix-linux-mipsel"
-      #    requires:
-      #      - ocix-base
+      # - ocix:
+      #     name: "linux-arm64"
+      #     image: "ocix-linux-arm64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv5"
+      #     image: "ocix-linux-armv5"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv5-musl"
+      #     image: "ocix-linux-armv5-musl"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv6"
+      #     image: "ocix-linux-armv6"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv7"
+      #     image: "ocix-linux-armv7"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv7a"
+      #     image: "ocix-linux-armv7a"
+      #     requires:
+      #       - ocix-base
+      # # Image build currently broken. See #209
+      # #- ocix:
+      # #    name: "linux-mipsel"
+      # #    image: "ocix-linux-mipsel"
+      # #    requires:
+      # #      - ocix-base
       - ocix:
           name: "linux-s390x"
           image: "ocix-linux-s390x"
           requires:
             - ocix-base
-      - ocix:
-          name: "linux-ppc64el"
-          image: "ocix-linux-ppc64el"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "linux-ppc64el"
+      #     image: "ocix-linux-ppc64el"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "linux-x64"
           image: "ocix-linux-x64"
