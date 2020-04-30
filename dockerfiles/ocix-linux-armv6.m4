@@ -3,7 +3,7 @@ include(shared/base.m4)
 # Enable 32 bits binaries
 RUN dpkg --add-architecture i386 && \
     aptitude update && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude install -f --no-gui -q -y --without-recommends \
                       libstdc++6:i386 \
                       libgcc1:i386 \
                       zlib1g:i386 \

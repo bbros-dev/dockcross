@@ -31,7 +31,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # 'cmake' is omitted because it is installed from source in the base image
 #
 RUN aptitude update && \
-    aptitude -q -f -y --no-gui --without-recommends install \
+    aptitude -f --no-gui -q -y --without-recommends install \
                       autoconf \
                       automake \
                       autopoint \
@@ -71,7 +71,7 @@ RUN aptitude update && \
   #
   dpkg --add-architecture i386 && \
   aptitude update && \
-  aptitude -q -f -y --no-gui --without-recommends install \
+  aptitude -f --no-gui -q -y --without-recommends install \
                     unzip:i386 \
                     wine32:i386 && \
   wine hostname && \

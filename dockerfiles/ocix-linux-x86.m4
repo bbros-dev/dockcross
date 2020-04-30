@@ -2,7 +2,7 @@ include(shared/base.m4)
 
 RUN dpkg --add-architecture i386 && \
     aptitude update  --no-gui -f -q -y && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude install -f --no-gui -q -y --without-recommends \
                       gcc-multilib:i386 \
                       g++-multilib:i386 \
                       libc6:i386 \

@@ -9,7 +9,7 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.
     sed -i 's/httpredir.debian.org/http.debian.net/' /etc/apt/sources.list && \
     dpkg --add-architecture mipsel && \ 
     aptitude --no-gui -f -q -y update && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude install -f --no-gui -q -y --without-recommends \
                       crossbuild-essential-mipsel:mips64el \
                       libelf-dev:mips64el \
                       qemu-user:mips64el \

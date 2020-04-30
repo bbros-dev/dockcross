@@ -15,14 +15,15 @@
 # generate a configuration.
 
 # Install Debian packages required for $(ct-ng).
-RUN aptitude -q -f -y --no-gui --without-recommends install \
+RUN aptitude -f --no-gui -q -y --without-recommends install \
                       gawk \
                       gperf \
                       help2man \
+                      libtool \
                       python-dev \
                       texinfo \
                       unzip && \
-    aptitude --no-gui -f -q -y clean && \
+    aptitude -f --no-gui -q -y clean && \
     mkdir -p /ocix/crosstool
 
 ENV XCC_PREFIX=/usr/xcc

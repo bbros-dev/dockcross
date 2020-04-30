@@ -4,7 +4,7 @@ include(shared/crosstool.m4)
 
 # The cross-compiling emulator
 RUN aptitude --no-gui -f -q -y update && \
-    aptitude -q -f -y --no-gui --without-recommends install \
+    aptitude -f --no-gui -q -y --without-recommends install \
                       qemu-user \
                       qemu-user-static && \
     aptitude clean  --no-gui -f -q -y

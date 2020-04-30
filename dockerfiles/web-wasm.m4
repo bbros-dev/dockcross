@@ -16,7 +16,7 @@ RUN \
   apt-get update --yes && \
   apt-get install --no-install-recommends --yes aptitude && \
   aptitude update  --no-gui -f -q -y && \
-  aptitude install -q -f -y --no-gui --without-recommends \
+  aptitude install -f --no-gui -q -y --without-recommends \
                     autogen \
                     automake \
                     bash \

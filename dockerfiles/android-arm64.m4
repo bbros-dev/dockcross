@@ -4,7 +4,7 @@ RUN mkdir /build && \
     sed -i '/debian-security/d' /etc/apt/sources.list && \
     dpkg --add-architecture arm64 && \
     aptitude update && \
-    aptitude -q -f -y --no-gui --without-recommends install \
+    aptitude -f --no-gui -q -y --without-recommends install \
     qemu-user:arm64 \
     qemu-user-static:arm64 \
     unzip:arm64
