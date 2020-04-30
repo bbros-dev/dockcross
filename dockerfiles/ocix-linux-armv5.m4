@@ -8,8 +8,7 @@ include(shared/crosstool.m4)
 RUN aptitude --no-gui -f -q -y update && \
     aptitude install -q -f -y --no-gui --without-recommends \
                       qemu-user \
-                      qemu-user-static \
-                      unzip && \
+                      qemu-user-static && \
     aptitude clean  --no-gui -f -q -y
 
 

@@ -4,10 +4,9 @@ include(shared/crosstool.m4)
 
 # The cross-compiling emulator
 RUN aptitude --no-gui -f -q -y update && \
-    aptitude install -q -f -y --no-gui --without-recommends \
+    aptitude -q -f -y --no-gui --without-recommends install \
                       qemu-user \
-                      qemu-user-static \
-                      unzip && \
+                      qemu-user-static && \
     aptitude clean  --no-gui -f -q -y
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 ENV CROSS_TRIPLE armv7-unknown-linux-gnueabi

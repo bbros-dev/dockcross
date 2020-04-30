@@ -20,7 +20,8 @@ RUN aptitude -q -f -y --no-gui --without-recommends install \
                       gperf \
                       help2man \
                       python-dev \
-                      texinfo && \
+                      texinfo \
+                      unzip && \
     aptitude --no-gui -f -q -y clean && \
     mkdir -p /ocix/crosstool
 
