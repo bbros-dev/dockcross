@@ -68,8 +68,8 @@ BOOTSTRAP_PREFIX="${CTNG}/prefix"
 ./bootstrap
 ./configure \
   --prefix "${BOOTSTRAP_PREFIX}"
-make -j$(nproc)
-make install
+make -j$(nproc)  2>&1 >make-install.log
+make install 2>&1 >>make-install.log
 
 ##
 # Use "crosstool-ng" to build the toolchain.
@@ -98,6 +98,8 @@ echo "${BUILD}/.config"
 echo "${CONFIG_PATH}.bak"
 cat "${BUILD}/.config"
 cp -f "${BUILD}/.config" "${CONFIG_PATH}.v2"
+cat "${CONFIG_PATH}.v2"
 
 # Build and install the toolchain!
-"${BOOTSTRAP_PREFIX}/bin/ct-ng" build
+echo ${PWD}
+"${BOOTSTRAP_PREFIX}/bin/ct-ng" build 2>&1 >>make-build.log
