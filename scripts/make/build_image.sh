@@ -46,8 +46,6 @@ then
     --build-arg VCS_REF=$(git rev-parse --short HEAD) \
     --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
     --file ${OCIX_DIR}/Dockerfile ${OCIX_DIR}
-  cat ${OCIX_DIR}/crosstool-ng.config
-  cat ${OCIX_DIR}/crosstool-ng.config.bak
   rm -rf ${OCIX_DIR}/scripts
   rm -f ${OCIX_DIR}/Dockerfile
 fi
