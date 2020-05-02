@@ -20,7 +20,7 @@ RUN aptitude -f --no-gui -q -y --without-recommends install \
                       gperf \
                       help2man \
                       libtool-bin \
-                      python-dev \
+                      python3-dev \
                       texinfo \
                       unzip && \
     aptitude -f --no-gui -q -y clean && \

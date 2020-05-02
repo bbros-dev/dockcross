@@ -4,7 +4,7 @@
 COPY \
   scripts/install-gosu-binary.sh \
   scripts/install-gosu-binary-wrapper.sh \
-  manylinux-common/install-python-packages.sh \
+  scripts/install-python-packages-manylinux.sh \
   /buildscripts/
 
 RUN set -x && \
@@ -26,11 +26,11 @@ RUN set -x && \
   rm -f /opt/rh/devtoolset-7/root/usr/bin/sudo && \
   rm -f /opt/rh/devtoolset-8/root/usr/bin/sudo && \
   PYTHON=$([ -e /opt/python/cp35-cp35m/bin/python ] && echo "/opt/python/cp35-cp35m/bin/python" || command -v python 2>/dev/null) && \
-  /buildscripts/install-python-packages.sh && \
+  /buildscripts/install-python-packages-manylinux.sh && \
   rm -rf /buildscripts
 
 # Runtime scripts
-COPY manylinux-common/pre_exec.sh /ocix/
+COPY scripts/pre-exec-manylinux.sh /ocix/pre_exec.sh
 
 #
 # End include from shared/manylinux.m4

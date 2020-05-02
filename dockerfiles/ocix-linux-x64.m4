@@ -1,6 +1,6 @@
 include(shared/base.m4)
 
-RUN dpkg --add-architecture amd64
+RUN dpkg --add-architecture amd64 && \
     aptitude -f --no-gui -q -y --without-recommends install\
                       libelf-dev:amd64 \
                       unzip:amd64

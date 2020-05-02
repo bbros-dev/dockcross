@@ -56,9 +56,10 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
                       make \
                       ncurses-dev \
                       pax \
+                      perl-base \
                       pkg-config \
-                      python \
-                      python-pip \
+                      python3 \
+                      python3-pip \
                       re2c \
                       rsync \
                       sed \

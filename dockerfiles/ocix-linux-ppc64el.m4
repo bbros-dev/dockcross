@@ -14,8 +14,7 @@ RUN dpkg --add-architecture ppc64el && \
               libssl-dev:ppc64el \
               libtool-bin:ppc64el \
               ncurses-dev:ppc64el \
-              python-dev:ppc64el \
-              texinfo:ppc64el \
+              texinfo:ppc64el=6.5.0.dfsg.1-4+b1 \
               zlib1g-dev:ppc64el \
               unzip:ppc64el && \
     aptitude -f --no-gui -q -y clean
