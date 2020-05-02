@@ -3,7 +3,9 @@ FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4
 RUN rm /bin/sh && ln -s /bin/dash /bin/sh
 
-COPY scripts/install-gosu-binary-wrapper.sh /buildscripts/
+COPY scripts/install-gosu-binary.sh \
+     scripts/install-gosu-binary-wrapper.sh \
+     /buildscripts/
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG REPO=http://cdn-fastly.deb.debian.org
@@ -50,6 +52,7 @@ RUN \
                     zip \
                     zlib1g-dev && \
   aptitude clean  -f --no-gui -q -y&& \
+  /buildscripts/install-gosu-binary.sh && \
   /buildscripts/install-gosu-binary-wrapper.sh && \
   rm -rf /buildscripts
 
