@@ -6,7 +6,7 @@ set -o pipefail
 ARCH="x86_64"
 
 while [ $# -gt 0 ]; do
-  X86_FLAG=$([ $1 =~ '-x86' ] && echo "-32" || echo "") 
+  X86_FLAG=$([[ "$1" =~ "-x86" ]] && echo "-32" || echo "") 
   case "${X86_FLAG}" in
     -32)
       ARCH="x86"

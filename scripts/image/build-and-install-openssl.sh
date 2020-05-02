@@ -27,7 +27,7 @@ CONFIG_FLAG=""
 
 while [ $# -gt 0 ]; do
   echo "$@"
-  X86_FLAG=$([ "$1" =~ '-x86' ] && echo "-32" || echo "") 
+  X86_FLAG=$([[ "$1" =~ "-x86" ]] && echo "-32" || echo "") 
   case "${X86_FLAG}" in
     -32)
       WRAPPER="linux-generic32"
