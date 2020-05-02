@@ -2,7 +2,12 @@ include(shared/base.m4)
 ENV CROSS_TRIPLE powerpc64el-linux-gnu
 
 COPY sources.list /etc/apt/sources.list
+
 RUN dpkg --add-architecture ppc64el && \
+    aptitude -f --no-gui -q -y purge \
+              libexpat1\
+              perl-base \
+              texinfo && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
               crossbuild-essential-ppc64el:ppc64el \
@@ -55,5 +60,3 @@ ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH powerpc
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

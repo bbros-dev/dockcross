@@ -1,5 +1,7 @@
 FROM quay.io/pypa/manylinux1_x86_64:2020-04-06-3cde635
 
+ARG OCIX_IMAGE
+ARG OCIX_NAME
 ARG OCIX_ORG
 ARG OCIX_VERSION
 
@@ -25,5 +27,3 @@ COPY ocix-manylinux1-x64/Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

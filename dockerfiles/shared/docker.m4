@@ -3,7 +3,7 @@
 WORKDIR /usr/src
 
 ARG GIT_VERSION=2.26.2
-ARG CMAKE_VERSION=3.17.2
+ARG CMAKE_VERSION=3.17.1
 
 # Image build scripts
 COPY scripts/build-and-install-cmake.sh \

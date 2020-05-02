@@ -29,5 +29,3 @@ COPY ocix-linux-x86/linux32-entrypoint.sh /ocix/
 ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

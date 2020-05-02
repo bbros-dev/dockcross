@@ -14,7 +14,16 @@ OCIX_ORG=$OCIX_ORG\n\
 OCIX_VERSION=$OCIX_VERSION\n\
 DEFAULT_OCIX_IMAGE=$OCIX_ORG/$OCIX_IMAGE:$OCIX_VERSION\n " \
 >> /etc/profile.d/00-ocix-env.sh && \
-chmod +x /etc/profile.d/00-ocix-env.sh
+  chmod +x /etc/profile.d/00-ocix-env.sh && \
+  mkdir -p /etc/apt/apt.conf.d && \
+  echo "\n\
+Aptitude {\n\
+  ProblemResolver {\n\
+    SolutionCost "100*canceled-actions,200*removals";\n\
+  };\n\
+};\n " \
+>> /etc/apt/apt.conf.d/00-resolver && \
+  chmod +x /etc/apt/apt.conf.d/00-resolver
 
 WORKDIR /work
 

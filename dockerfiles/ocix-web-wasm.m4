@@ -1,4 +1,11 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
+ARG OCIX_IMAGE
+ARG OCIX_NAME
+ARG OCIX_ORG
+ARG OCIX_VERSION
+
+ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+
 # Revert back to "/bin/sh" as default shell
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4
 RUN rm /bin/sh && ln -s /bin/dash /bin/sh
@@ -67,5 +74,3 @@ ENV CC=/emsdk_portable/emscripten/sdk/emcc \
 ENV CMAKE_TOOLCHAIN_FILE /emsdk_portable/emscripten/sdk/cmake/Modules/Platform/Emscripten.cmake
 
 include(shared/label.m4)
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}

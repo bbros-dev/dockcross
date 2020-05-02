@@ -14,15 +14,33 @@
 # generate its cross-compiler. This can be built using "ct-ng menuconfig" to
 # generate a configuration.
 
+# -o Aptitude::ProblemResolver::SolutionCost='100*canceled-actions,200*removals'
+# 
+# Derived from [the manual](https://www.debian.org/doc/manuals/aptitude/ch02s03s04.en.html)
+# Increase relative costs of solutions aptitude will use:
+# 
+# 1. Do not keep, if you can install or upgrade (by increasing canceled-actions counter)
+# 2. Increase removals counter, because we want keep packages if aptitude decide to delete it
+
+RUN mkdir -p /etc/apt/apt.conf.d && \
+    echo "\n\
+Aptitude {\n\
+  ProblemResolver {\n\
+    SolutionCost "100*canceled-actions,200*removals";\n\
+  };\n\
+};\n " \
+>> /etc/apt/apt.conf.d/01-crosstool-ng && \
+chmod +x /etc/apt/apt.conf.d/01-crosstool-ng
+
 # Install Debian packages required for $(ct-ng).
 RUN aptitude -f --no-gui -q -y --without-recommends install \
-                      gawk \
-                      gperf \
-                      help2man \
-                      libtool-bin \
-                      python3-dev \
-                      texinfo \
-                      unzip && \
+              gawk \
+              gperf \
+              help2man \
+              libtool-bin \
+              python3-dev \
+              texinfo \
+              unzip && \
     aptitude -f --no-gui -q -y clean && \
     mkdir -p /ocix/crosstool
 
