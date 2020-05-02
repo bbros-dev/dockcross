@@ -26,9 +26,10 @@ WRAPPER=""
 CONFIG_FLAG=""
 
 while [ $# -gt 0 ]; do
-  case "$1" in
+  X86_FLAG=$([ $1 =~ '-x86' ] && echo "-32" || echo "") 
+  case "${X86_FLAG}" in
     -32)
-      WRAPPER="linux32"
+      WRAPPER="linux-generic32"
       CONFIG_FLAG="-m32"
       ;;
     *)

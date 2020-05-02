@@ -102,4 +102,5 @@ cat "${CONFIG_PATH}.v2"
 
 # Build and install the toolchain!
 echo ${PWD}
-"${BOOTSTRAP_PREFIX}/bin/ct-ng" build 2>&1 >>make-build.log
+"${BOOTSTRAP_PREFIX}/bin/ct-ng" build 
+# 2>&1 >>make-build.log

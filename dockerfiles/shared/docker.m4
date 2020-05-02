@@ -2,8 +2,8 @@
 #
 WORKDIR /usr/src
 
-ARG GIT_VERSION=2.22.0
-ARG CMAKE_VERSION=3.17.1
+ARG GIT_VERSION=2.26.2
+ARG CMAKE_VERSION=3.17.2
 
 # Image build scripts
 COPY scripts/build-and-install-cmake.sh \
@@ -18,12 +18,11 @@ COPY scripts/build-and-install-cmake.sh \
       scripts/utils.sh \
       /buildscripts/
 
-RUN X86_FLAG=$([ "$DEFAULT_OCIX_IMAGE" = "${OCIX_ORG}/ocix-manylinux1-x86:${OCIX_VERSION}" -o "$DEFAULT_OCIX_IMAGE" = "${OCIX_ORG}/ocix-manylinux2010-x86:${OCIX_VERSION}" ] && echo "-m32 linux-generic32" || echo "") && \
-    /buildscripts/build-and-install-openssl.sh $X86_FLAG && \
+RUN /buildscripts/build-and-install-openssl.sh $DEFAULT_OCIX_IMAGE && \
     /buildscripts/build-and-install-openssh.sh && \
     /buildscripts/build-and-install-curl.sh && \
     /buildscripts/build-and-install-git.sh && \
-    /buildscripts/install-cmake-binary.sh $X86_FLAG && \
+    /buildscripts/install-cmake-binary.sh $DEFAULT_OCIX_IMAGE && \
     /buildscripts/install-liquidprompt-binary.sh && \
     PYTHON=$([ -e /opt/python/cp35-cp35m/bin/python ] && echo "/opt/python/cp35-cp35m/bin/python" || command -v python 2>/dev/null) && \
     /buildscripts/install-python-packages.sh -python ${PYTHON} && \
