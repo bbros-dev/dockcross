@@ -23,9 +23,9 @@ ENV AS=${CROSS_ROOT}/as \
     LD=${CROSS_ROOT}/ld \
     FC=${CROSS_ROOT}/gfortran
 
-COPY linux-x64/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
+COPY ocix-linux-x64/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
-COPY manylinux2010-x64/Toolchain.cmake ${CROSS_ROOT}/../lib/
+COPY ocix-manylinux2010-x64/Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
 include(shared/label.m4)

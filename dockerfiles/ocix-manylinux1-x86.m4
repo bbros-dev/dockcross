@@ -22,7 +22,7 @@ ENV AS=${CROSS_ROOT}/as \
 
 COPY linux-x86/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
-COPY manylinux1-x86/Toolchain.cmake ${CROSS_ROOT}/../lib/
+COPY ocix-manylinux1-x86/Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
 COPY linux-x86/linux32-entrypoint.sh /ocix/

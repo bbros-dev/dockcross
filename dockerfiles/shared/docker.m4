@@ -18,7 +18,7 @@ COPY scripts/build-and-install-cmake.sh \
       scripts/utils.sh \
       /buildscripts/
 
-RUN X86_FLAG=$([ "$DEFAULT_OCIX_IMAGE" = "${OCIX_ORG}/manylinux1-x86:${OCIX_VERSION}" -o "$DEFAULT_OCIX_IMAGE" = "${OCIX_ORG}/manylinux2010-x86:${OCIX_VERSION}" ] && echo "-32" || echo "") && \
+RUN X86_FLAG=$([ "$DEFAULT_OCIX_IMAGE" = "${OCIX_ORG}/ocix-manylinux1-x86:${OCIX_VERSION}" -o "$DEFAULT_OCIX_IMAGE" = "${OCIX_ORG}/ocix-manylinux2010-x86:${OCIX_VERSION}" ] && echo "-m32 linux-generic32" || echo "") && \
     /buildscripts/build-and-install-openssl.sh $X86_FLAG && \
     /buildscripts/build-and-install-openssh.sh && \
     /buildscripts/build-and-install-curl.sh && \

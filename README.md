@@ -55,7 +55,7 @@ Podman users can replace docker with podman in all documentation examples:
     chmod +x ./ocix
     mv ./ocix ~/bin/
 
-Where CROSS_COMPILER_IMAGE_NAME is the name of the cross-compiler toolchain container 'slug', e.g. dockcross/linux-armv7.
+Where CROSS_COMPILER_IMAGE_NAME is the name of the cross-compiler toolchain container 'slug', e.g. dockcross/ocix-linux-armv7.
 
 Only 64-bit x86_64 images are provided; a 64-bit x86_64 host system is required.
 
@@ -84,7 +84,7 @@ Cross compilers
 >
 > :   <https://microbadger.com/images/dockcross/ocix-base>
 >
-dockcross/base
+dockcross/ocix-base
 
 :   
 
@@ -94,169 +94,169 @@ dockcross/base
 
     target
 
-    :   <https://microbadger.com/images/dockcross/android-arm>
+    :   <https://microbadger.com/images/dockcross/ocix-android-arm>
 
-dockcross/android-arm
+dockcross/ocix-android-arm
 
-:   ![android-arm-images](https://images.microbadger.com/badges/image/dockcross/android-arm.svg) The Android NDK standalone toolchain for the arm architecture.
+:   ![android-arm-images](https://images.microbadger.com/badges/image/dockcross/ocix-android-arm.svg) The Android NDK standalone toolchain for the arm architecture.
 
 <!-- -->
 
-dockcross/android-arm64
+dockcross/ocix-android-arm64
 
 :   |android-arm64-images| The Android NDK standalone toolchain for the arm64 architecture.
 
 <!-- -->
 
-dockcross/linux-arm64
+dockcross/ocix-linux-arm64
 
 :   |linux-arm64-images| Cross compiler for the 64-bit ARM platform on Linux, also known as AArch64.
 
 <!-- -->
 
-dockcross/linux-armv5
+dockcross/ocix-linux-armv5
 
 :   |linux-armv5-images| Linux armv5 cross compiler toolchain for legacy devices like the Parrot AR Drone.
 
 <!-- -->
 
-dockcross/linux-armv5-musl
+dockcross/ocix-linux-armv5-musl
 
 :   |linux-armv5-musl-images| Linux armv5 cross compiler toolchain using [musl](https://www.musl-libc.org/) as base "libc".
 
 <!-- -->
 
-dockcross/linux-armv6
+dockcross/ocix-linux-armv6
 
 :   |linux-armv6-images| Linux ARMv6 cross compiler toolchain for the Raspberry Pi, etc.
 
 <!-- -->
 
-dockcross/linux-armv7
+dockcross/ocix-linux-armv7
 
 :   |linux-armv7-images| Generic Linux armv7 cross compiler toolchain.
 
 <!-- -->
 
-dockcross/linux-armv7a
+dockcross/ocix-linux-armv7a
 
 :   |linux-armv7a-images| Toolchain configured for ARMv7-A used in Beaglebone Black single board PC with TI SoC AM3358 on board, Cortex-A8.
 
     target
 
-    :   <https://microbadger.com/images/dockcross/linux-mipsel>
+    :   <https://microbadger.com/images/dockcross/ocix-linux-mipsel>
 
-dockcross/linux-mipsel
+dockcross/ocix-linux-mipsel
 
-:   ![linux-mipsel-images](https://images.microbadger.com/badges/image/dockcross/linux-mipsel.svg) Linux mipsel cross compiler toolchain for little endian MIPS GNU systems.
-
-    target
-
-    :   <https://microbadger.com/images/dockcross/linux-mips>
-
-dockcross/linux-mips
-
-:   ![linux-mips-images](https://images.microbadger.com/badges/image/dockcross/linux-mips.svg) Linux mips cross compiler toolchain for big endian 32-bit hard float MIPS GNU systems.
+:   ![linux-mipsel-images](https://images.microbadger.com/badges/image/dockcross/ocix-linux-mipsel.svg) Linux mipsel cross compiler toolchain for little endian MIPS GNU systems.
 
     target
 
-    :   <https://microbadger.com/images/dockcross/linux-s390x>
+    :   <https://microbadger.com/images/dockcross/ocix-linux-mips>
 
-dockcross/linux-s390x
+dockcross/ocix-linux-mips
 
-:   ![linux-s390x-images](https://images.microbadger.com/badges/image/dockcross/linux-s390x.svg) Linux s390x cross compiler toolchain for S390X GNU systems.
+:   ![linux-mips-images](https://images.microbadger.com/badges/image/dockcross/ocix-linux-mips.svg) Linux mips cross compiler toolchain for big endian 32-bit hard float MIPS GNU systems.
 
     target
 
-    :   <https://microbadger.com/images/dockcross/linux-ppc64el>
+    :   <https://microbadger.com/images/dockcross/ocix-linux-s390x>
 
-dockcross/linux-ppc64el
+dockcross/ocix-linux-s390x
 
-:   ![linux-ppc64el-images](https://images.microbadger.com/badges/image/dockcross/linux-ppc64el.svg) Linux PowerPC 64 little endian cross compiler toolchain for the POWER8, etc.
+:   ![linux-s390x-images](https://images.microbadger.com/badges/image/dockcross/ocix-linux-s390x.svg) Linux s390x cross compiler toolchain for S390X GNU systems.
+
+    target
+
+    :   <https://microbadger.com/images/dockcross/ocix-linux-ppc64el>
+
+dockcross/ocix-linux-ppc64el
+
+:   ![linux-ppc64el-images](https://images.microbadger.com/badges/image/dockcross/ocix-linux-ppc64el.svg) Linux PowerPC 64 little endian cross compiler toolchain for the POWER8, etc.
 
 <!-- -->
 
-dockcross/linux-x64
+dockcross/ocix-linux-x64
 
 :   |linux-x64-images| Linux x86_64 / amd64 compiler. Since the container image is natively x86_64, this is not actually a cross compiler.
 
 <!-- -->
 
-dockcross/linux-x86
+dockcross/ocix-linux-x86
 
 :   |linux-x86-images| Linux i686 cross compiler.
 
 <!-- -->
 
-dockcross/manylinux2014-x64
+dockcross/ocix-manylinux2014-x64
 
 :   |manylinux2014-x64-images| [manylinux2014](https://github.com/pypa/manylinux) container image for building Linux x86_64 / amd64 [Python wheel packages](http://pythonwheels.com/). It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8. Also has support for the dockcross script, and it has installations of CMake, Ninja, and [scikit-build](http://scikit-build.org). For CMake, it sets MANYLINUX2014 to "TRUE" in the toolchain.
 
 <!-- -->
 
-dockcross/manylinux2010-x64
+dockcross/ocix-manylinux2010-x64
 
 :   |manylinux2010-x64-images| [manylinux2010](https://github.com/pypa/manylinux) container image for building Linux x86_64 / amd64 [Python wheel packages](http://pythonwheels.com/). It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8. Also has support for the dockcross script, and it has installations of CMake, Ninja, and [scikit-build](http://scikit-build.org). For CMake, it sets MANYLINUX2010 to "TRUE" in the toolchain.
 
 <!-- -->
 
-dockcross/manylinux2010-x86
+dockcross/ocix-manylinux2010-x86
 
 :   |manylinux2010-x86-images| [manylinux2010](https://github.com/pypa/manylinux) container image for building Linux i686 [Python wheel packages](http://pythonwheels.com/). It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8. Also has support for the dockcross script, and it has installations of CMake, Ninja, and [scikit-build](http://scikit-build.org). For CMake, it sets MANYLINUX2010 to "TRUE" in the toolchain.
 
 <!-- -->
 
-dockcross/manylinux1-x64
+dockcross/ocix-manylinux1-x64
 
 :   |manylinux1-x64-images| [manylinux1](https://github.com/pypa/manylinux/tree/manylinux1) container image for building Linux x86_64 / amd64 [Python wheel packages](http://pythonwheels.com/). It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8. Also has support for the dockcross script, and it has installations of CMake, Ninja, and [scikit-build](http://scikit-build.org). For CMake, it sets MANYLINUX1 to "TRUE" in the toolchain.
 
 <!-- -->
 
-dockcross/manylinux1-x86
+dockcross/ocix-manylinux1-x86
 
 :   |manylinux1-x86-images| [manylinux1](https://github.com/pypa/manylinux/tree/manylinux1) container image for building Linux i686 [Python wheel packages](http://pythonwheels.com/). It includes Python 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8. Also has support for the dockcross script, and it has installations of CMake, Ninja, and [scikit-build](http://scikit-build.org). For CMake, it sets MANYLINUX1 to "TRUE" in the toolchain.
 
 <!-- -->
 
-dockcross/web-wasm
+dockcross/ocix-web-wasm
 
 :   |web-wasm-images| The Emscripten WebAssembly/asm.js/JavaScript cross compiler.
 
 <!-- -->
 
-dockcross/windows-static-x64
+dockcross/ocix-windows-static-x64
 
 :   |windows-static-x64-images| 64-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with win32 threads and static linking.
 
 <!-- -->
 
-dockcross/windows-static-x64-posix
+dockcross/ocix-windows-static-x64-posix
 
 :   |windows-static-x64-posix-images| 64-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with posix threads and static linking.
 
 <!-- -->
 
-dockcross/windows-static-x86
+dockcross/ocix-windows-static-x86
 
 :   |windows-static-x86-images| 32-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with win32 threads and static linking.
 
     target
 
-    :   <https://microbadger.com/images/dockcross/windows-shared-x64>
+    :   <https://microbadger.com/images/dockcross/ocix-windows-shared-x64>
 
-dockcross/windows-shared-x64
+dockcross/ocix-windows-shared-x64
 
-:   ![windows-shared-x64-images](https://images.microbadger.com/badges/image/dockcross/windows-shared-x64.svg) 64-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with win32 threads and dynamic linking.
+:   ![windows-shared-x64-images](https://images.microbadger.com/badges/image/dockcross/ocix-windows-shared-x64.svg) 64-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with win32 threads and dynamic linking.
 
 <!-- -->
 
-dockcross/windows-shared-x64-posix
+dockcross/ocix-windows-shared-x64-posix
 
 :   |windows-shared-x64-posix-images| 64-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with posix threads and dynamic linking.
 
 <!-- -->
 
-dockcross/windows-shared-x86
+dockcross/ocix-windows-shared-x86
 
 :   |windows-shared-x86-images| 32-bit Windows cross-compiler based on [MXE/MinGW-w64](https://mxe.cc/) with win32 threads and dynamic linking.
 
