@@ -98,10 +98,9 @@ echo "${BUILD}/.config"
 echo "${CONFIG_PATH}.bak"
 cat "${BUILD}/.config"
 cp -f "${BUILD}/.config" "${CONFIG_PATH}.v2"
-cat "${CONFIG_PATH}.v2"
-
+ls -la "${CONFIG_PATH}*"
 # Build and install the toolchain!
 pushd ${BUILD}
   cat "${PWD}/.config"
-  "${BOOTSTRAP_PREFIX}/bin/ct-ng" build | grep --invert-match '[0-9][0-9]:[0-9][0-9]'
+  "${BOOTSTRAP_PREFIX}/bin/ct-ng" build | grep --invert-match '[0-9][0-9]:[0-9][0-9]' | tee ct-ng-build.log
 popd

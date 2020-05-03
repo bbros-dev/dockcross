@@ -1,4 +1,4 @@
-FROM quay.io/pypa/manylinux2010_i686:latest
+FROM quay.io/pypa/manylinux2010_i686:2020-04-06-694ff3c
 
 include(shared/manylinux.m4)
 
