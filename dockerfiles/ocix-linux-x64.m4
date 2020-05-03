@@ -15,7 +15,7 @@ ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
     LD=/usr/bin/${CROSS_TRIPLE}-ld \
     FC=/usr/bin/${CROSS_TRIPLE}-gfortran
 
-COPY ${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
+COPY scripts/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
 COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
 ENV CMAKE_TOOLCHAIN_FILE=/usr/lib/${CROSS_TRIPLE}/Toolchain.cmake

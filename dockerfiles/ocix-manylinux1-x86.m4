@@ -21,12 +21,12 @@ ENV AS=${CROSS_ROOT}/as \
     LD=${CROSS_ROOT}/ld \
     FC=${CROSS_ROOT}/gfortran
 
-COPY linux-x86/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
+COPY scripts/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
-COPY ocix-manylinux1-x86/Toolchain.cmake ${CROSS_ROOT}/../lib/
+COPY Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
-COPY ocix-linux-x86/linux32-entrypoint.sh /ocix/
+COPY scripts/linux32-entrypoint.sh /ocix/
 ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)
