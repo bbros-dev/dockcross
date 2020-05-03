@@ -34,8 +34,7 @@ while [ $# -gt 0 ]; do
       CONFIG_FLAG="-m32"
       ;;
     *)
-      echo "Usage: Usage: ${0##*/} [-32]"
-      exit 1
+      echo "Building non-X86 architecture."
       ;;
   esac
   shift

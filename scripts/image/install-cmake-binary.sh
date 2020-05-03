@@ -12,8 +12,7 @@ while [ $# -gt 0 ]; do
       ARCH="x86"
       ;;
     *)
-      echo "Usage: Usage: ${0##*/} [-32]"
-      exit 1
+      echo "Building non-X86 architecture."
       ;;
   esac
   shift
