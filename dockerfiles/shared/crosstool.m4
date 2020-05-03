@@ -22,15 +22,7 @@
 # 1. Do not keep, if you can install or upgrade (by increasing canceled-actions counter)
 # 2. Increase removals counter, because we want keep packages if aptitude decide to delete it
 
-RUN mkdir -p /etc/apt/apt.conf.d && \
-    echo "\n\
-Aptitude {\n\
-  ProblemResolver {\n\
-    SolutionCost "100*canceled-actions,200*removals";\n\
-  };\n\
-};\n " \
->> /etc/apt/apt.conf.d/01-crosstool-ng && \
-chmod +x /etc/apt/apt.conf.d/01-crosstool-ng
+include(shared/aptitude-env.m4)
 
 # Install Debian packages required for $(ct-ng).
 RUN aptitude -f --no-gui -q -y --without-recommends install \

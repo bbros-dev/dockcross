@@ -30,9 +30,6 @@ commands:
             make << parameters.image_name >>
             make << parameters.image_name >>.test
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
-      - store_artifacts:
-          path: /ocix/crosstool-ng.config.v2
-          destination: ct-ng-config
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/ocix/<< parameters.image_name >>.tar

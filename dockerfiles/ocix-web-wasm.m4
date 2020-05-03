@@ -1,20 +1,6 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 
-ARG OCIX_IMAGE=${OCIX_IMAGE}
-ARG OCIX_NAME=${OCIX_NAME}
-ARG OCIX_ORG=${OCIX_ORG}
-ARG OCIX_VERSION=${OCIX_VERSION}
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
-
-RUN echo "#!/usr/bin/env bash\n\
-OCIX_IMAGE=$OCIX_IMAGE\n\
-OCIX_NAME=$OCIX_NAME\n\
-OCIX_ORG=$OCIX_ORG\n\
-OCIX_VERSION=$OCIX_VERSION\n\
-DEFAULT_OCIX_IMAGE=$OCIX_ORG/$OCIX_IMAGE:$OCIX_VERSION\n " \
->> /etc/profile.d/00-ocix-env.sh && \
-   chmod a+x /etc/profile.d/00-ocix-env.sh
+include(shared/aptitude-env.m4)
 
 # Revert back to "/bin/sh" as default shell
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4

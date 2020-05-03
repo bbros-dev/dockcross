@@ -1,8 +1,4 @@
 FROM quay.io/pypa/manylinux2010_i686:latest
-ARG OCIX_ORG
-ARG OCIX_VERSION
-
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
 
 include(shared/manylinux.m4)
 

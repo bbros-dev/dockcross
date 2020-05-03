@@ -1,22 +1,24 @@
 # Start include from shared/manylinux.m4
 #
+
+include(shared/aptitude-env.m4)
+
 # Image build scripts
-COPY \
-  scripts/install-gosu-binary.sh \
-  scripts/install-gosu-binary-wrapper.sh \
-  scripts/install-python-packages-manylinux.sh \
-  /buildscripts/
+COPY scripts/install-gosu-binary.sh \
+     scripts/install-gosu-binary-wrapper.sh \
+     scripts/install-python-packages-manylinux.sh \
+     /buildscripts/
 
 RUN set -x && \
     yum -y install \
-                  epel-release \
-                  gpg \
-                  zlib-devel \
-                  gettext \
-                  openssh-clients \
-                  pax \
-                  wget \
-                  zip  && \
+        epel-release \
+        gpg \
+        zlib-devel \
+        gettext \
+        openssh-clients \
+        pax \
+        wget \
+        zip  && \
   yum clean all && \
   /buildscripts/install-gosu-binary.sh && \
   /buildscripts/install-gosu-binary-wrapper.sh && \
