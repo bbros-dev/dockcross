@@ -16,10 +16,13 @@
 #  ARG MXE_TARGET_LINK=shared
 #
 
+include(shared/aptitude-env.m4)
+
 # mxe master 2019-12-06
 ARG MXE_GIT_TAG=aab04b93b06892a3dc675c97653236a40858c4a3
 
-ENV CMAKE_TOOLCHAIN_FILE /usr/src/mxe/usr/${MXE_TARGET_ARCH}-w64-mingw32.${MXE_TARGET_LINK}${MXE_TARGET_THREAD}/share/cmake/mxe-conf.cmake
+ENV MXE_STRING ${MXE_TARGET_ARCH}-w64-mingw32.${MXE_TARGET_LINK}${MXE_TARGET_THREAD}
+ENV CMAKE_TOOLCHAIN_FILE /usr/src/mxe/usr/${MXE_STRING}/share/cmake/mxe-conf.cmake
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -88,12 +91,12 @@ RUN aptitude update && \
   # Configure "settings.mk" required to build MXE
   #
   cd /usr/src/mxe && \
-  echo "MXE_TARGETS := ${MXE_TARGET_ARCH}-w64-mingw32.${MXE_TARGET_LINK}${MXE_TARGET_THREAD}" > settings.mk && \
-  echo "MXE_USE_CCACHE :="                                                       >> settings.mk && \
-  echo "MXE_PLUGIN_DIRS := plugins/gcc9"                                         >> settings.mk && \
-  echo "LOCAL_PKG_LIST := cc cmake"                                              >> settings.mk && \
-  echo ".DEFAULT local-pkg-list:"                                                >> settings.mk && \
-  echo "local-pkg-list: \$(LOCAL_PKG_LIST)"                                      >> settings.mk && \
+  echo "MXE_TARGETS := ${MXE_STRING}"        > settings.mk && \
+  echo "MXE_USE_CCACHE :="                  >> settings.mk && \
+  echo "MXE_PLUGIN_DIRS := plugins/gcc9"    >> settings.mk && \
+  echo "LOCAL_PKG_LIST := cc cmake"         >> settings.mk && \
+  echo ".DEFAULT local-pkg-list:"           >> settings.mk && \
+  echo "local-pkg-list: \$(LOCAL_PKG_LIST)" >> settings.mk && \
   
   #
   # Build MXE
@@ -102,8 +105,8 @@ RUN aptitude update && \
   make JOBS=$(nproc) && \
   
   #
-  # Cleanup: By keeping the MXE build system (Makefile, ...), derived images will be able to install
-  #          additional packages.
+  # Cleanup: By keeping the MXE build system (Makefile, ...), derived images
+  #           will be able to install additional packages.
   #
   rm -rf log pkg && \
   
@@ -117,11 +120,11 @@ RUN aptitude update && \
   #
   cd /usr/bin && \
   rm cmake cpack && \
-  ln -s /usr/src/mxe/usr/bin/${MXE_TARGET_ARCH}-w64-mingw32.${MXE_TARGET_LINK}${MXE_TARGET_THREAD}-cmake cmake && \
-  ln -s /usr/src/mxe/usr/bin/${MXE_TARGET_ARCH}-w64-mingw32.${MXE_TARGET_LINK}${MXE_TARGET_THREAD}-cpack cpack
+  ln -s /usr/src/mxe/usr/bin/${MXE_STRING}-cmake cmake && \
+  ln -s /usr/src/mxe/usr/bin/${MXE_STRING}-cpack cpack
 
 ENV PATH ${PATH}:/usr/src/mxe/usr/bin
-ENV CROSS_TRIPLE ${MXE_TARGET_ARCH}-w64-mingw32.${MXE_TARGET_LINK}${MXE_TARGET_THREAD}
+ENV CROSS_TRIPLE ${MXE_STRING}
 ENV AS=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-as \
     AR=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-ar \
     CC=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-gcc \

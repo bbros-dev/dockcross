@@ -1,4 +1,5 @@
 include(shared/base.m4)
+
 ENV WINEARCH win64
 ARG MXE_TARGET_ARCH=x86_64
 ARG MXE_TARGET_THREAD=

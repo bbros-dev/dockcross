@@ -2,13 +2,13 @@
 #
 # Image build scripts
 
-include(shared/aptitude-env.m4)
-
 WORKDIR /work
 
 COPY scripts/install-gosu-binary.sh \
      scripts/install-gosu-binary-wrapper.sh \
      /buildscripts/
+
+include(shared/aptitude-env.m4)
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG REPO=http://deb.debian.org
@@ -23,41 +23,41 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
                                                   aptitude && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-                      autogen \
-                      automake \
-                      bash \
-                      bc \
-                      bison \
-                      build-essential \
-                      bzip2 \
-                      ca-certificates \
-                      curl \
-                      dirmngr \
-                      file \
-                      flex \
-                      gettext \
-                      gzip \
-                      gnupg \
-                      initramfs-tools \
-                      libtool-bin \
-                      m4 \
-                      make \
-                      ncurses-dev \
-                      pax \
-                      perl-base \
-                      pkg-config \
-                      python3 \
-                      python3-pip \
-                      re2c \
-                      rsync \
-                      sed \
-                      ssh \
-                      tar \
-                      vim \
-                      wget \
-                      xz-utils \
-                      zip \
-                      zlib1g-dev && \
+              autogen \
+              automake \
+              bash \
+              bc \
+              bison \
+              build-essential \
+              bzip2 \
+              ca-certificates \
+              curl \
+              dirmngr \
+              file \
+              flex \
+              gettext \
+              gzip \
+              gnupg \
+              initramfs-tools \
+              libtool-bin \
+              m4 \
+              make \
+              ncurses-dev \
+              pax \
+              perl-base \
+              pkg-config \
+              python3 \
+              python3-pip \
+              re2c \
+              rsync \
+              sed \
+              ssh \
+              tar \
+              vim \
+              wget \
+              xz-utils \
+              zip \
+              zlib1g-dev && \
     aptitude -f -y -q --no-gui clean && \
     /buildscripts/install-gosu-binary.sh && \
     /buildscripts/install-gosu-binary-wrapper.sh && \
