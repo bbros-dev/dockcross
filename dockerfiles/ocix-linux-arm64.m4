@@ -2,10 +2,13 @@ include(shared/base.m4)
 
 # This is for 64-bit ARM Linux machine
 
+include(shared/aptitude-env.m4)
+
 # The cross-compiling emulator
 RUN dpkg --add-architecture arm64 && \
+    aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-              crossbuild-essential-arm64:arm64 \
+              crossbuild-essential-arm64 \
               libelf-dev:arm64 \
               libtool-bin:arm64 \
               qemu-user:arm64 \

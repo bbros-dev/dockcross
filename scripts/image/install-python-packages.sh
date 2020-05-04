@@ -3,7 +3,17 @@
 set -e
 set -o pipefail
 
-PYTHON=$(command -v python 2>/dev/null)
+if [ -e /opt/python/cp35-cp35m/bin/python ]
+then
+  PYTHON=/opt/python/cp35-cp35m/bin/python
+else 
+  PYTHON=$(command -v python 2>/dev/null)
+  if [ "${PYTHON}" = "" ]
+  then
+    echo "Found no Python to setup for OCIX testing."
+    exit 1
+fi
+
 while [ $# -gt 0 ]; do
   case "$1" in
     -python)

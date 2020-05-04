@@ -9,6 +9,7 @@ COPY scripts/install-gosu-binary.sh \
      /buildscripts/
 
 include(shared/aptitude-env.m4)
+include(shared/sshd-privilege-separation.m4)
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG REPO=http://deb.debian.org
@@ -39,12 +40,10 @@ RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/s
               gzip \
               gnupg \
               initramfs-tools \
-              libtool-bin \
               m4 \
               make \
               ncurses-dev \
               pax \
-              perl-base \
               pkg-config \
               python3 \
               python3-pip \

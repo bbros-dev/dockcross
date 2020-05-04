@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
  
-set -o xtrace
+# A better class of script...
+if [ -z "${DEBUG}" ]
+then
+  set +o xtrace          # DO NOT trace the execution of the script (debug)
+else
+  set -o xtrace          # DO trace the execution of the script (debug)
+fi
+
+set -o errexit          # Exit on most errors (see the manual)
+set -o errtrace         # Make sure any error trap is inherited
+set -o nounset          # Disallow expansion of unset variables
+set -o pipefail         # Use last non-zero exit code in a pipeline
 
 include(/etc/profile.d/00-ocix-env.sh)
 
@@ -38,7 +49,7 @@ has() {
 # DESC: Select a container engine executable.  
 # ARGS: None
 # OUTS: $OCI_EXE: Either `docker` or `podman`. If `podman` is not available the
-#       default is $(docker).
+#       default is `$(command -v docker)`.
 # NOTE: The selected tool manages Open Container Initative (OCI) compatible
 #       container runtime, storage/format and images. Docker and
 #       Podman are implementations of (some) of the OCI specifications. Podman
@@ -81,17 +92,17 @@ help:update() {
 }
 
 command:help() {
-    if [[ $# != 0 ]]; then
-        if ! has command $1; then
-            err \"$1\" is not an ocix command
-            command:help
-        elif ! has help $1; then
-            err No help found for \"$1\"
-        else
-            help:$1
-        fi
+  if [[ $# != 0 ]]; then
+    if ! has command $1; then
+        err \"$1\" is not an ocix command
+        command:help
+    elif ! has help $1; then
+        err No help found for \"$1\"
     else
-        cat >&2 <<ENDHELP
+        help:$1
+    fi
+  else
+    cat >&2 <<ENDHELP
 Usage: ocix [options] [--] command [args]
 
 By default, run the given *command* in an ocix container.
@@ -109,8 +120,8 @@ Additionally, there are special update commands:
 
 For update command help use: $0 help <command>
 ENDHELP
-        exit 1
-    fi
+      exit 1
+  fi
 }
 
 #------------------------------------------------------------------------------
@@ -167,9 +178,8 @@ FINAL_CONFIG=${ARG_CONFIG-${OCIX_CONFIG-${DEFAULT_OCIX_CONFIG}}}
 
 [[ -f "$FINAL_CONFIG" ]] && source "$FINAL_CONFIG"
 
-docker images
-# Set the OCI image
-FINAL_IMAGE=${ARG_IMAGE-${DEFAULT_OCIX_IMAGE}}
+# Set the OCI engine `$(run)` command extra args (if any)
+FINAL_ARGS=${ARG_ARGS-${OCIX_ARGS-''}}
 
 # Handle special update command
 if [ "$special_update_command" != "" ]; then
@@ -193,8 +203,8 @@ if [ "$special_update_command" != "" ]; then
     esac
 fi
 
-# Set the OCI engine $(run) command extra args (if any)
-FINAL_ARGS=${ARG_ARGS-${DOCKCROSS_ARGS}}
+# Set the OCI engine `$(run)` command extra args (if any)
+FINAL_ARGS=${ARG_ARGS-${OCIX_ARGS-''}}
 
 # Bash on Ubuntu on Windows
 UBUNTU_ON_WINDOWS=$([ -e /proc/version ] && grep -l Microsoft /proc/version || echo "")
@@ -226,11 +236,19 @@ else
     HOST_PWD=$PWD
 fi
 
-# Mount Additional Volumes
-if [ -z "$SSH_DIR" ]; then
+if [ -n "${SSH_DIR-}" ]
+then
+    echo "SSH_DIR not empty: ${SSH_DIR}"
+elif [ "${SSH_DIR+defined}" = defined ]
+then
+    echo 'SSH_DIR empty but defined'
+    SSH_DIR="$HOME/.ssh"
+else
+    echo 'SSH_DIR unset'
     SSH_DIR="$HOME/.ssh"
 fi
 
+# Mount Additional Volumes
 HOST_VOLUMES=
 if [ -e "$SSH_DIR" -a -z "$MSYS" ]; then
     HOST_VOLUMES+="--volume $SSH_DIR:/home/$(id -un)/.ssh"

@@ -24,9 +24,8 @@ RUN /buildscripts/build-and-install-openssl.sh $DEFAULT_OCIX_IMAGE && \
     /buildscripts/build-and-install-git.sh && \
     /buildscripts/install-cmake-binary.sh $DEFAULT_OCIX_IMAGE && \
     /buildscripts/install-liquidprompt-binary.sh && \
-    PYTHON=$([ -e /opt/python/cp35-cp35m/bin/python ] && echo "/opt/python/cp35-cp35m/bin/python" || command -v python 2>/dev/null) && \
-    /buildscripts/install-python-packages.sh -python ${PYTHON} && \
-    /buildscripts/build-and-install-ninja.sh -python ${PYTHON} && \
+    /buildscripts/install-python-packages.sh && \
+    /buildscripts/build-and-install-ninja.sh && \
     rm -rf /buildscripts
 
 RUN echo "root:root" | chpasswd

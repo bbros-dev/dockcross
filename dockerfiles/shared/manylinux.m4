@@ -2,6 +2,7 @@
 #
 
 include(shared/aptitude-env.m4)
+include(shared/sshd-privilege-separation.m4)
 
 # Image build scripts
 COPY scripts/install-gosu-binary.sh \
@@ -27,7 +28,6 @@ RUN set -x && \
   rm -f /opt/rh/devtoolset-2/root/usr/bin/sudo && \
   rm -f /opt/rh/devtoolset-7/root/usr/bin/sudo && \
   rm -f /opt/rh/devtoolset-8/root/usr/bin/sudo && \
-  PYTHON=$([ -e /opt/python/cp35-cp35m/bin/python ] && echo "/opt/python/cp35-cp35m/bin/python" || command -v python 2>/dev/null) && \
   /buildscripts/install-python-packages-manylinux.sh && \
   rm -rf /buildscripts
 
