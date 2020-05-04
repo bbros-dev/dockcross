@@ -19,7 +19,8 @@ COPY scripts/build-shared-docker.sh \
       scripts/utils.sh \
       /buildscripts/
 
-RUN /buildscripts/build-shared-docker.sh && \
+WORK /buildscripts
+RUN ./build-shared-docker.sh && \
     rm -rf /buildscripts
 
 RUN echo "root:root" | chpasswd
