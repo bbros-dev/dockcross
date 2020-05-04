@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
- 
 # A better class of script...
 if [ -z "${DEBUG}" ]
 then
