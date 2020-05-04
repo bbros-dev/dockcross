@@ -19,7 +19,7 @@ COPY scripts/build-shared-docker.sh \
       scripts/utils.sh \
       /buildscripts/
 
-WORK /buildscripts
+WORKDIR /buildscripts
 RUN ./build-shared-docker.sh && \
     rm -rf /buildscripts
 
