@@ -6,7 +6,7 @@ ARG GIT_VERSION=2.26.2
 ARG CMAKE_VERSION=3.17.1
 
 # Image build scripts
-COPY scripts/build-shared-docker.sh && \
+COPY scripts/build-shared-docker.sh \
       scripts/build-and-install-cmake.sh \
       scripts/build-and-install-curl.sh \
       scripts/build-and-install-git.sh \
