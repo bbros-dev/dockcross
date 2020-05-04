@@ -17,10 +17,10 @@ ARG REPO=http://deb.debian.org
 
 
 # Note Debian Buster is Debian 10.x
-RUN bash -c "echo \"deb [i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] $REPO/debian buster main contrib non-free\" > /etc/apt/sources.list"  && \
-    bash -c "echo \"deb [i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] $REPO/debian buster-updates main contrib non-free\" >> /etc/apt/sources.list"  && \
-    bash -c "echo \"deb [i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] $REPO/debian-security buster/updates main\" >> /etc/apt/sources.list" && \
-    bash -c "echo \"deb [i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] http://deb.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
+RUN bash -c "echo \"deb [arch=i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] $REPO/debian buster main contrib non-free\" > /etc/apt/sources.list"  && \
+    bash -c "echo \"deb [arch=i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] $REPO/debian buster-updates main contrib non-free\" >> /etc/apt/sources.list"  && \
+    bash -c "echo \"deb [arch=i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] $REPO/debian-security buster/updates main\" >> /etc/apt/sources.list" && \
+    bash -c "echo \"deb [arch=i386 amd64 armel armhf arm64 mips mips64el mipsel ppc64el s390x] http://deb.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
     dpkg --add-architecture amd64 && \
     apt-get update --yes && \
     apt-get install --no-install-recommends --yes apt-transport-https \
