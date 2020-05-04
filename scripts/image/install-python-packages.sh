@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 
-set -e
-set -o pipefail
+# A better class of script...
+if [ -z "${DEBUG}" ]
+then
+  set +o xtrace          # DO NOT trace the execution of the script (debug)
+else
+  set -o xtrace          # DO trace the execution of the script (debug)
+fi
+
+set -o errexit          # Exit on most errors (see the manual)
+set -o errtrace         # Make sure any error trap is inherited
+set -o nounset          # Disallow expansion of unset variables
+set -o pipefail         # Use last non-zero exit code in a pipeline
 
 if [ -e /opt/python/cp35-cp35m/bin/python ]
 then

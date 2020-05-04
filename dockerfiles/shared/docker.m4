@@ -19,9 +19,9 @@ COPY scripts/build-shared-docker.sh \
       scripts/utils.sh \
       /buildscripts/
 
+SHELL ["/bin/bash", "-c"]
 WORKDIR /buildscripts
-RUN ./build-shared-docker.sh && \
-    rm -rf /buildscripts
+RUN /buildscripts/build-shared-docker.sh
 
 RUN echo "root:root" | chpasswd
 WORKDIR /work
