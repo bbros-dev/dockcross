@@ -23,19 +23,40 @@
 # 2. Increase removals counter, because we want keep packages if aptitude decide to delete it
 
 include(shared/aptitude-env.m4)
+include(shared/sshd-privilege-separation.m4)
 
 # Install Debian packages required for $(ct-ng).
-RUN aptitude -f --no-gui -q -y --without-recommends install \
+#    aptitude -f --no-gui -q -y --without-recommends install \
+#              gawk \
+#              gperf \
+#              help2man \
+#              python3-dev \
+#              unzip && \
+#    aptitude -f --no-gui -q -y clean && \
+RUN mkdir -p /ocix/crosstool && \
+    aptitude -f --no-gui -q -y --without-recommends install \
+              autoconf \
+              automake \
+              bison \
+              bzip2 \
+              flex \
+              g++ \
               gawk \
+              gcc \
               gperf \
               help2man \
+              libncurses5-dev \
+              libstdc++6 \
+              libtool \
               libtool-bin \
+              make \
+              patch \
               python3-dev \
+              rsync \
               texinfo \
-              unzip && \
-    aptitude -f --no-gui -q -y clean && \
-    mkdir -p /ocix/crosstool
-
+              unzip \
+              wget \
+              xz-utils
 ENV XCC_PREFIX=/usr/xcc
 
 # Add the crosstool-ng script and image-specific toolchain configuration into
