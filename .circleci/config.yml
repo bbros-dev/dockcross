@@ -29,7 +29,12 @@ commands:
             [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
             make << parameters.image_name >>.test
+            tar -zcvf ~/ocix/<< parameters.image_name >>-work.tar.gz ~/ocix/<< parameters.image_name >>/work
+            rm -rf ~/ocix/<< parameters.image_name >>/work/*
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+      - store_artifacts:
+          path: ~/ocix/<< parameters.image_name >>-work.tar.gz
+          destination: << parameters.image_name >>-work
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/ocix/<< parameters.image_name >>.tar
@@ -70,7 +75,12 @@ jobs:
             docker pull debian:10.3-slim
             make ocix-base
             make ocix-base.test
+            tar -zcvf ~/ocix/ocix-base-work.tar.gz ~/ocix/ocix-base/work
+            rm -rf ~/ocix/ocix-base/work/*
             docker save --output ~/ocix/ocix-base.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
+      - store_artifacts:
+          path: ~/ocix/ocix-base-work.tar.gz
+          destination: ocix-base-work
       - save_cache:
           key: ocix-base-assets-{{ .Revision }}
           paths:
