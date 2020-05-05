@@ -179,6 +179,9 @@ FINAL_CONFIG=${ARG_CONFIG-${OCIX_CONFIG-${DEFAULT_OCIX_CONFIG}}}
 # Set the OCI engine `$(run)` command extra args (if any)
 FINAL_ARGS=${ARG_ARGS-${OCIX_ARGS-''}}
 
+# Set the OCI image
+FINAL_IMAGE=${ARG_IMAGE-${OCIX_IMAGE-$DEFAULT_OCIX_IMAGE-'missing-image'}}
+
 # Handle special update command
 if [ "$special_update_command" != "" ]; then
     case $special_update_command in
