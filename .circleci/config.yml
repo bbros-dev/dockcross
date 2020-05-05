@@ -28,12 +28,12 @@ commands:
           command: |
             [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
-            make << parameters.image_name >>.test
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+            [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
+            make << parameters.image_name >>.test
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/ocix/<< parameters.image_name >>.tar
-
   deploy_ocix_image:
     description: Deploy a OCI-Cross container image
     parameters:

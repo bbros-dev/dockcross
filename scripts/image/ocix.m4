@@ -60,24 +60,24 @@ oci_exe() {
 # Command handlers
 #
 command:update-image() {
-    ${OCI_EXE} pull $FINAL_IMAGE
+    ${OCI_EXE} pull ${FINAL_IMAGE}
 }
 
 help:update-image() {
-    echo Pull the latest $FINAL_IMAGE .
+    echo Pull the latest ${FINAL_IMAGE} .
 }
 
 command:update-script() {
-    if cmp -s <( ${OCI_EXE} run --rm $FINAL_IMAGE ) $0; then
+    if cmp -s <( ${OCI_EXE} run --rm ${FINAL_IMAGE} ) $0; then
         echo $0 is up to date
     else
         echo -n Updating $0 '... '
-        ${OCI_EXE} run --rm $FINAL_IMAGE > $0 && echo ok
+        ${OCI_EXE} run --rm ${FINAL_IMAGE} > $0 && echo ok
     fi
 }
 
 help:update-image() {
-    echo Update $0 from $FINAL_IMAGE .
+    echo Update $0 from ${FINAL_IMAGE} .
 }
 
 command:update() {
@@ -86,7 +86,7 @@ command:update() {
 }
 
 help:update() {
-    echo Pull the latest $FINAL_IMAGE, and then update $0 from that.
+    echo Pull the latest ${FINAL_IMAGE}, and then update $0 from that.
 }
 
 command:help() {
@@ -180,7 +180,7 @@ FINAL_CONFIG=${ARG_CONFIG-${OCIX_CONFIG-${DEFAULT_OCIX_CONFIG}}}
 FINAL_ARGS=${ARG_ARGS-${OCIX_ARGS-''}}
 
 # Set the OCI image
-FINAL_IMAGE=${ARG_IMAGE-${OCIX_IMAGE-$DEFAULT_OCIX_IMAGE-'missing-image'}}
+FINAL_IMAGE=${ARG_IMAGE-${DEFAULT_OCIX_IMAGE-'missing-image'}}
 
 # Handle special update command
 if [ "$special_update_command" != "" ]; then
@@ -267,7 +267,7 @@ ${OCI_EXE} run $TTY_ARGS --name $CONTAINER_NAME \
     $HOST_VOLUMES \
     "${USER_IDS[@]}" \
     $FINAL_ARGS \
-    $FINAL_IMAGE "$@"
+    ${FINAL_IMAGE} "$@"
 run_exit_code=$?
 
 # Attempt to delete container
