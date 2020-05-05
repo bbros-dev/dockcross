@@ -86,21 +86,10 @@ export CT_ALLOW_BUILD_AS_ROOT_SURE=1
 # Create our build directory and copy our configuration into it.
 BUILD="${ROOT}/toolchain"
 mkdir -p "${BUILD}"
-cd "${BUILD}"
 
 cp "${CONFIG_PATH}" "${BUILD}/.config"
 
-# Upgrade configuration....
-"${BOOTSTRAP_PREFIX}/bin/ct-ng" upgradeconfig
-# ... and copy it back.
-echo 'CT-NG upgraded configuration'
-echo "${BUILD}/.config"
-echo "${CONFIG_PATH}.bak"
-cat "${BUILD}/.config"
-cp -f "${BUILD}/.config" "${CONFIG_PATH}.v2"
-ls -la "${CONFIG_PATH}*"
 # Build and install the toolchain!
 pushd ${BUILD}
-  cat "${PWD}/.config"
   "${BOOTSTRAP_PREFIX}/bin/ct-ng" build | grep --invert-match '[0-9][0-9]:[0-9][0-9]' | tee ct-ng-build.log
 popd
