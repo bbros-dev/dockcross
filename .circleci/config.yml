@@ -12,9 +12,6 @@ commands:
       - run:
           name: Export OCI-Cross Registry, Organization and Version
           command: |
-            echo ${PWD}
-            echo $(pwd)
-            ls -la
             ./scripts/ocix-ci-env.sh >> $BASH_ENV
   build_test_ocix_image:
     description: Build & test an OCI-Cross container image
@@ -31,9 +28,8 @@ commands:
           command: |
             [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
-            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
-            [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>.test
+            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
       - save_cache:
           key: << parameters.image_name >>-assets-{{ .Revision }}
           paths: ~/ocix/<< parameters.image_name >>.tar
@@ -72,8 +68,9 @@ jobs:
           name: Build ocix-base
           command: |
             docker pull debian:10.3-slim
-      - build_test_ocix_image:
-          image_name: ocix-base
+            make ocix-base
+            make ocix-base.test
+            docker save --output ~/ocix/ocix-base.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
       - save_cache:
           key: ocix-base-assets-{{ .Revision }}
           paths:
