@@ -7,4 +7,5 @@ web-wasm/Dockerfile
 !imagefiles/*
 work/*
 !work/.gitkeep
-!work/*
+scratch/*
+!scratch/.gitkeep

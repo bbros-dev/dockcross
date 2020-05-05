@@ -1,5 +1,8 @@
 SHELL := /bin/bash
 LIB = ./dockerfiles
+# Teting directory for each image ocix script (e.g bin/ocix-manylinux1-x64)
+BIN = $(shell [ -d /work ] && echo /work/bin || echo ./scratch/bin )
+
 # OCI engine
 OCI_EXE := $(shell command -v podman || command -v docker 2> /dev/null)
 # OCI Registry to push/pull the images to/from
@@ -18,12 +21,6 @@ ifdef SEMVER
 else
 $(error OCIX_VERSION is not semantic version number)
 endif
-
-# Tag images with semantic version number.
-TAG = $(OCIX_VERSION)
-
-# Directory where to generate the ocix script for each images (e.g bin/ocix-manylinux1-x64)
-BIN = ./bin
 
 DOCKERFILES=$(shell find dockerfiles/ -maxdepth 1 -type f -iname '*.m4' -execdir basename -s '.m4' {} +)
 IMAGES=$(subst /,\:,$(subst /Dockerfile,,$(DOCKERFILES)))
@@ -86,10 +83,10 @@ $(IMAGES): check-ocix-base
 #
 $(addsuffix .test,$(IMAGES)): $(basename $@)
 	mkdir -p $(BIN)
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) cat /etc/profile.d/00-ocix-env.sh
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(TAG) m4 --include=/etc/profile.d /ocix/ocix.m4
-	echo $(BIN)/$(basename $@)
+	[ -d /work ] && mkdir -p /work/test && rsync --archive test/ /work/test/
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) cat /etc/profile.d/00-ocix-env.sh
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) m4 --include=/etc/profile.d /ocix/ocix.m4
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 	rm -rf $(BIN)
 

@@ -21,8 +21,8 @@ RUN dpkg --add-architecture arm64 && \
 
 include(shared/crosstool.m4)
 
-# The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
-ENV CROSS_TRIPLE aarch64-unknown-linux-gnueabi
+# The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnu" target.
+ENV CROSS_TRIPLE aarch64-unknown-linux-gnu
 
 ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
