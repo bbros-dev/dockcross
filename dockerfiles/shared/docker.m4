@@ -31,5 +31,8 @@ COPY scripts/cmake.sh /usr/local/bin/cmake
 COPY scripts/ccmake.sh /usr/local/bin/ccmake
 COPY scripts/entrypoint.sh scripts/ocix.m4 /ocix/
 
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work
+
 #
 # End include from shared/docker.m4

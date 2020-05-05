@@ -65,5 +65,8 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
     /buildscripts/install-gosu-binary-wrapper.sh && \
     rm -rf /buildscripts
 
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work
+
 #
 # End include from shared/debian.m4
