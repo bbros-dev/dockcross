@@ -19,6 +19,7 @@ else
   then
     echo "Found no Python to setup for OCIX testing."
     exit 1
+  fi
 fi
 
 while [ $# -gt 0 ]; do
