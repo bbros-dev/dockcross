@@ -38,7 +38,6 @@ then
   OCIX_TAG=${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION}
   mkdir -p ${OCIX_DIR}/work
   ${OCI_EXE} build --tag ${OCIX_TAG} \
-    --volume ${OCIX_DIR}/work:/work \
     --ulimit nofile=90000:90000 \
     --build-arg OCIX_IMAGE=${OCIX_IMAGE} \
     --build-arg OCIX_NAME=${OCIX_ORG}/${OCIX_IMAGE} \
@@ -48,6 +47,7 @@ then
     --build-arg VCS_REF=$(git rev-parse --short HEAD) \
     --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
     --file ${OCIX_DIR}/Dockerfile ${OCIX_DIR}
+  # docker container cp 9917:/work ${OCIX_DIR}/work
   rm -rf ${OCIX_DIR}/scripts
   rm -f ${OCIX_DIR}/Dockerfile
 fi
