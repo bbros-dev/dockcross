@@ -23,8 +23,12 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
     bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,ppc64el,s390x] http://deb.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
     dpkg --add-architecture amd64 && \
     apt-get update --yes && \
-    apt-get install --no-install-recommends --yes apt-transport-https \
-                                                  aptitude && \
+    apt-get install --no-install-recommends --yes apt-transport-https:amd64 \
+                                                  aptitude:amd64 \
+                                                  apt-xapian-index:amd64 \
+                                                  debtags:amd64 \
+                                                  tasksel:amd64 \
+                                                  xapian-tools:amd64 && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
               autogen:amd64 \
@@ -43,9 +47,11 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               gzip:amd64 \
               gnupg:amd64 \
               initramfs-tools:amd64 \
+              libtool-bin:amd64 \
               m4:amd64 \
               make:amd64 \
               ncurses-dev:amd64 \
+              perl-base:amd64 \
               pax:amd64 \
               pkg-config:amd64 \
               python3:amd64 \
@@ -55,6 +61,7 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               sed:amd64 \
               ssh:amd64 \
               tar:amd64 \
+              texinfo:amd64 \
               vim:amd64 \
               wget:amd64 \
               xz-utils:amd64 \
