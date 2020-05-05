@@ -19,7 +19,6 @@ COPY scripts/build-shared-docker.sh \
       scripts/utils.sh \
       /buildscripts/
 
-SHELL ["/bin/bash", "-c"]
 WORKDIR /buildscripts
 RUN /buildscripts/build-shared-docker.sh
 

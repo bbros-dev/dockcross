@@ -15,9 +15,9 @@ set -o pipefail         # Use last non-zero exit code in a pipeline
 
 if [ -e /opt/python/cp35-cp35m/bin/python ]
 then
-  PYTHON=/opt/python/cp35-cp35m/bin/python
+  export PYTHON=/opt/python/cp35-cp35m/bin/python
 else 
-  PYTHON=$(command -v python 2>/dev/null)
+  export PYTHON="$(command -v python || command -v python3 2>/dev/null)"
   if [ "${PYTHON}" = "" ]
   then
     echo "Found no Python to setup for OCIX testing."

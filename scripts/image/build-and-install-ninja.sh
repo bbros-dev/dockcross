@@ -14,7 +14,7 @@ if [ -e /opt/python/cp35-cp35m/bin/python ]
 then
   PYTHON=/opt/python/cp35-cp35m/bin/python
 else 
-  PYTHON=$(command -v python 2>/dev/null)
+  PYTHON=$(command -v python || command -v python3 2>/dev/null)
   if [ "${PYTHON}" = "" ]
   then
     echo "Found no Python to setup for OCIX testing."

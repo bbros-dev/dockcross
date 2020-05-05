@@ -26,7 +26,7 @@ commands:
           name: Build << parameters.image_name >>
           no_output_timeout: 1.5h
           command: |
-            docker load -i ~/ocix/ocix-base.tar
+            [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
             make << parameters.image_name >>.test
             docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
@@ -69,10 +69,8 @@ jobs:
           name: Build ocix-base
           command: |
             docker pull debian:10.3-slim
-            make ocix-base
-            make ocix-base.test
-            mkdir -p ~/ocix
-            docker save --output ~/ocix/ocix-base.tar debian:10.3-slim ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/ocix-base:${OCIX_VERSION}
+      - build_test_ocix_image:
+          image_name: ocix-base
       - save_cache:
           key: ocix-base-assets-{{ .Revision }}
           paths:
