@@ -91,5 +91,6 @@ cp "${CONFIG_PATH}" "${BUILD}/.config"
 
 # Build and install the toolchain!
 pushd ${BUILD}
-  "${BOOTSTRAP_PREFIX}/bin/ct-ng" build | grep --invert-match '[0-9][0-9]:[0-9][0-9]' | tee ct-ng-build.log
+  "${BOOTSTRAP_PREFIX}/bin/ct-ng" build | \
+    grep --invert-match '[0-9][0-9]:[0-9][0-9]'
 popd

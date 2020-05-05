@@ -36,8 +36,9 @@ then
 	mkdir -p ${OCIX_DIR}/scripts
   cp -f scripts/image/* ${OCIX_DIR}/scripts/
   OCIX_TAG=${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/${OCIX_IMAGE}:${OCIX_VERSION}
-  echo ${OCIX_TAG}
+  mkdir -p ${OCIX_DIR}/work
   ${OCI_EXE} build --tag ${OCIX_TAG} \
+    --volume ${OCIX_DIR}/work:/work \
     --ulimit nofile=90000:90000 \
     --build-arg OCIX_IMAGE=${OCIX_IMAGE} \
     --build-arg OCIX_NAME=${OCIX_ORG}/${OCIX_IMAGE} \

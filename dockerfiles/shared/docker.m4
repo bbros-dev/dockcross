@@ -20,7 +20,7 @@ COPY scripts/build-shared-docker.sh \
       /buildscripts/
 
 WORKDIR /buildscripts
-RUN /buildscripts/build-shared-docker.sh
+RUN /buildscripts/build-shared-docker.sh 2>&1 | tee --append /work/docker.log
 
 RUN echo "root:root" | chpasswd
 WORKDIR /work

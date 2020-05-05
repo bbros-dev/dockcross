@@ -69,8 +69,8 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               zip:amd64 \
               zlib1g-dev:amd64 && \
     aptitude -f -y -q --no-gui clean && \
-    /buildscripts/install-gosu-binary.sh && \
-    /buildscripts/install-gosu-binary-wrapper.sh && \
+    /buildscripts/install-gosu-binary.sh 2>&1 | tee --append /work/debian.log && \
+    /buildscripts/install-gosu-binary-wrapper.sh 2>&1 | tee --append /work/debian.log && \
     rm -rf /buildscripts
 
 # Restore our default workdir (from "ocix-base" image).

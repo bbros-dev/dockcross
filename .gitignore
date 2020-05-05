@@ -5,3 +5,6 @@ Dockerfile
 web-wasm/Dockerfile
 */imagefiles/*
 !imagefiles/*
+work/*
+!work/.gitkeep
+!work/*

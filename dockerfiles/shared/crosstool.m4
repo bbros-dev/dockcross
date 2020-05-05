@@ -71,11 +71,9 @@ COPY scripts/install-crosstool-ng-toolchain.sh \
 # Build and install the toolchain, cleaning up artifacts afterwards.
 WORKDIR /ocix/crosstool
 RUN /ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
-                                            -c /ocix/crosstool-ng.config
-                                            
-# Suspend cross tool cleanup to view upgraded config for each build.
-#                                             && \
-#    rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
+                                            -c /ocix/crosstool-ng.config | \
+                                            tee --append /work/crosstool.log && \
+    rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
 
 # Restore our default workdir (from "ocix-base" image).
 WORKDIR /work
