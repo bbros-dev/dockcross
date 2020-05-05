@@ -68,10 +68,14 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               xz-utils:amd64 \
               zip:amd64 \
               zlib1g-dev:amd64 && \
-    aptitude -f -y -q --no-gui clean && \
-    /buildscripts/install-gosu-binary.sh 2>&1 | tee --append /work/debian.log && \
+    aptitude -f -y -q --no-gui clean
+RUN (/buildscripts/install-gosu-binary.sh 2>&1 | tee --append /work/debian.log && \
     /buildscripts/install-gosu-binary-wrapper.sh 2>&1 | tee --append /work/debian.log && \
-    rm -rf /buildscripts
+    rm -rf /buildscripts && \
+    touch /work/debian-done) || /bin/true
+RUN test -f /work/debian-done || \
+    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo run docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
+RUN test -f /work/debian-done
 
 # Restore our default workdir (from "ocix-base" image).
 WORKDIR /work

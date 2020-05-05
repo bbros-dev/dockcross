@@ -70,10 +70,14 @@ COPY scripts/install-crosstool-ng-toolchain.sh \
 
 # Build and install the toolchain, cleaning up artifacts afterwards.
 WORKDIR /ocix/crosstool
-RUN /ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
+RUN (/ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
                                             -c /ocix/crosstool-ng.config | \
                                             tee --append /work/crosstool.log && \
-    rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh
+    rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh && \
+    touch /work/crosstool-done) || /bin/true
+RUN test -f /work/crosstool-done || \
+    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo run docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
+RUN test -f /work/crosstool-done
 
 # Restore our default workdir (from "ocix-base" image).
 WORKDIR /work
