@@ -6,7 +6,7 @@ source /etc/profile.d/00-ocix-env.sh
 # container at runtime.
 
 if [[ $# == 0 ]]; then
-  # Presumably the image has been run directly, so help the user get
+  # The image has been run directly, so help the user get
   # started by outputting the ocix script
   m4 --include=/etc/profile.d /ocix/ocix.m4
   exit 0

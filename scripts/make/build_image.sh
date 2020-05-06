@@ -49,4 +49,6 @@ then
   # docker container cp 9917:/work ${OCIX_DIR}/work
   rm -rf ${OCIX_DIR}/scripts
   rm -f ${OCIX_DIR}/Dockerfile
+  echo "Current working directory: ${PWD}"
+  echo "COMPLETED: build image ${OCIX_TAG}"
 fi

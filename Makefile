@@ -2,7 +2,6 @@ SHELL := /bin/bash
 LIB = ./dockerfiles
 # Teting directory for each image ocix script (e.g bin/ocix-manylinux1-x64)
 BIN = $(shell [ -d /work ] && echo /work/bin || echo ./scratch/bin )
-
 # OCI engine
 OCI_EXE := $(shell command -v podman || command -v docker 2> /dev/null)
 # OCI Registry to push/pull the images to/from
@@ -14,7 +13,7 @@ OCIX_ORG := $(shell cat ocix_org)
 # OCI version number to push/pull the images to/from
 OCIX_VERSION := $(shell cat ocix_version)
 # Make doesn't have regular expressions. Delegate to the shell.
-SEMVER := $(shell [[ $(OCIX_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo semver)
+SEMVER := $(shell [[ $(OCIX_VERSION) =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]] && echo good)
 # Check we have a semantic version. If not, abend. 
 ifdef SEMVER
 @echo Semantic version number given: $(OCIX_VERSION)
@@ -83,10 +82,9 @@ $(IMAGES): check-ocix-base
 #
 $(addsuffix .test,$(IMAGES)): $(basename $@)
 	mkdir -p $(BIN)
-	[ -d /work ] && mkdir -p /work/test && rsync --archive test/ /work/test/
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) > $(BIN)/$(basename $@) && chmod +x $(BIN)/$(basename $@)
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) cat /etc/profile.d/00-ocix-env.sh
-	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) m4 --include=/etc/profile.d /ocix/ocix.m4
+	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) > \
+	               $(BIN)/$(basename $@) && \
+								 chmod a+x $(BIN)/$(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 	rm -rf $(BIN)
 
