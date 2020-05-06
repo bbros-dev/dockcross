@@ -1,10 +1,13 @@
 include(shared/base.m4)
 # This is for 32-bit Big-Endian MIPS devices with hard floating point enabled
 
+include(shared/aptitude-env.m4)
+
 # The cross-compiling emulator
 RUN dpkg --add-architecture mips && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
+              crossbuild-essential-mips \
               libelf-dev:mips \
               libtool-bin:mips \
               qemu-user:mips \
@@ -40,4 +43,5 @@ ENV ARCH mips
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

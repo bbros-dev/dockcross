@@ -1,8 +1,10 @@
-FROM quay.io/pypa/manylinux1_i686:latest
+FROM quay.io/pypa/manylinux1_i686:2020-04-06-3cde635
 
 include(shared/manylinux.m4)
 
 include(shared/docker.m4)
+
+include(shared/aptitude-env.m4)
 
 ENV CROSS_TRIPLE i686-linux-gnu
 ENV CROSS_ROOT /opt/rh/devtoolset-2/root/usr/bin
@@ -23,3 +25,6 @@ COPY scripts/linux32-entrypoint.sh /ocix/
 ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

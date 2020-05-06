@@ -47,3 +47,6 @@ ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH arm64
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

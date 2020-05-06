@@ -3,6 +3,8 @@ include(shared/base.m4)
 # This is for ARMv5 "legacy" (mipsel) devices which do NOT support hard float
 # VFP instructions (mipshf).
 
+include(shared/aptitude-env.m4)
+
 # From https://wiki.debian.org/CrossToolchains, installing for jessie
 RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/emdebian.list && \
     curl http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - && \
@@ -10,7 +12,7 @@ RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.
     dpkg --add-architecture mipsel && \ 
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-              crossbuild-essential-mipsel:mips64el \
+              crossbuild-essential-mips64el \
               libelf-dev:mips64el \
               libtool-bin:mips64el \
               qemu-user:mips64el \
@@ -42,4 +44,5 @@ ENV ARCH mips
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

@@ -2,14 +2,20 @@ include(shared/base.m4)
 
 # This is for 32-bit ARMv7 Linux
 
-# The cross-compiling emulator
-RUN aptitude update && \
+include(shared/aptitude-env.m4)
+
+# The cross-compiling emulator.
+# For Debian ARM details see:
+# https://wiki.debian.org/ArmPorts
+RUN dpkg --add-architecture armhf && \
+    aptitude update && \
     aptitude -f --no-gui -q -y --without-recommends install\
-              libtool-bin \
-              qemu-user \
-              qemu-user-static \
-              texinfo \
-              unzip && \
+              crossbuild-essential-armhf \
+              libtool-bin:armhf \
+              qemu-user:armhf \
+              qemu-user-static:armhf \
+              texinfo:armhf \
+              unzip:armhf && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)
@@ -42,3 +48,6 @@ ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH arm
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

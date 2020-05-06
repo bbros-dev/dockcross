@@ -5,7 +5,7 @@
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VCS_URL
-ARG OCIX_URL="https://github.com/dockcross/dockcross/blob/master/README.rst"
+ARG OCIX_URL="https://github.com/dockcross/dockcross/blob/master/README.md"
 LABEL org.opencontainers.image.created=$BUILD_DATE \
       org.opencontainers.image.description=${OCIX_NAME}:${OCIX_VERSION} \
       org.opencontainers.image.documentation=$OCIX_URL \

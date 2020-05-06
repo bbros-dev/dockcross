@@ -17,6 +17,7 @@
 #
 
 include(shared/aptitude-env.m4)
+include(shared/sshd-privilege-separation.m4)
 
 # mxe master 2019-12-06
 ARG MXE_GIT_TAG=aab04b93b06892a3dc675c97653236a40858c4a3
@@ -133,6 +134,7 @@ ENV AS=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-as \
     LD=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-ld \
     FC=/usr/src/mxe/usr/bin/${CROSS_TRIPLE}-gfortran
 
+# Restore our default workdir (from "ocix-base" image).
 WORKDIR /work
 
 #

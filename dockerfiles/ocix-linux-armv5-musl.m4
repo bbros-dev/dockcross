@@ -1,15 +1,21 @@
 include(shared/base.m4)
+
 # This is for ARMv5 "legacy" (armel) devices which do NOT support hard float
 # VFP instructions (armhf).
 # musleabi as default glibc
 
+include(shared/aptitude-env.m4)
+
 # The cross-compiling emulator
-RUN aptitude -f --no-gui -q -y update && \
+RUN dpkg --add-architecture armel && \
+    aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install\
-              libtool-bin \
-              qemu-user \
-              qemu-user-static \
-              unzip && \
+              crossbuild-essential-armel \
+              libtool-bin:armel \
+              qemu-user:armel \
+              qemu-user-static:armel \
+              texinfo:armel \
+              unzip:armel && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)
@@ -40,4 +46,5 @@ ENV ARCH arm
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

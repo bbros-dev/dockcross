@@ -1,5 +1,7 @@
 include(shared/base.m4)
 
+include(shared/aptitude-env.m4)
+
 # The cross-compiling emulator
 RUN aptitude update && \
     aptitude install -f --no-gui -q -y --without-recommends \
@@ -39,4 +41,5 @@ ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

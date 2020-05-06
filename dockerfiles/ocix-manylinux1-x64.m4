@@ -4,6 +4,8 @@ include(shared/manylinux.m4)
 
 include(shared/docker.m4)
 
+include(shared/aptitude-env.m4)
+
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /opt/rh/devtoolset-2/root/usr/bin
 ENV AS=${CROSS_ROOT}/as \
@@ -20,3 +22,6 @@ COPY Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

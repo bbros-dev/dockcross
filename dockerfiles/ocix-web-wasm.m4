@@ -1,6 +1,7 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 
 include(shared/aptitude-env.m4)
+include(shared/sshd-privilege-separation.m4)
 
 # Revert back to "/bin/sh" as default shell
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4
@@ -70,3 +71,6 @@ ENV CC=/emsdk_portable/emscripten/sdk/emcc \
 ENV CMAKE_TOOLCHAIN_FILE /emsdk_portable/emscripten/sdk/cmake/Modules/Platform/Emscripten.cmake
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

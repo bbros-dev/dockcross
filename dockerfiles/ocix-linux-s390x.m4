@@ -1,10 +1,13 @@
 include(shared/base.m4)
 # This is for 64-bit S390X Linux machine
 
+include(shared/aptitude-env.m4)
+
 # The cross-compiling emulator
 RUN dpkg --add-architecture s390x && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
+              crossbuild-essential-s390x \
               libelf-dev:s390x=0.176-1.1 \
               libtool-bin:s390x=2.4.6-9 \
               qemu-user:s390x=1:3.1+dfsg-8+deb10u3 \
@@ -40,4 +43,5 @@ ENV ARCH s390
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

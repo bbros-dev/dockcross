@@ -4,6 +4,8 @@ include(shared/manylinux.m4)
 
 include(shared/docker.m4)
 
+include(shared/aptitude-env.m4)
+
 # Override yum to work around the problem with newly built libcurl.so.4
 # https://access.redhat.com/solutions/641093
 RUN echo $'#!/bin/bash\n\
@@ -26,3 +28,6 @@ COPY Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/../lib/Toolchain.cmake
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

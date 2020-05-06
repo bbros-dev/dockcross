@@ -1,5 +1,7 @@
 include(shared/base.m4)
 
+include(shared/aptitude-env.m4)
+
 RUN dpkg --add-architecture i386 && \
     aptitude update  -f --no-gui -q -y&& \
     aptitude install -f --no-gui -q -y --without-recommends \
@@ -47,3 +49,6 @@ COPY linux32-entrypoint.sh /ocix/
 ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

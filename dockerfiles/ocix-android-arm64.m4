@@ -1,10 +1,13 @@
 include(shared/base.m4)
 
+include(shared/aptitude-env.m4)
+
 RUN mkdir /build && \
     sed -i '/debian-security/d' /etc/apt/sources.list && \
     dpkg --add-architecture arm64 && \
     aptitude update && \
     aptitude -f --no-gui -q -y --without-recommends install \
+              crossbuild-essential-arm64 \
               libtool-bin:arm64 \
               qemu-user:arm64 \
               qemu-user-static:arm64 \
@@ -44,8 +47,7 @@ RUN curl -O https://dl.google.com/android/repository/android-ndk-r${ANDROID_NDK_
 COPY Toolchain.cmake ${CROSS_ROOT}/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
 
-WORKDIR /work
-
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

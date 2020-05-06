@@ -2,6 +2,8 @@ include(shared/base.m4)
 
 include(shared/aptitude-env.m4)
 
+include(shared/aptitude-env.m4)
+
 RUN dpkg --add-architecture amd64 && \
     aptitude -f --no-gui -q -y --without-recommends install\
               crossbuild-essential-amd64 \
@@ -24,3 +26,6 @@ COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
 ENV CMAKE_TOOLCHAIN_FILE=/usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 include(shared/label.m4)
+
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

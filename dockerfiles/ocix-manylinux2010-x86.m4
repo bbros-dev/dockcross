@@ -4,6 +4,8 @@ include(shared/manylinux.m4)
 
 include(shared/docker.m4)
 
+include(shared/aptitude-env.m4)
+
 # Override yum to work around the problem with newly built libcurl.so.4
 # https://access.redhat.com/solutions/641093
 RUN echo $'#!/bin/bash\n\
@@ -29,4 +31,5 @@ ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work

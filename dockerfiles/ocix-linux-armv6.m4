@@ -1,16 +1,17 @@
 include(shared/base.m4)
 
-# Enable 32 bits binaries
-RUN dpkg --add-architecture i386 && \
-    aptitude update && \
+include(shared/aptitude-env.m4)
+
+RUN dpkg --add-architecture armel && \
+    aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --without-recommends install \
-              libgcc1:i386 \
-              libstdc++6:i386 \
-              libtool-bin \
-              qemu-user:i386 \
-              qemu-user-static:i386 \
-              unzip:i386 \
-              zlib1g:i386 && \
+              libgcc1:armel \
+              libstdc++6:armel \
+              libtool-bin:armel \
+              qemu-user:armel \
+              qemu-user-static:armel \
+              unzip:armel \
+              zlib1g:armel && \
     aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE arm-linux-gnueabihf
@@ -58,4 +59,5 @@ ENV ARCH arm
 
 include(shared/label.m4)
 
-ENV DEFAULT_OCIX_IMAGE=${OCIX_NAME}:${OCIX_VERSION}
+# Restore our default workdir (from "ocix-base" image).
+WORKDIR /work
