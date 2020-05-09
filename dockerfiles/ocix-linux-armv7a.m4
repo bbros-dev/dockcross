@@ -9,13 +9,8 @@ include(shared/aptitude-env.m4)
 # https://wiki.debian.org/ArmPorts
 RUN dpkg --add-architecture armhf && \
     aptitude update && \
-    aptitude -f --no-gui -q -y --without-recommends install\
-              crossbuild-essential-armhf \
-              libtool-bin:armhf \
-              qemu-user:armhf \
-              qemu-user-static:armhf \
-              texinfo:armhf \
-              unzip:armhf && \
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-armhf && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)

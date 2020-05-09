@@ -6,14 +6,8 @@ include(shared/aptitude-env.m4)
 # The cross-compiling emulator
 RUN dpkg --add-architecture mips && \
     aptitude -f --no-gui -q -y update && \
-    aptitude -f --no-gui -q -y --without-recommends install \
-              crossbuild-essential-mips \
-              libelf-dev:mips \
-              libtool-bin:mips \
-              qemu-user:mips \
-              qemu-user-static:mips
-              texinfo:mips \
-              unzip:mips && \
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-mips && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)

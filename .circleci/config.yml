@@ -2,7 +2,8 @@ version: 2.1
 
 executors:
   ocix:
-    machine: true
+    machine:
+      image: ubuntu-1604:202004-01
     working_directory: ~/ocix
 
 commands:

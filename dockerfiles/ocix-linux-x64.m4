@@ -2,13 +2,9 @@ include(shared/base.m4)
 
 include(shared/aptitude-env.m4)
 
-include(shared/aptitude-env.m4)
-
 RUN dpkg --add-architecture amd64 && \
-    aptitude -f --no-gui -q -y --without-recommends install\
-              crossbuild-essential-amd64 \
-              libelf-dev:amd64 \
-              unzip:amd64
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-amd64
 
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /usr/bin

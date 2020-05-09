@@ -2,18 +2,19 @@ include(shared/base.m4)
 
 include(shared/aptitude-env.m4)
 
+# gcc-multilib:i386 \
+#                       g++-multilib:i386 \
+#                       libc6:i386 \
+#                       libelf-dev:i386 \
+#                       libstdc++6:i386 \
+#                       libbz2-dev:i386 \
+#                       libexpat1-dev:i386 \
+#                       ncurses-dev:i386 \
+#                       unzip:i386
 RUN dpkg --add-architecture i386 && \
     aptitude update  -f --no-gui -q -y&& \
-    aptitude install -f --no-gui -q -y --without-recommends \
-                      gcc-multilib:i386 \
-                      g++-multilib:i386 \
-                      libc6:i386 \
-                      libelf-dev:i386 \
-                      libstdc++6:i386 \
-                      libbz2-dev:i386 \
-                      libexpat1-dev:i386 \
-                      ncurses-dev:i386 \
-                      unzip:i386 && \
+    aptitude install -f --no-gui -q -y --with-recommends \
+                      crossbuild-essential-i386 && \
     aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE=i686-linux-gnu

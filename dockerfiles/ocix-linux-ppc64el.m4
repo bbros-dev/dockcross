@@ -13,19 +13,8 @@ RUN dpkg --add-architecture ppc64el && \
               perl-base \
               perl-base:ppc64el \
               texinfo && \
-    aptitude -f --no-gui -q -y --without-recommends install \
-              crossbuild-essential-ppc64el \
-              libbz2-dev:ppc64el \
-              libelf-dev:ppc64el \
-              libexpat1-dev:ppc64el \
-              libglib2.0-dev:ppc64el \
-              libpixman-1-dev:ppc64el \
-              libssl-dev:ppc64el \
-              libtool-bin:ppc64el \
-              ncurses-dev:ppc64el \
-              texinfo:ppc64el=6.5.0.dfsg.1-4+b1 \
-              zlib1g-dev:ppc64el \
-              unzip:ppc64el && \
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-ppc64el && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)

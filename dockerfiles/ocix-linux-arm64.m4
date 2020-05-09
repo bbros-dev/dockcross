@@ -15,7 +15,7 @@ include(shared/aptitude-env.m4)
 #              unzip:arm64 && \
 RUN dpkg --add-architecture arm64 && \
     aptitude -f --no-gui -q -y update && \
-    aptitude -f --no-gui -q -y --without-recommends install \
+    aptitude -f --no-gui -q -y --with-recommends install \
               crossbuild-essential-arm64 && \
     aptitude -f --no-gui -q -y clean
 

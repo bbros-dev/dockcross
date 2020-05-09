@@ -5,14 +5,15 @@ include(shared/base.m4)
 include(shared/aptitude-env.m4)
 
 # The cross-compiling emulator
+# \
+#              libtool-bin:armhf \
+#              qemu-user:armhf \
+#              qemu-user-static:armhf \
+#              texinfo:armhf
 RUN dpkg --add-architecture armhf && \
     aptitude -f --no-gui -q -y update && \
-    aptitude -f --no-gui -q -y --without-recommends install \
-              crossbuild-essential-armhf \
-              libtool-bin:armhf \
-              qemu-user:armhf \
-              qemu-user-static:armhf \
-              texinfo:armhf && \
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-armhf && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)

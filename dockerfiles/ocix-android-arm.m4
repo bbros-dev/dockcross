@@ -2,12 +2,11 @@ include(shared/base.m4)
 
 include(shared/aptitude-env.m4)
 
-# The cross-compiling emulator
-RUN aptitude update && \
-    aptitude install -f --no-gui -q -y --without-recommends \
-                      qemu-user \
-                      qemu-user-static \
-                      unzip
+# The cross-compiling emulator.  ARMEL should run on most hardware.
+RUN  dpkg --add-architecture armel && \
+    aptitude update && \
+    aptitude install -f --no-gui -q -y --with-recommends \
+                      crossbuild-essential-armel
 
 ENV CROSS_TRIPLE=arm-linux-androideabi
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}

@@ -4,14 +4,8 @@ include(shared/aptitude-env.m4)
 
 RUN dpkg --add-architecture armel && \
     aptitude -f --no-gui -q -y update && \
-    aptitude -f --no-gui -q -y --without-recommends install \
-              libgcc1:armel \
-              libstdc++6:armel \
-              libtool-bin:armel \
-              qemu-user:armel \
-              qemu-user-static:armel \
-              unzip:armel \
-              zlib1g:armel && \
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-armel && \
     aptitude -f --no-gui -q -y clean
 
 ENV CROSS_TRIPLE arm-linux-gnueabihf

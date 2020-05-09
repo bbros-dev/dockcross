@@ -12,7 +12,7 @@ COPY scripts/install-gosu-binary.sh \
      /buildscripts/
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG REPO=http://cdn-fastly.deb.debian.org
+ARG REPO=http://deb.debian.org
 
 RUN \
   bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/sources.list"  && \
@@ -46,6 +46,7 @@ RUN \
                     pkg-config \
                     python \
                     python-pip \
+                    re2c \
                     rsync \
                     sed \
                     ssh \
@@ -57,8 +58,7 @@ RUN \
                     zlib1g-dev && \
   aptitude clean  -f --no-gui -q -y&& \
   /buildscripts/install-gosu-binary.sh && \
-  /buildscripts/install-gosu-binary-wrapper.sh && \
-  rm -rf /buildscripts
+  /buildscripts/install-gosu-binary-wrapper.sh
 
 include(shared/docker.m4)
 
@@ -66,8 +66,8 @@ ENV EMSCRIPTEN_VERSION 1.39.10
 
 ENV PATH /emsdk_portable:/emsdk_portable/llvm/clang/bin/:/emsdk_portable/emscripten/sdk:${PATH}
 ENV CC=/emsdk_portable/emscripten/sdk/emcc \
-  CXX=/emsdk_portable/emscripten/sdk/em++ \
-  AR=/emsdk_portable/emscripten/sdk/emar
+    CXX=/emsdk_portable/emscripten/sdk/em++ \
+    AR=/emsdk_portable/emscripten/sdk/emar
 ENV CMAKE_TOOLCHAIN_FILE /emsdk_portable/emscripten/sdk/cmake/Modules/Platform/Emscripten.cmake
 
 include(shared/label.m4)

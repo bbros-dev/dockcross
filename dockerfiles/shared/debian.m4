@@ -48,6 +48,7 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               gzip:amd64 \
               gnupg:amd64 \
               initramfs-tools:amd64 \
+              libelf-dev:amd64 \
               libtool-bin:amd64 \
               m4:amd64 \
               make:amd64 \
@@ -57,12 +58,15 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               pkg-config:amd64 \
               python3:amd64 \
               python3-pip:amd64 \
+              qemu-user:amd64 \
+              qemu-user-static:amd64 \
               re2c:amd64 \
               rsync:amd64 \
               sed:amd64 \
               ssh:amd64 \
               tar:amd64 \
               texinfo:amd64 \
+              unzip:amd64 \
               vim:amd64 \
               wget:amd64 \
               xz-utils:amd64 \

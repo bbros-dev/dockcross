@@ -9,13 +9,8 @@ include(shared/aptitude-env.m4)
 # The cross-compiling emulator
 RUN dpkg --add-architecture armel && \
     aptitude -f --no-gui -q -y update && \
-    aptitude -f --no-gui -q -y --without-recommends install\
-              crossbuild-essential-armel \
-              libtool-bin:armel \
-              qemu-user:armel \
-              qemu-user-static:armel \
-              texinfo:armel \
-              unzip:armel && \
+    aptitude -f --no-gui -q -y --with-recommends install \
+              crossbuild-essential-armel && \
     aptitude -f --no-gui -q -y clean
 
 include(shared/crosstool.m4)
