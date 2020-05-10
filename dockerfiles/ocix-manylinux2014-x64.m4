@@ -1,6 +1,7 @@
 # Recent versions address yum functionality
 FROM quay.io/pypa/manylinux2014_x86_64:2020-04-06-2fd435d
 
+WORKDIR /work
 
 include(shared/environment.m4)
 

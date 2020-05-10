@@ -1,5 +1,7 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 
+WORKDIR /work
+
 include(shared/aptitude.m4)
 
 include(shared/environment.m4)
@@ -17,51 +19,50 @@ COPY scripts/install-gosu-binary.sh \
 ARG DEBIAN_FRONTEND=noninteractive
 ARG REPO=http://deb.debian.org
 
-RUN \
-  bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/sources.list"  && \
-  bash -c "echo \"deb $REPO/debian buster-updates main contrib non-free\" >> /etc/apt/sources.list"  && \
-  bash -c "echo \"deb $REPO/debian-security buster/updates main\" >> /etc/apt/sources.list" && \
-  bash -c "echo \"deb http://deb.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
-  apt-get update --yes && \
-  apt-get install --no-install-recommends --yes aptitude && \
-  aptitude update  -f --no-gui -q -y&& \
-  aptitude install -f --no-gui -q -y --without-recommends \
-                    autogen \
-                    automake \
-                    bash \
-                    bc \
-                    bison \
-                    build-essential \
-                    bzip2 \
-                    ca-certificates \
-                    curl \
-                    dirmngr \
-                    file \
-                    flex \
-                    gettext \
-                    gzip \
-                    gnupg \
-                    initramfs-tools \
-                    libtool-bin \
-                    make \
-                    ncurses-dev \
-                    pax \
-                    pkg-config \
-                    python \
-                    python-pip \
-                    re2c \
-                    rsync \
-                    sed \
-                    ssh \
-                    tar \
-                    vim \
-                    wget \
-                    xz-utils \
-                    zip \
-                    zlib1g-dev && \
-  aptitude clean  -f --no-gui -q -y&& \
-  /buildscripts/install-gosu-binary.sh && \
-  /buildscripts/install-gosu-binary-wrapper.sh
+RUN bash -c "echo \"deb $REPO/debian buster main contrib non-free\" > /etc/apt/sources.list"  && \
+    bash -c "echo \"deb $REPO/debian buster-updates main contrib non-free\" >> /etc/apt/sources.list"  && \
+    bash -c "echo \"deb $REPO/debian-security buster/updates main\" >> /etc/apt/sources.list" && \
+    bash -c "echo \"deb http://deb.debian.org/debian buster-backports main\" >> /etc/apt/sources.list" && \
+    apt-get update --yes && \
+    apt-get install --no-install-recommends --yes aptitude && \
+    aptitude update  -f --no-gui -q -y&& \
+    aptitude install -f --no-gui -q -y --without-recommends \
+                      autogen \
+                      automake \
+                      bash \
+                      bc \
+                      bison \
+                      build-essential \
+                      bzip2 \
+                      ca-certificates \
+                      curl \
+                      dirmngr \
+                      file \
+                      flex \
+                      gettext \
+                      gzip \
+                      gnupg \
+                      initramfs-tools \
+                      libtool-bin \
+                      make \
+                      ncurses-dev \
+                      pax \
+                      pkg-config \
+                      python \
+                      python-pip \
+                      re2c \
+                      rsync \
+                      sed \
+                      ssh \
+                      tar \
+                      vim \
+                      wget \
+                      xz-utils \
+                      zip \
+                      zlib1g-dev && \
+    aptitude clean  -f --no-gui -q -y&& \
+    /buildscripts/install-gosu-binary.sh && \
+    /buildscripts/install-gosu-binary-wrapper.sh
 
 include(shared/docker.m4)
 

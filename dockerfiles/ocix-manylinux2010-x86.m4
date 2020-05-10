@@ -1,5 +1,6 @@
 FROM quay.io/pypa/manylinux2010_i686:2020-04-06-694ff3c
 
+WORKDIR /work
 
 include(shared/environment.m4)
 
