@@ -78,6 +78,7 @@ RUN (/ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
 RUN test -f /work/crosstool-done || \
     (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo run docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
 RUN test -f /work/crosstool-done
+RUN ls /usr/bin/*arm* 1>&2
 
 # Restore our default workdir (from "ocix-base" image).
 WORKDIR /work

@@ -13,6 +13,7 @@ commands:
       - run:
           name: Export OCI-Cross Registry, Organization and Version
           command: |
+            cp -rf ./test /work
             ./scripts/ocix-ci-env.sh >> $BASH_ENV
   build_test_ocix_image:
     description: Build & test an OCI-Cross container image
@@ -125,16 +126,16 @@ workflows:
       #     image: "ocix-android-arm64"
       #     requires:
       #       - ocix-base
-      - ocix:
-          name: "linux-arm64"
-          image: "ocix-linux-arm64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv5"
-          image: "ocix-linux-armv5"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "linux-arm64"
+      #     image: "ocix-linux-arm64"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "linux-armv5"
+      #     image: "ocix-linux-armv5"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "linux-armv5-musl"
           image: "ocix-linux-armv5-musl"
@@ -145,11 +146,11 @@ workflows:
           image: "ocix-linux-armv6"
           requires:
             - ocix-base
-      - ocix:
-          name: "linux-armv7"
-          image: "ocix-linux-armv7"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "linux-armv7"
+      #     image: "ocix-linux-armv7"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "linux-armv7a"
           image: "ocix-linux-armv7a"
@@ -161,11 +162,11 @@ workflows:
       #    image: "ocix-linux-mipsel"
       #    requires:
       #      - ocix-base
-      - ocix:
-          name: "linux-s390x"
-          image: "ocix-linux-s390x"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "linux-s390x"
+      #     image: "ocix-linux-s390x"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "linux-ppc64el"
           image: "ocix-linux-ppc64el"

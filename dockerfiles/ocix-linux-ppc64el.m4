@@ -6,13 +6,13 @@ ENV CROSS_TRIPLE powerpc64el-linux-gnu
 
 COPY sources.list /etc/apt/sources.list
 
+#    aptitude -f --no-gui -q -y purge \
+#              libexpat1\
+#              perl-base \
+#              perl-base:ppc64el \
+#              texinfo && \
 RUN dpkg --add-architecture ppc64el && \
     aptitude -f --no-gui -q -y update && \
-    aptitude -f --no-gui -q -y purge \
-              libexpat1\
-              perl-base \
-              perl-base:ppc64el \
-              texinfo && \
     aptitude -f --no-gui -q -y --with-recommends install \
               crossbuild-essential-ppc64el && \
     aptitude -f --no-gui -q -y clean
@@ -21,12 +21,13 @@ include(shared/crosstool.m4)
 
 WORKDIR /usr/src
 
-RUN curl -L http://wiki.qemu-project.org/download/qemu-2.6.0.tar.bz2 | tar xj && \
-  cd qemu-2.6.0 && \
-  ./configure --target-list=ppc64le-linux-user,ppc64-softmmu --prefix=/usr && \
-  make -j$(nproc) && \
-  make install && \
-  cd .. && rm -rf qemu-2.6.0
+RUN apt-get install -y libglib2.0-dev zlib1g-dev libpixman-1-dev && \
+    curl -L http://wiki.qemu-project.org/download/qemu-2.6.0.tar.bz2 | tar xj && \
+    cd qemu-2.6.0 && \
+    ./configure --target-list=ppc64le-linux-user,ppc64-softmmu --prefix=/usr && \
+    make -j$(nproc) && \
+    make install && \
+    cd .. && rm -rf qemu-2.6.0
 
 ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \

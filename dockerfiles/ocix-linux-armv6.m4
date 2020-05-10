@@ -51,6 +51,8 @@ ENV PATH ${PATH}:${CROSS_ROOT}/bin
 ENV CROSS_COMPILE ${CROSS_TRIPLE}-
 ENV ARCH arm
 
+RUN ls /usr/bin/*arm* 1>&2
+
 include(shared/label.m4)
 
 # Restore our default workdir (from "ocix-base" image).
