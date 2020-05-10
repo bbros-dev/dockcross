@@ -21,9 +21,9 @@ ENV CROSS_TRIPLE=i686-linux-gnu
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}
 ENV PATH ${PATH}:${CROSS_ROOT}/bin
 RUN mkdir -p ${CROSS_ROOT}/bin
-COPY ${CROSS_TRIPLE}.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}.sh
-COPY ${CROSS_TRIPLE}-as.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as.sh
-COPY ${CROSS_TRIPLE}-noop.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-noop.sh
+COPY scripts/${CROSS_TRIPLE}.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}.sh
+COPY scripts/${CROSS_TRIPLE}-as.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as.sh
+COPY scripts/${CROSS_TRIPLE}-noop.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-noop.sh
 RUN cd ${CROSS_ROOT}/bin && \
   chmod +x ${CROSS_TRIPLE}.sh && \
   ln -s /usr/bin/x86_64-linux-gnu-gcc && \

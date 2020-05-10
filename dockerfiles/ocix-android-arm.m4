@@ -6,7 +6,8 @@ include(shared/aptitude-env.m4)
 RUN  dpkg --add-architecture armel && \
     aptitude update && \
     aptitude install -f --no-gui -q -y --with-recommends \
-                      crossbuild-essential-armel
+                      crossbuild-essential-armel \
+                      lib32ncurses-dev
 
 ENV CROSS_TRIPLE=arm-linux-androideabi
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}

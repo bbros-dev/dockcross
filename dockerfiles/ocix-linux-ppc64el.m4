@@ -21,13 +21,13 @@ include(shared/crosstool.m4)
 
 WORKDIR /usr/src
 
-RUN apt-get install -y libglib2.0-dev zlib1g-dev libpixman-1-dev && \
-    curl -L http://wiki.qemu-project.org/download/qemu-2.6.0.tar.bz2 | tar xj && \
-    cd qemu-2.6.0 && \
-    ./configure --target-list=ppc64le-linux-user,ppc64-softmmu --prefix=/usr && \
-    make -j$(nproc) && \
-    make install && \
-    cd .. && rm -rf qemu-2.6.0
+# RUN apt-get install -y libglib2.0-dev zlib1g-dev libpixman-1-dev && \
+#     curl -L http://wiki.qemu-project.org/download/qemu-2.6.0.tar.bz2 | tar xj && \
+#     cd qemu-2.6.0 && \
+#     ./configure --target-list=ppc64le-linux-user,ppc64-softmmu --prefix=/usr && \
+#     make -j$(nproc) && \
+#     make install && \
+#     cd .. && rm -rf qemu-2.6.0
 
 ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \

@@ -82,6 +82,7 @@ $(IMAGES): check-ocix-base
 #
 $(addsuffix .test,$(IMAGES)): $(basename $@)
 	mkdir -p $(BIN)
+	ls -la .
 	$(OCI_EXE) run $(RM) $(OCIX_ORG)/$(basename $@):$(OCIX_VERSION) > \
 	               $(BIN)/$(basename $@) && \
 								 chmod a+x $(BIN)/$(basename $@)

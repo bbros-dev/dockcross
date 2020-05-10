@@ -17,7 +17,7 @@ include(shared/crosstool.m4)
 
 # The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
 #ENV CROSS_TRIPLE armv7-unknown-linux-gnueabi
-ENV CROSS_TRIPLE arm-cortexa8_neon-linux-gnueabihf
+ENV CROSS_TRIPLE arm-linux-gnueabihf
 ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \

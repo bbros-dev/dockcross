@@ -18,6 +18,7 @@ RUN set -x && \
         gettext \
         openssh-clients \
         pax \
+        re2c \
         wget \
         zip  && \
   yum clean all && \
