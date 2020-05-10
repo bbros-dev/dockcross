@@ -22,7 +22,9 @@
 # 1. Do not keep, if you can install or upgrade (by increasing canceled-actions counter)
 # 2. Increase removals counter, because we want keep packages if aptitude decide to delete it
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 include(shared/sshd-privilege-separation.m4)
 
@@ -77,7 +79,7 @@ RUN (/ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
     rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh && \
     touch /work/crosstool-done) || /bin/true
 RUN test -f /work/crosstool-done || \
-    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo run docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
+    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo Execute docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
 RUN test -f /work/crosstool-done
 RUN ls /usr/bin/*arm* 1>&2
 

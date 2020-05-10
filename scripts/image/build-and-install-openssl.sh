@@ -58,10 +58,10 @@ OPENSSL_HASH=cabd5c9492825ce5bd23f3c3aeed6a97f8142f606d893df216411f07d1abab96
 OPENSSL_DOWNLOAD_URL=http://www.openssl.org/source/old/1.0.2/
 
 function do_openssl_build {
-    export OPENSSL_CONF=/etc/ssl/openssl.cnf
     ${WRAPPER} ./config no-ssl2 no-shared -fPIC $CONFIG_FLAG --prefix=/usr/local/ssl 2>&1
     ${WRAPPER} make 2>&1
-    ${WRAPPER} make install_sw 2>&1 
+    ${WRAPPER} make install_sw 2>&1
+    ln --symbolic --force /etc/ssl/openssl.cnf /usr/local/ssl/openssl.cnf
 }
 
 function build_openssl {

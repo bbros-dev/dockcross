@@ -23,7 +23,7 @@ WORKDIR /buildscripts
 RUN (/buildscripts/build-shared-docker.sh 2>&1 | tee --append /work/docker.log && \
     touch /work/docker-done) || /bin/true
 RUN test -f /work/docker-done || \
-    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo run docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
+    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo Execute docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
 
 RUN test -f /work/docker-done && \
     echo "root:root" | chpasswd

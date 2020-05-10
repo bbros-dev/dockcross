@@ -3,7 +3,9 @@ include(shared/base.m4)
 # This is for ARMv5 "legacy" (mipsel) devices which do NOT support hard float
 # VFP instructions (mipshf).
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 # From https://wiki.debian.org/CrossToolchains, installing for jessie
 RUN echo "deb http://emdebian.org/tools/debian/ jessie main" > /etc/apt/sources.list.d/emdebian.list && \

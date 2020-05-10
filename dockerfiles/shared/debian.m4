@@ -4,7 +4,9 @@
 
 WORKDIR /work
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 include(shared/sshd-privilege-separation.m4)
 
@@ -78,7 +80,7 @@ RUN (/buildscripts/install-gosu-binary.sh 2>&1 | tee --append /work/debian.log &
     rm -rf /buildscripts && \
     touch /work/debian-done) || /bin/true
 RUN test -f /work/debian-done || \
-    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo run docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
+    (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo Execute docker run '<last image id>' /bin/cat /work/*.log; echo ----------)
 RUN test -f /work/debian-done
 
 # Restore our default workdir (from "ocix-base" image).

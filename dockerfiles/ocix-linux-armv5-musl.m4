@@ -4,7 +4,9 @@ include(shared/base.m4)
 # VFP instructions (armhf).
 # musleabi as default glibc
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 # The cross-compiling emulator
 RUN dpkg --add-architecture armel && \

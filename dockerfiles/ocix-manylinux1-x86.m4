@@ -1,6 +1,7 @@
 FROM quay.io/pypa/manylinux1_i686:2020-04-06-3cde635
 
-include(shared/aptitude-env.m4)
+
+include(shared/environment.m4)
 
 include(shared/manylinux.m4)
 

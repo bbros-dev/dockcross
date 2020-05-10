@@ -1,6 +1,8 @@
 include(shared/base.m4)
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 RUN dpkg --add-architecture amd64 && \
     aptitude -f --no-gui -q -y --with-recommends install \

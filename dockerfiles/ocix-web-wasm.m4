@@ -1,6 +1,8 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 include(shared/sshd-privilege-separation.m4)
 

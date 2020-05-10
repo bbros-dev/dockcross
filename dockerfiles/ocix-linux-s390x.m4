@@ -1,7 +1,9 @@
 include(shared/base.m4)
 # This is for 64-bit S390X Linux machine
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 # The cross-compiling emulator
 RUN dpkg --add-architecture s390x && \

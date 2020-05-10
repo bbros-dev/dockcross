@@ -1,7 +1,7 @@
 # Start include from shared/manylinux.m4
 #
 
-include(shared/aptitude-env.m4)
+include(shared/environment.m4)
 
 include(shared/sshd-privilege-separation.m4)
 

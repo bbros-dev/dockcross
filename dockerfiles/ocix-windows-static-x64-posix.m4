@@ -1,6 +1,8 @@
 include(shared/base.m4)
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 ENV WINEARCH win64
 ARG MXE_TARGET_ARCH=x86_64

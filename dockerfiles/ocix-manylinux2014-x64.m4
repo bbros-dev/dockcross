@@ -1,7 +1,8 @@
 # Recent versions address yum functionality
 FROM quay.io/pypa/manylinux2014_x86_64:2020-04-06-2fd435d
 
-include(shared/aptitude-env.m4)
+
+include(shared/environment.m4)
 
 include(shared/manylinux.m4)
 

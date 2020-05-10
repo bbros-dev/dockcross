@@ -3,7 +3,9 @@ include(shared/base.m4)
 # This is for ARMv5 "legacy" (armel) devices which do NOT support hard float
 # VFP instructions (armhf).
 
-include(shared/aptitude-env.m4)
+include(shared/aptitude.m4)
+
+include(shared/environment.m4)
 
 # The cross-compiling emulator
 RUN dpkg --add-architecture armel && \
