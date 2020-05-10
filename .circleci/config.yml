@@ -13,7 +13,7 @@ commands:
       - run:
           name: Export OCI-Cross Registry, Organization and Version
           command: |
-            cp -rf ./test /work
+            [ -d /work ] && [ -d ~/ocix/test ] && cp -rf ~/ocix/test /work
             ./scripts/ocix-ci-env.sh >> $BASH_ENV
   build_test_ocix_image:
     description: Build & test an OCI-Cross container image
