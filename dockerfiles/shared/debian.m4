@@ -4,17 +4,16 @@
 
 WORKDIR /work
 
+include(shared/aptitude-env.m4)
+
+include(shared/sshd-privilege-separation.m4)
+
 COPY scripts/install-gosu-binary.sh \
      scripts/install-gosu-binary-wrapper.sh \
      /buildscripts/
 
-include(shared/aptitude-env.m4)
-include(shared/sshd-privilege-separation.m4)
-
 ARG DEBIAN_FRONTEND=noninteractive
 ARG REPO=http://deb.debian.org
-
-
 
 # Note Debian Buster is Debian 10.x
 RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,ppc64el,s390x] $REPO/debian buster main contrib non-free\" > /etc/apt/sources.list"  && \

@@ -2,6 +2,7 @@
 #
 
 include(shared/aptitude-env.m4)
+
 include(shared/sshd-privilege-separation.m4)
 
 # Image build scripts

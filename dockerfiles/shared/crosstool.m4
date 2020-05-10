@@ -23,6 +23,7 @@
 # 2. Increase removals counter, because we want keep packages if aptitude decide to delete it
 
 include(shared/aptitude-env.m4)
+
 include(shared/sshd-privilege-separation.m4)
 
 # Install Debian packages required for $(ct-ng).

@@ -1,10 +1,10 @@
 FROM quay.io/pypa/manylinux2010_i686:2020-04-06-694ff3c
 
+include(shared/aptitude-env.m4)
+
 include(shared/manylinux.m4)
 
 include(shared/docker.m4)
-
-include(shared/aptitude-env.m4)
 
 # Override yum to work around the problem with newly built libcurl.so.4
 # https://access.redhat.com/solutions/641093

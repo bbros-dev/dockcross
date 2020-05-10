@@ -1,10 +1,10 @@
 FROM quay.io/pypa/manylinux1_x86_64:2020-04-06-3cde635
 
+include(shared/aptitude-env.m4)
+
 include(shared/manylinux.m4)
 
 include(shared/docker.m4)
-
-include(shared/aptitude-env.m4)
 
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /opt/rh/devtoolset-2/root/usr/bin

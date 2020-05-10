@@ -30,10 +30,11 @@ commands:
           command: |
             [ -f ~/ocix/ocix-base.tar ] && docker load -i ~/ocix/ocix-base.tar
             make << parameters.image_name >>
+            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
+            docker load -i ~/ocix/<< parameters.image_name >>.tar
             make << parameters.image_name >>.test
             tar -zcvf ~/ocix/<< parameters.image_name >>-work.tar.gz ~/ocix/<< parameters.image_name >>/work
             rm -rf ~/ocix/<< parameters.image_name >>/work/*
-            docker save --output ~/ocix/<< parameters.image_name >>.tar ${OCIX_REGISTRY}${OCIX_PORT}/${OCIX_ORG}/<< parameters.image_name >>:${OCIX_VERSION}
       - store_artifacts:
           path: ~/ocix/<< parameters.image_name >>-work.tar.gz
           destination: << parameters.image_name >>-work.tar.gz

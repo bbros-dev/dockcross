@@ -1,6 +1,7 @@
 FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
 
 include(shared/aptitude-env.m4)
+
 include(shared/sshd-privilege-separation.m4)
 
 # Revert back to "/bin/sh" as default shell
