@@ -65,7 +65,7 @@ cd "crosstool-ng-crosstool-ng-${REV}"
 # https://github.com/crosstool-ng/crosstool-ng/issues/1217
 git init
 git remote add origin https://github.com/crosstool-ng/crosstool-ng.git
-git fetch --depth 1 origin 5659366
+git fetch --depth 1 origin 5659366bf62b5555bf914b5f55e8a01c92d6c6f1
 git checkout FETCH_HEAD
 
 # Bootstrap and install the tool.
