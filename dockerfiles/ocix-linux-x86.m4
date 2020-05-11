@@ -48,7 +48,7 @@ ENV CMAKE_TOOLCHAIN_FILE=/usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 ENV CROSS_COMPILE=${CROSS_TRIPLE}-
 ENV ARCH=x86
 
-COPY linux32-entrypoint.sh /ocix/
+COPY scripts/linux32-entrypoint.sh /ocix/
 ENTRYPOINT ["/ocix/linux32-entrypoint.sh"]
 
 include(shared/label.m4)

@@ -17,8 +17,8 @@ RUN dpkg --add-architecture armel && \
 
 include(shared/crosstool.m4)
 
-# The CROSS_TRIPLE is a configured alias of the "armv5-unknown-linux-musleabi" target.
-ENV CROSS_TRIPLE armv5-unknown-linux-musleabi
+# The CROSS_TRIPLE is a configured alias of the "arm-linux-gnueabi" target.
+ENV CROSS_TRIPLE arm-linux-gnueabi
 ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \

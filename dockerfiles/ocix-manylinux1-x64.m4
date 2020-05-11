@@ -4,9 +4,9 @@ WORKDIR /work
 
 include(shared/environment.m4)
 
-RUN curl https://dl.fedoraproject.org/pub/epel/6/x86_64/Packages/r/re2c-0.13.5-1.el6.x86_64.rpm \
-         --output re2c-0.13.5-1.el6.x86_64.rpm && \
-    rpm -Uvh re2c-0.13.5-1.el6.x86_64.rpm
+# RUN curl https://dl.fedoraproject.org/pub/epel/6/x86_64/Packages/r/re2c-0.13.5-1.el6.x86_64.rpm \
+#          --output re2c-0.13.5-1.el6.x86_64.rpm && \
+#     rpm -Uvh re2c-0.13.5-1.el6.x86_64.rpm
 
 include(shared/manylinux.m4)
 

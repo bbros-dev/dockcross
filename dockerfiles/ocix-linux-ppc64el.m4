@@ -1,5 +1,7 @@
 include(shared/base.m4)
 
+WORKDIR /work
+
 include(shared/aptitude.m4)
 
 include(shared/environment.m4)

@@ -9,7 +9,7 @@ RUN  dpkg --add-architecture armel && \
     aptitude update && \
     aptitude install -f --no-gui -q -y --with-recommends \
                       crossbuild-essential-armel \
-                      lib32ncurses-dev
+                      libncurses5
 
 ENV CROSS_TRIPLE=arm-linux-androideabi
 ENV CROSS_ROOT=/usr/${CROSS_TRIPLE}

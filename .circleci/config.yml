@@ -188,16 +188,16 @@ workflows:
           image: "ocix-manylinux1-x64"
           requires:
             - ocix-base
-      - ocix:
-          name: "manylinux1-x86"
-          image: "ocix-manylinux1-x86"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "manylinux2010-x64"
-          image: "ocix-manylinux2010-x64"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "manylinux1-x86"
+      #     image: "ocix-manylinux1-x86"
+      #     requires:
+      #       - ocix-base
+      # - ocix:
+      #     name: "manylinux2010-x64"
+      #     image: "ocix-manylinux2010-x64"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "manylinux2010-x86"
           image: "ocix-manylinux2010-x86"
@@ -208,11 +208,11 @@ workflows:
           image: "ocix-manylinux2014-x64"
           requires:
             - ocix-base
-      - ocix:
-          name: "web-wasm"
-          image: "ocix-web-wasm"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "web-wasm"
+      #     image: "ocix-web-wasm"
+      #     requires:
+      #       - ocix-base
       # - ocix:
       #     name: "windows-static-x64"
       #     image: "ocix-windows-static-x64"
