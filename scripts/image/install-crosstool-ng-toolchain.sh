@@ -58,16 +58,20 @@ cd "${CTNG}"
 
 # Download and install the "crosstool-ng" source.
 REV=1.24.0
-curl -# -LO \
-  "https://github.com/crosstool-ng/crosstool-ng/archive/crosstool-ng-${REV}.tar.gz"
-tar -xzf "crosstool-ng-${REV}.tar.gz" --no-same-owner
+mkdir "crosstool-ng-crosstool-ng-${REV}"
 cd "crosstool-ng-crosstool-ng-${REV}"
+# We require crosstool-ng code that is more recent than the latest release.
+# This is due to issue #1217 (see #1195 for ppc64le specific instance):
+# https://github.com/crosstool-ng/crosstool-ng/issues/1217
+git init
+git remote add origin https://github.com/crosstool-ng/crosstool-ng.git
+git fetch --depth 1 origin 5659366
+git checkout FETCH_HEAD
 
 # Bootstrap and install the tool.
 BOOTSTRAP_PREFIX="${CTNG}/prefix"
 ./bootstrap
-./configure \
-  --prefix "${BOOTSTRAP_PREFIX}"
+./configure --prefix "${BOOTSTRAP_PREFIX}"
 make -j$(nproc)  2>&1 >make-install.log
 make install 2>&1 >>make-install.log
 

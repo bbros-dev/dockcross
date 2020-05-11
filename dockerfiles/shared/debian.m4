@@ -45,6 +45,8 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               dirmngr:amd64 \
               file:amd64 \
               flex:amd64 \
+              g++-multilib:amd64 \
+              gcc-multilib:amd64 \
               gettext:amd64 \
               gzip:amd64 \
               gnupg:amd64 \

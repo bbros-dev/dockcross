@@ -183,11 +183,11 @@ workflows:
           image: "ocix-linux-x86"
           requires:
             - ocix-base
-      - ocix:
-          name: "manylinux1-x64"
-          image: "ocix-manylinux1-x64"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "manylinux1-x64"
+      #     image: "ocix-manylinux1-x64"
+      #     requires:
+      #       - ocix-base
       # - ocix:
       #     name: "manylinux1-x86"
       #     image: "ocix-manylinux1-x86"
