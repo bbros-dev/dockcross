@@ -76,7 +76,6 @@ WORKDIR /ocix/crosstool
 RUN (/ocix/install-crosstool-ng-toolchain.sh -p "${XCC_PREFIX}" \
                                             -c /ocix/crosstool-ng.config | \
                                             tee --append /work/crosstool.log && \
-    rm -rf /ocix/crosstool /ocix/install-crosstool-ng-toolchain.sh && \
     touch /work/crosstool-done) || /bin/true
 RUN test -f /work/crosstool-done || \
     (echo ERROR-------; echo RUN failed, see files in container /work directory of the last container layer; echo Execute docker run '<last image id>' /bin/cat /work/*.log; echo ----------)

@@ -1,7 +1,6 @@
-ocix
-====
+# ocix
 
-Cross compiling toolchains in OCI container images.
+[Self hostable]() cross compiling toolchains in OCI container images.
 
 ![image](https://circleci.com/gh/dockcross/dockcross/tree/master.svg?style=svg)
 

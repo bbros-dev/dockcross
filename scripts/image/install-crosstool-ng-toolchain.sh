@@ -72,8 +72,8 @@ git checkout FETCH_HEAD
 BOOTSTRAP_PREFIX="${CTNG}/prefix"
 ./bootstrap
 ./configure --prefix "${BOOTSTRAP_PREFIX}"
-make -j$(nproc)  2>&1 >make-install.log
-make install 2>&1 >>make-install.log
+make -j$(nproc)
+make install
 
 ##
 # Use "crosstool-ng" to build the toolchain.

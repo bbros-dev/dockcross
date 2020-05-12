@@ -10,11 +10,6 @@ ENV CROSS_TRIPLE powerpc64el-linux-gnu
 
 COPY sources.list /etc/apt/sources.list
 
-#    aptitude -f --no-gui -q -y purge \
-#              libexpat1\
-#              perl-base \
-#              perl-base:ppc64el \
-#              texinfo && \
 RUN dpkg --add-architecture ppc64el && \
     aptitude -f --no-gui -q -y update && \
     aptitude -f --no-gui -q -y --with-recommends install \

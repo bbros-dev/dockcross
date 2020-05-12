@@ -21,6 +21,20 @@ LD_PRELOAD=/usr/lib/libcurl.so.4 /usr/bin/yum "$@"' > /usr/local/bin/yum && chmo
 
 ENV CROSS_TRIPLE i686-linux-gnu
 ENV CROSS_ROOT /opt/rh/devtoolset-7/root/usr/bin
+# Following mimic ocix-linux-x86.sh
+#RUN cd ${CROSS_ROOT}/bin && \
+#  ln -s /usr/bin/x86_64-linux-gnu-gcc && \
+#  ln -s /usr/bin/x86_64-linux-gnu-g++ && \
+#  ln -s /usr/bin/x86_64-linux-gnu-as && \
+#  ln -s ${CROSS_TRIPLE}.sh ${CROSS_TRIPLE}-gcc && \
+#  ln -s ${CROSS_TRIPLE}.sh ${CROSS_TRIPLE}-g++ && \
+#  ln -s ${CROSS_TRIPLE}-as.sh ${CROSS_TRIPLE}-as && \
+#  ln -s /usr/bin/x86_64-linux-gnu-ar ${CROSS_TRIPLE}-ar && \
+#  ln -s ${CROSS_TRIPLE}-noop.sh ${CROSS_TRIPLE}-noop
+#ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
+#    AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \
+#    CC=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-gcc \
+#    CXX=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-g++
 ENV AS=${CROSS_ROOT}/as \
     AR=${CROSS_ROOT}/ar \
     CC=${CROSS_ROOT}/gcc \

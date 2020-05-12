@@ -117,11 +117,11 @@ workflows:
     jobs:
       - ocix-base:
           <<: *workflow-settings
-      - ocix:
-          name: "android-arm"
-          image: "ocix-android-arm"
-          requires:
-            - ocix-base
+      # - ocix:
+      #     name: "android-arm"
+      #     image: "ocix-android-arm"
+      #     requires:
+      #       - ocix-base
       # - ocix:
       #     name: "android-arm64"
       #     image: "ocix-android-arm64"

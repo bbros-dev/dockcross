@@ -42,12 +42,10 @@ ifeq ("$(CIRCLECI)", "true")
 endif
 
 # all targets are phony (no files to check).
-.PHONY: check-ocix-base images $(IMAGES) test %.test
-# Prevent implict rule search for files triggering a rebuild of this Makefile
-Makefile: ;
+.PHONY: check-ocix-base help images  list $(IMAGES) %.test test 
 
 #
-# images: This target builds all IMAGES (because it is the first one, it is built by default)
+# images: Build all IMAGES (because it is the first one, it is built by default)
 #
 images: $(IMAGES)
 
@@ -78,7 +76,7 @@ $(IMAGES): check-ocix-base
 	./scripts/make/build_image.sh $(OCI_EXE) $(OCIX_ORG) $@ $(OCIX_VERSION) $@
 
 #
-# testing implicit rule
+# test implicit rule
 #
 $(addsuffix .test,$(IMAGES)): $(basename $@)
 	mkdir -p $(BIN)
@@ -89,10 +87,12 @@ $(addsuffix .test,$(IMAGES)): $(basename $@)
 	$(BIN)/$(basename $@) /usr/local/bin/python4ocixtest test/run.py $($@_ARGS)
 	rm -rf $(BIN)
 
-.PHONY: list
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
 help:
 	$(info The following are some of the valid targets for this Makefile)
 	make list
+
+# Prevent implict rule search for files triggering a rebuild of this Makefile
+Makefile: ;
