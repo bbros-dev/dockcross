@@ -5,6 +5,14 @@ WORKDIR /work
 
 include(shared/environment.m4)
 
+# Test suite test/run.py report error:
+# /opt/rh/devtoolset-8/root/usr/bin/gcc
+# is not a full path to an existing compiler tool.
+RUN ln -s /opt/rh/devtoolset-9/root/usr/bin/gcc /usr/bin/cc && \
+    ln -s /opt/rh/devtoolset-9/root/usr/bin/g++ /usr/bin/c++ && \
+    ln -s /opt/rh/devtoolset-9/root/usr/bin/gcc /usr/bin/gcc && \
+    ln -s /opt/rh/devtoolset-9/root/usr/bin/g++ /usr/bin/g++
+
 include(shared/manylinux.m4)
 
 include(shared/docker.m4)

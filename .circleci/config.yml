@@ -117,11 +117,13 @@ workflows:
     jobs:
       - ocix-base:
           <<: *workflow-settings
+      # For this ARM please use the Yocto project https://www.yocto.org
       # - ocix:
       #     name: "android-arm"
       #     image: "ocix-android-arm"
       #     requires:
       #       - ocix-base
+      # For this ARM please use the Yocto project https://www.yocto.org
       # - ocix:
       #     name: "android-arm64"
       #     image: "ocix-android-arm64"
@@ -132,31 +134,35 @@ workflows:
       #     image: "ocix-linux-arm64"
       #     requires:
       #       - ocix-base
+      # For this ARM please use the Yocto project https://www.yocto.org
       # - ocix:
       #     name: "linux-armv5"
       #     image: "ocix-linux-armv5"
       #     requires:
       #       - ocix-base
-      - ocix:
-          name: "linux-armv5-musl"
-          image: "ocix-linux-armv5-musl"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "linux-armv6"
-          image: "ocix-linux-armv6"
-          requires:
-            - ocix-base
+      # For this ARM please use the Yocto project https://www.yocto.org
+      # - ocix:
+      #     name: "linux-armv5-musl"
+      #     image: "ocix-linux-armv5-musl"
+      #     requires:
+      #       - ocix-base
+      # For this ARM please use the Yocto project https://www.yocto.org
+      # - ocix:
+      #     name: "linux-armv6"
+      #     image: "ocix-linux-armv6"
+      #     requires:
+      #       - ocix-base
       # - ocix:
       #     name: "linux-armv7"
       #     image: "ocix-linux-armv7"
       #     requires:
       #       - ocix-base
-      - ocix:
-          name: "linux-armv7a"
-          image: "ocix-linux-armv7a"
-          requires:
-            - ocix-base
+      # For this ARM please use the Yocto project https://www.yocto.org
+      # - ocix:
+      #     name: "linux-armv7a"
+      #     image: "ocix-linux-armv7a"
+      #     requires:
+      #       - ocix-base
       # Image build currently broken. See issue #209
       #- ocix:
       #    name: "linux-mipsel"
