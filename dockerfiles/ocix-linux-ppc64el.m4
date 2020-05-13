@@ -12,6 +12,7 @@ COPY sources.list /etc/apt/sources.list
 
 RUN dpkg --add-architecture ppc64el && \
     aptitude -f --no-gui -q -y update && \
+    aptitude -f --no-gui -q -y --without-recommends purge gcc-multilib && \
     aptitude -f --no-gui -q -y --with-recommends install \
               crossbuild-essential-ppc64el && \
     aptitude -f --no-gui -q -y clean
