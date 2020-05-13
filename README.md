@@ -2,82 +2,102 @@
 
 [Self hostable]() cross compiling toolchains in OCI container images.
 
-![image](https://circleci.com/gh/dockcross/dockcross/tree/master.svg?style=svg)
+[![Master](https://circleci.com/gh/begleybrothers/ocix.svg?style=svg)](https://app.circleci.com/pipelines/github/begleybrothers/ocix?branch=master)
+[![Development](https://circleci.com/gh/bbros-dev/ocix/tree/develop.svg?style=svg)](https://app.circleci.com/pipelines/github/bbros-dev/ocix?branch=develop)
 
-> target
->
-> :   <https://circleci.com/gh/dockcross/dockcross/tree/master>
->
-Features
---------
+## Features
 
--   Supports [Docker](https://www.docker.com/) and [Podman](https://podman.io/) container engines at buildtime and at runtime.
--   Supports [Open Container Initiative (OCI)](https://www.opencontainers.org/) compatible containers and registries.
--   Supports use cases where code and all containers must be self-hosted. See Self-Hosting below. To see a list of containers available: `make list`.
--   Supports single container use cases where this project is a [git-subrepo](https://github.com/ingydotnet/git-subrepo) of a project: `make ocix-linux-x64` builds and uploads to your registry the container `ocix-linux-x64`. See Self-Hosting below.
--   Pre-built and configured toolchains for cross compiling.
--   Most images also contain an emulator for the target system.
--   Clean separation of build tools, source code, and build artifacts.
--   Commands in the container are run as the calling user, so that any created files have the expected ownership, (i.e. not root).
--   Make variables (CC, LD etc) are set to point to the appropriate tools in the container.
--   Recent [CMake](https://cmake.org) and ninja are precompiled.
--   [Conan.io](https://www.conan.io) can be used as a package manager.
--   Toolchain files configured for CMake.
--   Current directory is mounted as the container's workdir, `/work`.
--   Works with the [Docker for Mac](https://docs.docker.com/docker-for-mac/) and [Docker for Windows](https://docs.docker.com/docker-for-windows/).
+- Supports [Docker](https://www.docker.com/) and [Podman](https://podman.io/)
+  container engines at build-time and at runtime.
+- Supports [Open Container Initiative (OCI)](https://www.opencontainers.org/)
+  compatible containers and registries.
+- Supports use cases where code and containers must be self-hosted. See
+  Self-Hosting below. To see a list of containers available: `make list`.
+- Supports single container use cases where this project is a
+  [git-subrepo](https://github.com/ingydotnet/git-subrepo) of a project:
+  `make ocix-linux-x64` builds and uploads to **your OCI-registry** the
+  container `ocix-linux-x64`. See Se-Hosting below.
+- Pre-built and configured toolchains for cross compiling.
+- Most images also contain an emulator for the target system.
+- Clean separation of build tools, source code, and build artifacts.
+- Commands in the container are run as the calling user, so that any created
+  files have the expected ownership, (i.e. not ro).
+- Make variables (CC, LD etc) are set to point to the appropriate tools in the
+  container.
+- Recent [CMake](https://cmake.org) and ninja are precompiled.
+- [Conan.io](https://www.conan.io) can be used as a package manager.
+- Toolchain files configured for CMake.
+- Current directory is mounted as the container's workdir, `/work`.
+- Works with the [Docker for Mac](https://docs.docker.com/docker-for-mac/) and
+  [Docker for Windows](https://docs.docker.codocker-for-windows/).
 
-Examples
---------
+## Installation
 
-1.  `ocix make`: Build the *Makefile* in the current directory.
-2.  `ocix cmake -Bbuild -H. -GNinja`: Run CMake with a build directory `./build` for a *CMakeLists.txt* file in the current directory and generate `ninja` build configuration files.
-3.  `ocix ninja -Cbuild`: Run ninja in the `./build` directory.
-4.  `ocix bash -c '$CC test/C/hello.c -o hello'`: Build the *hello.c* file with the compiler identified with the `CC` environmental variable in the build environment.
-5.  `ocix bash`: Run an interactive shell in the build environment.
-
-Note that commands are executed verbatim. If any shell processing for environment variable expansion or redirection is required, please use bash -c 'command args...'.
-
-Installation
-------------
-
-This image does not need to be run manually. Instead, there is a helper script to execute build commands on source code existing on the local host filesystem. This script is bundled with the image.
+This image does not need to be run manually.
+Instead, there is a helper script to execute build commands on source code
+existing on the local host filesystem. This script is bundled with the image.
 
 To install the helper script, run one of the images with no arguments, and redirect the output to a file:
 
-    docker run --rm CROSS_COMPILER_IMAGE_NAME > ./ocix
-    chmod +x ./ocix
-    mv ./ocix ~/bin/
+```bash
+IMAGE=yelgeb/ocix-linux-x64:2.0.0
+docker run --rm ${IMAGE} > ~/.local/share/bin/ocix
+chmod a+x ~/.local/share/bin/ocix
+```
 
 Podman users can replace docker with podman in all documentation examples:
 
-    podman run --rm CROSS_COMPILER_IMAGE_NAME > ./ocix
-    chmod +x ./ocix
-    mv ./ocix ~/bin/
+```bash
+IMAGE=yelgeb/ocix-linux-x64:2.0.0
+podman run --rm ${IMAGE} > ~/.local/share/bin/ocix
+chmod a+x ~/.local/share/bin/ocix
+```
 
-Where CROSS_COMPILER_IMAGE_NAME is the name of the cross-compiler toolchain container 'slug', e.g. dockcross/ocix-linux-armv7.
+### Examples
 
-Only 64-bit x86_64 images are provided; a 64-bit x86_64 host system is required.
+1. `ocix cmake -Bbuild -H. -GNinja`: Run CMake with a build directory
+   `./build` for a *CMakeLists.txt* file in the current directory and generate
+   `ninja` build configuration files.
+1. `ocix ninja -Cbuild`: Run ninja in the `./build` directory.
+1. `ocix bash -c '$CC test/C/hello.c -o hello'`: Build the *hello.c* file with
+   the compiler identified with the `CC` environmental variable in the build
+   environment.
+1. `ocix bash`: Run an interactive shell in the build environment.
 
-Usage
------
+Note that commands are executed verbatim. If any shell processing for
+environment variable expansion or redirection is required, please use
+`bash -c 'command args...'`.
 
-For the impatient, here's how to compile a hello world for armv7 using Docker:
+## Usage
 
-    cd ~/src/ocix
-    docker run --rm ocix/linux-armv7 > ./ocix-linux-armv7
-    chmod +x ./ocix-linux-armv7
-    ./ocix-linux-armv7 bash -c '$CC test/C/hello.c -o hello_arm'
+For the impatient, here's how to compile a hello world for `arm64` using Podman:
 
-Note how invoking any toolchain command (make, gcc, etc.) is just a matter of prepending the **ocix** script on the commandline:
+```bash
+cd ~/src/your-project
+podman run --rm ocix/linux-arm64 > ~/.local/share/bin/ocix-linux-arm64
+chmod +x ~/.local/share/bin/ocix-linux-arm64
+./ocix-linux-arm64 bash -c '$CC test/C/hello.c -o hello_arm'
+```
 
-    ./ocix-linux-armv7 [command] [args...]
+Note how invoking any toolchain command (make, gcc, etc.) is just a matter of
+prepending the **ocix** script on the commandline:
 
-The **ocix** script will select between the docker and podman container engines, then execute the given command-line inside the container, along with all arguments passed after the command. If podman is installed and responds to command -v podman it is selected. Otherwise, the default container engine executable is docker.
+```bash
+./ocix-linux-arm64 [command] [args...]
+```
 
-Commands that evaluate environmental variables in the image, like $CC above, should be executed in bash -c. The present working directory is mounted within the image, which can be used to make source code available in the container.
+The **ocix** script will select between the docker and podman container engines,
+then execute the given command-line inside the container, along with all
+arguments passed after the command. 
+If podman is installed and responds to `command -v podman` it is selected.
+Otherwise, the default container engine executable is `docker`.
 
-Cross compilers
----------------
+Commands that evaluate environmental variables in the image, like `${CC}` above,
+should be executed in `bash -c 'some cmds'`.
+The present working directory is mounted within the image, which can be used to
+make source code available in the container.
+
+## Cross compilers
 
 > target
 >
@@ -85,7 +105,7 @@ Cross compilers
 >
 dockcross/ocix-base
 
-:   
+:
 
     ![base-images](https://images.microbadger.com/badges/image/dockcross/ocix-base.svg) Base image for other toolchain images. From Debian 10 (Buster)
 
@@ -268,19 +288,21 @@ Articles
 
 A special update command can be executed that will update the source cross-compiler container image or the ocix script itself.
 
--   `ocix [--] command [args...]`: Forces a command to run inside the container (in case of a name clash with a built-in command), use `--` before the command.
--   `ocix update-image`: Fetch the latest version of the container image.
--   `ocix update-script`: Update the installed ocix script with the one bundled in the image.
+- `ocix [--] command [args...]`: Forces a command to run inside the container (in case of a name clash with a built-in command), use `--` before the command.
+- `ocix update-image`: Fetch the latest version of the container image.
+- `ocix update-script`: Update the installed ocix script with the one bundled in the image.
 
 - `ocix update`: Update both the container image, and the ocix script. Download all images -------------------
 
 To easily download all images, the convenience target `display_images` could be used:
 
-    curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
-    for image in $(make -f ocix-Makefile display_images); do
-      echo "Pulling ocix/$image"
-      docker pull ocix/$image
-    done
+```bash
+curl https://raw.githubusercontent.com/dockcross/dockcross/master/Makefile -o ocix-Makefile
+for image in $(make -f ocix-Makefile display_images); do
+  echo "Pulling ocix/$image"
+  docker pull ocix/$image
+done
+```
 
 For Podman users cut-and-paste:
 
@@ -302,7 +324,7 @@ To automatically install in `~/bin` the ocix scripts for each images already dow
         continue
       fi
       echo "~/bin/ocix-$image ok"
-      docker run ocix/$image > ~/bin/ocix-$image && 
+      docker run ocix/$image > ~/bin/ocix-$image &&
       chmod u+x  ~/bin/ocix-$image
     done
 
@@ -315,7 +337,7 @@ For Podman users cut-and-paste:
         continue
       fi
       echo "~/bin/ocix-$image ok"
-      podman run ocix/$image > ~/bin/ocix-$image && 
+      podman run ocix/$image > ~/bin/ocix-$image &&
       chmod u+x  ~/bin/ocix-$image
     done
 
