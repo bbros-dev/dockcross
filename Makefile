@@ -57,11 +57,11 @@ test: $(addsuffix .test,$(IMAGES))
 #
 # display
 #
-display_images:
+list_images:
 	$(info The following are the OCI-Cross images this Makefile can build)
 	for image in $(IMAGES); do echo $$image; done
 
-$(VERBOSE).SILENT: display_images
+$(VERBOSE).SILENT: list_images
 
 check-ocix-base:
 ifndef BASE_BUILT

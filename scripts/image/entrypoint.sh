@@ -4,7 +4,7 @@ source /etc/profile.d/00-ocix-env.sh
 
 # This is the entrypoint script for the dockerfile. Executed in the
 # container at runtime.
-
+#
 if [[ $# == 0 ]]; then
   # The image has been run directly, so help the user get
   # started by outputting the ocix script
@@ -16,6 +16,7 @@ fi
 # with the same UID and GID as the user on the host machine, so that any files
 # created are owned by that user. Without this they are all owned by root.
 # The ocix script sets the BUILDER_UID and BUILDER_GID vars.
+#
 if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
 
     groupadd -o -g $BUILDER_GID $BUILDER_GROUP 2> /dev/null
