@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 LIB = ./dockerfiles
-# Teting directory for each image ocix script (e.g bin/ocix-manylinux1-x64)
+# Testing directory for each image ocix script (e.g bin/ocix-manylinux1-x64)
 BIN = $(shell [ -d /work ] && echo /work/bin || echo ./scratch/bin )
 # OCI engine
 OCI_EXE := $(shell command -v podman || command -v docker 2> /dev/null)

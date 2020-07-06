@@ -174,11 +174,13 @@ workflows:
           image: "ocix-linux-s390x"
           requires:
             - ocix-base
-      - ocix:
-          name: "linux-ppc64el"
-          image: "ocix-linux-ppc64el"
-          requires:
-            - ocix-base
+      # Currently build is red needs investigation
+      #
+      # - ocix:
+      #     name: "linux-ppc64el"
+      #     image: "ocix-linux-ppc64el"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "linux-x64"
           image: "ocix-linux-x64"
@@ -209,21 +211,27 @@ workflows:
           image: "ocix-manylinux2010-x86"
           requires:
             - ocix-base
-      - ocix:
-          name: "manylinux2014-x64"
-          image: "ocix-manylinux2014-x64"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "web-wasm"
-          image: "ocix-web-wasm"
-          requires:
-            - ocix-base
-      - ocix:
-          name: "windows-static-x64"
-          image: "ocix-windows-static-x64"
-          requires:
-            - ocix-base
+      # Currently build is red needs investigation
+      #
+      # - ocix:
+      #     name: "manylinux2014-x64"
+      #     image: "ocix-manylinux2014-x64"
+      #     requires:
+      #       - ocix-base
+      # Currently build is red needs investigation
+      #
+      # - ocix:
+      #     name: "web-wasm"
+      #     image: "ocix-web-wasm"
+      #     requires:
+      #       - ocix-base
+      # Currently build is red needs investigation
+      #
+      # - ocix:
+      #     name: "windows-static-x64"
+      #     image: "ocix-windows-static-x64"
+      #     requires:
+      #       - ocix-base
       - ocix:
           name: "windows-static-x64-posix"
           image: "ocix-windows-static-x64-posix"

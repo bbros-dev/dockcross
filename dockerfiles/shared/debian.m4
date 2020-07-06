@@ -53,6 +53,7 @@ RUN bash -c "echo \"deb [arch=i386,amd64,armel,armhf,arm64,mips,mips64el,mipsel,
               initramfs-tools:amd64 \
               libelf-dev:amd64 \
               libidn2-0-dev:amd64 \
+              libssl-dev:amd64 \
               libtool-bin:amd64 \
               m4:amd64 \
               make:amd64 \

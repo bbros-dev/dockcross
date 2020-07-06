@@ -5,12 +5,23 @@
 [![Master](https://circleci.com/gh/begleybrothers/ocix.svg?style=svg)](https://app.circleci.com/pipelines/github/begleybrothers/ocix?branch=master "Released Images")
 [![Development](https://circleci.com/gh/bbros-dev/ocix/tree/develop.svg?style=svg)](https://app.circleci.com/pipelines/github/bbros-dev/ocix?branch=develop "Development Images")
 
+## TL;DR
+
+We welcome PRs adding other OCI registries and CI providers.
+
+1. Update the TLD files `ocix_version`, `ocix_org`, `ocix_registry`,
+   `ocix_api_server`, `ocix_port`.
+1. In Circle CI:
+    * Add `OCIX_REGISTRY_USER` with your OCI registry user name.
+    * Add `OCIX_REGISTRY_PASSWORD` with your OCI registry password.
+1. `git add .; git commit -m "Deployed if built on CircleCI";` . 
+
 ## Features
 
 - Supports [Docker](https://www.docker.com/) and [Podman](https://podman.io/)
-  container engines at build-time and at runtime.
+  OCI container engines at build-time and at runtime.
 - Supports [Open Container Initiative (OCI)][oci] compatible containers and
-  registries.
+  registries, docker.io, quay.io, etc.
 - Supports use cases where code and containers must be self-hosted. See
   Self-Hosting below. To see a list of containers available: `make list`.
 - Supports single container use cases where this project may be a
@@ -70,7 +81,13 @@ environment variable expansion or redirection is required, please use
 
 ## Self-Hosting
 
-Some use cases require that all code and infrastructure be under the control of an organization (e.g. regulated industries). This code base aims to support such use cases. The following describes how to setup one pipeline and does not cover configuring Git server, CI/CD server, or OCI registry. The images created are prefixed with `ocix-*` to prevent clashes with existing container image names in your registry.
+Some use cases require that all code and infrastructure be under the control
+of an organization (e.g. regulated industries).
+This code base supports such use cases.
+The following describes how to setup one pipeline and does not cover
+configuring Git server, CI/CD server, or OCI registry.
+The images created are prefixed with `ocix-*` to prevent clashes with existing
+container image names in your registry.
 
 We welcome Pull-Requests adding support and instructions for other services.
 
@@ -93,7 +110,7 @@ We welcome Pull-Requests adding support and instructions for other services.
     c.  Add `OCIX_REGISTRY_USER` with your OCI registry user name.
     d.  Add `OCIX_REGISTRY_PASSWORD` with your OCI registry password.
 
-## Usage
+## OCIX Usage
 
 For the impatient, here's how to compile a hello world for `arm64` using Podman:
 
