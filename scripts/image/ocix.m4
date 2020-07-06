@@ -1,9 +1,7 @@
+#!/usr/bin/env bash
 # A better class of script...
-if [ -z "${DEBUG}" ]
-then
-  set +o xtrace          # DO NOT trace the execution of the script (debug)
-else
-  set -o xtrace          # DO trace the execution of the script (debug)
+if [[ ${DEBUG-} =~ ^1|[yY]|yes|[tT]|true$ ]]; then
+  set -o xtrace       # Trace the execution of the script (debug)
 fi
 
 set -o errexit          # Exit on most errors (see the manual)
