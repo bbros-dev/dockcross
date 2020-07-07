@@ -14,32 +14,40 @@ We welcome PRs adding other OCI registries and CI providers.
 1. In Circle CI:
     * Add `OCIX_REGISTRY_USER` with your OCI registry user name.
     * Add `OCIX_REGISTRY_PASSWORD` with your OCI registry password.
-1. `git add .; git commit -m "Deployed if built on CircleCI";` . 
+1. `git add .; git commit -m "Deployed if built on CircleCI";` .
+1. `podman login <registry>`
+1. Finally:
+
+    ```bash
+    IMAGE_SLUG=yelgeb/ocix-linux-x64:0.23.0
+    podman run --rm ${IMAGE_SLUG} > ~/.local/share/bin/ocix
+    chmod a+x ~/.local/share/bin/ocix
+    ```
 
 ## Features
 
-- Supports [Docker](https://www.docker.com/) and [Podman](https://podman.io/)
+* Supports [Docker](https://www.docker.com/) and [Podman](https://podman.io/)
   OCI container engines at build-time and at runtime.
-- Supports [Open Container Initiative (OCI)][oci] compatible containers and
+* Supports [Open Container Initiative (OCI)][oci] compatible containers and
   registries, docker.io, quay.io, etc.
-- Supports use cases where code and containers must be self-hosted. See
+* Supports use cases where code and containers must be self-hosted. See
   Self-Hosting below. To see a list of containers available: `make list`.
-- Supports single container use cases where this project may be a
+* Supports single container use cases where this project may be a
   [git-subrepo](https://github.com/ingydotnet/git-subrepo) of a project:
   `make ocix-linux-x64` builds and uploads to **your OCI-registry** the
   container `ocix-linux-x64`. See Se-Hosting below.
-- Pre-built and configured toolchains for cross compiling.
-- Most images also contain an emulator for the target system.
-- Clean separation of build tools, source code, and build artifacts.
-- Commands in the container are run as the calling user, so that any created
+* Pre-built and configured toolchains for cross compiling.
+* Most images also contain an emulator for the target system.
+* Clean separation of build tools, source code, and build artifacts.
+* Commands in the container are run as the calling user, so that any created
   files have the expected ownership, (i.e. not ro).
-- Make variables (CC, LD etc) are set to point to the appropriate tools in the
+* Make variables (CC, LD etc) are set to point to the appropriate tools in the
   container.
-- Recent [CMake](https://cmake.org) and ninja are precompiled.
-- [Conan.io](https://www.conan.io) can be used as a package manager.
-- Toolchain files configured for CMake.
-- Current directory is mounted as the container's workdir, `/work`.
-- Works with the [Docker for Mac](https://docs.docker.com/docker-for-mac/) and
+* Recent [CMake](https://cmake.org) and ninja are precompiled.
+* [Conan.io](https://www.conan.io) can be used as a package manager.
+* Toolchain files configured for CMake.
+* Current directory is mounted as the container's workdir, `/work`.
+* Works with the [Docker for Mac](https://docs.docker.com/docker-for-mac/) and
   [Docker for Windows](https://docs.docker.codocker-for-windows/).
 
 ## Installation
